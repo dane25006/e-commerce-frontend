@@ -155,19 +155,44 @@
             type="text"
             placeholder="Coupon code"
             class="flex-1 px-3.5 py-2 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/30"
+            :disabled="!!cartStore.coupon"
           />
-          <button class="btn-outline text-sm px-4 py-2">Apply</button>
+          <button
+            v-if="!cartStore.coupon"
+            class="btn-outline text-sm px-4 py-2"
+            @click="handleApplyCoupon"
+          >
+            Apply
+          </button>
+          <button
+            v-else
+            class="text-sm px-4 py-2 text-red-500 hover:text-red-700 font-medium"
+            @click="handleRemoveCoupon"
+          >
+            Remove
+          </button>
         </div>
+        <p
+          v-if="cartStore.couponMsg"
+          class="text-xs mt-1"
+          :class="cartStore.couponErr ? 'text-red-500' : 'text-green-600'"
+        >
+          {{ cartStore.couponMsg }}
+        </p>
 
         <!-- Summary -->
         <div class="space-y-1.5 text-sm">
           <div class="flex justify-between text-gray-600">
             <span>Subtotal</span>
-            <span>${{ cartStore.total.toFixed(2) }}</span>
+            <span>${{ cartStore.subtotal.toFixed(2) }}</span>
+          </div>
+          <div v-if="cartStore.discount > 0" class="flex justify-between text-green-600">
+            <span>Discount</span>
+            <span class="font-semibold">-${{ cartStore.discount.toFixed(2) }}</span>
           </div>
           <div class="flex justify-between text-gray-600">
             <span>Shipping</span>
-            <span class="text-green-600 font-medium">{{ cartStore.total >= 100 ? 'Free' : '$9.99' }}</span>
+            <span class="text-green-600 font-medium">{{ cartStore.subtotal >= 100 ? 'Free' : '$9.99' }}</span>
           </div>
           <div class="flex justify-between font-bold text-gray-900 text-base border-t border-purple-100 pt-2 mt-2">
             <span>Total</span>
@@ -177,12 +202,22 @@
 
         <!-- Checkout Button -->
         <RouterLink
+          v-if="auth.isLoggedIn"
           to="/checkout"
           @click="$emit('update:modelValue', false)"
           class="w-full btn-primary text-center block text-sm py-3"
         >
           <i class="ti ti-lock mr-2" aria-hidden="true" />
           Secure Checkout
+        </RouterLink>
+        <RouterLink
+          v-else
+          to="/login?redirect=/checkout"
+          @click="$emit('update:modelValue', false)"
+          class="w-full flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium rounded-xl px-4 py-3 transition"
+        >
+          <i class="ti ti-lock" aria-hidden="true" />
+          Sign in to Checkout
         </RouterLink>
 
         <button
@@ -198,26 +233,36 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
-import api from '@/plugins/axios'
 import { imageUrl } from '@/utils/image'
 import type { CartItem } from '@/types/cart'
 
 defineProps<{ modelValue: boolean }>()
 defineEmits<{ 'update:modelValue': [val: boolean] }>()
 
+const auth = useAuthStore()
 const cartStore = useCartStore()
 const couponCode = ref('')
 const updatingId = ref<number | null>(null)
 const removingId = ref<number | null>(null)
+
+function handleApplyCoupon() {
+  if (!couponCode.value.trim()) return
+  cartStore.applyCoupon(couponCode.value.trim())
+}
+
+function handleRemoveCoupon() {
+  couponCode.value = ''
+  cartStore.removeCoupon()
+}
 
 async function updateQty(item: CartItem, newQty: number) {
   if (newQty < 1) return removeItem(item)
   if (newQty > item.product.stock) return
   updatingId.value = item.cart_id
   try {
-    await api.put(`/cart/${item.cart_id}`, { quantity: newQty })
-    await cartStore.fetchCart()
+    await cartStore.updateQty(item.cart_id, newQty)
   } finally {
     updatingId.value = null
   }
@@ -226,8 +271,7 @@ async function updateQty(item: CartItem, newQty: number) {
 async function removeItem(item: CartItem) {
   removingId.value = item.cart_id
   try {
-    await api.delete(`/cart/${item.cart_id}`)
-    await cartStore.fetchCart()
+    await cartStore.removeItem(item.cart_id)
   } finally {
     removingId.value = null
   }
