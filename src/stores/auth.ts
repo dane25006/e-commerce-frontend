@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import api from '@/plugins/axios'
 import config from '@/config/app'
 import router from '@/router'
+import { getGuestToken } from '@/utils/guest'
 import type {
   User,
   LoginPayload,
@@ -71,6 +72,13 @@ export const useAuthStore = defineStore('auth', () => {
       await getCsrfCookie()
       const { data } = await api.post<AuthResponse>('/register', payload)
       setSession(data)
+
+      const token = getGuestToken()
+      await Promise.allSettled([
+        api.post('/cart/merge', { guest_token: token, _token: '' }),
+        api.post('/wishlist/merge', { guest_token: token, _token: '' }),
+      ])
+
       await router.push('/')
     } catch (err: unknown) {
       error.value = extractMessage(err, 'Registration failed.')
@@ -91,6 +99,12 @@ export const useAuthStore = defineStore('auth', () => {
       const { data } = await api.post<AuthResponse>('/login', payload)
 
       setSession(data)
+
+      const token = getGuestToken()
+      await Promise.allSettled([
+        api.post('/cart/merge', { guest_token: token, _token: '' }),
+        api.post('/wishlist/merge', { guest_token: token, _token: '' }),
+      ])
 
       const redirect = router.currentRoute.value.query.redirect as string
 
