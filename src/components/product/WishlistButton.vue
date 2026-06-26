@@ -1,7 +1,7 @@
 <template>
   <button
     @click.prevent="handleToggle"
-    :disabled="!auth.isLoggedIn || toggling"
+    :disabled="toggling"
     class="flex items-center justify-center rounded-full transition-all duration-200"
     :class="[
       sizeClasses,
@@ -9,10 +9,8 @@
         ? 'bg-pink-100 text-pink-500 hover:bg-pink-200'
         : 'bg-white/80 text-gray-400 hover:bg-pink-50 hover:text-pink-400',
       { 'heart-animate': animating },
-      { 'opacity-50 cursor-not-allowed': !auth.isLoggedIn },
     ]"
     :aria-label="isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'"
-    :title="!auth.isLoggedIn ? 'Sign in to save to wishlist' : ''"
   >
     <i
       :class="[
@@ -26,7 +24,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAuthStore } from '@/stores/auth'
 import { useWishlistStore } from '@/stores/wishlist'
 
 const props = withDefaults(defineProps<{
@@ -34,7 +31,6 @@ const props = withDefaults(defineProps<{
   size?: 'sm' | 'md' | 'lg'
 }>(), { size: 'md' })
 
-const auth = useAuthStore()
 const wishlistStore = useWishlistStore()
 const toggling = ref(false)
 const animating = ref(false)
@@ -54,7 +50,7 @@ const iconSizeClass = computed(() => ({
 }[props.size]))
 
 async function handleToggle() {
-  if (!auth.isLoggedIn || toggling.value) return
+  if (toggling.value) return
   toggling.value = true
   animating.value = true
   setTimeout(() => { animating.value = false }, 300)
@@ -65,3 +61,14 @@ async function handleToggle() {
   }
 }
 </script>
+
+<style scoped>
+.heart-animate {
+  animation: heartPop 0.3s ease;
+}
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+</style>
