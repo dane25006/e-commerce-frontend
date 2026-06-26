@@ -1,306 +1,303 @@
 <template>
-  <div class="min-h-screen bg-[#F8F5FF]">
+  <div class="min-h-screen" style="background:#F8F5FF">
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
     <!-- Page Header -->
-    <div class="bg-gradient-to-br from-purple-600 to-violet-700 py-12">
+    <div class="bg-gradient-to-br from-purple-600 to-violet-700 py-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <span class="text-purple-200 text-xs font-bold uppercase tracking-widest block mb-2">Our Collection</span>
         <h1 class="text-3xl md:text-4xl font-black text-white mb-2">All Fragrances</h1>
-        <p v-if="store.meta" class="text-purple-200 text-sm">
-          {{ store.meta.total }} premium scents available
-        </p>
+        <p v-if="store.meta" class="text-purple-200 text-sm">{{ store.meta.total }} premium scents available</p>
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Top bar -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div v-if="store.meta" class="text-sm text-gray-500">
-          Showing <span class="font-semibold text-gray-900">{{ store.products.length }}</span>
-          of <span class="font-semibold text-gray-900">{{ store.meta.total }}</span> results
-          <span v-if="filters.search"> for "<span class="text-purple-700">{{ filters.search }}</span>"</span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Top Bar -->
+      <div class="flex items-center justify-between gap-3 mb-4 flex-wrap">
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <div class="relative flex-1 min-w-[180px] max-w-xs">
+            <i class="ti ti-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none" aria-hidden="true" />
+            <input
+              v-model="filters.search"
+              type="text"
+              placeholder="Search perfumes..."
+              class="w-full pl-8 pr-3 py-1.5 text-sm border border-purple-200 rounded-lg outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50/40"
+            />
+          </div>
         </div>
-
-        <div class="flex items-center gap-2 ml-auto">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-400 shrink-0">{{ filteredCount }} product{{ filteredCount !== 1 ? 's' : '' }}</span>
           <select
             v-model="filters.sort"
             @change="onFilterChange"
-            class="text-sm border border-purple-200 rounded-xl px-3 py-2 bg-white outline-none focus:ring-2 focus:ring-purple-400 text-gray-700 cursor-pointer"
+            class="sort-select"
           >
-            <option value="newest">Newest First</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
-            <option value="name_asc">Name: A–Z</option>
+            <option value="newest">Sort: featured</option>
+            <option value="price_asc">Price: low to high</option>
+            <option value="price_desc">Price: high to low</option>
+            <option value="name_asc">Name A–Z</option>
+            <option value="rating">Top rated</option>
           </select>
-
-          <div class="flex border border-purple-200 rounded-xl overflow-hidden bg-white">
-            <button
-              @click="viewMode = 'grid'"
-              class="p-2.5 transition"
-              :class="viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:bg-purple-50'"
-              aria-label="Grid view"
-            >
-              <i class="ti ti-layout-grid text-sm" aria-hidden="true" />
-            </button>
-            <button
-              @click="viewMode = 'list'"
-              class="p-2.5 transition"
-              :class="viewMode === 'list' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:bg-purple-50'"
-              aria-label="List view"
-            >
-              <i class="ti ti-list text-sm" aria-hidden="true" />
-            </button>
-          </div>
+          <button
+            @click="showMobileFilters = !showMobileFilters"
+            class="lg:hidden p-2 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition"
+            aria-label="Filters"
+          >
+            <i class="ti ti-filter text-lg" aria-hidden="true" />
+          </button>
         </div>
       </div>
 
-      <div class="flex gap-6">
-        <!-- Sidebar Filters -->
-        <aside class="hidden lg:block w-60 flex-shrink-0">
-          <div class="card-luxury p-5 sticky top-24">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <i class="ti ti-filter text-purple-500" aria-hidden="true" />
-              Filters
-              <span v-if="activeFilterCount" class="ml-auto text-xs bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded-full">
-                {{ activeFilterCount }}
-              </span>
-            </h3>
+      <!-- Active Filter Chips -->
+      <div v-if="activeChips.length" class="flex flex-wrap gap-1.5 mb-3">
+        <span
+          v-for="chip in activeChips"
+          :key="chip.key + ':' + chip.value"
+          class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium cursor-pointer"
+          @click="chip.remove"
+        >
+          {{ chip.label }}
+          <i class="ti ti-x text-sm" aria-hidden="true" />
+        </span>
+        <button @click="handleReset" class="text-xs text-gray-400 hover:text-red-500 px-2 py-1">Clear all</button>
+      </div>
 
-            <!-- Search -->
-            <div class="mb-5">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Search</label>
-              <div class="relative">
-                <i class="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-                <input
-                  v-model="filters.search"
-                  type="text"
-                  placeholder="Search fragrances..."
-                  class="w-full pl-9 pr-3 py-2.5 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/30"
-                />
-              </div>
+      <!-- Mobile Filters Panel -->
+      <Transition name="collapse">
+        <div v-if="showMobileFilters" class="lg:hidden bg-white border border-purple-200 rounded-xl p-4 mb-4 space-y-4">
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Gender</div>
+            <div v-for="g in filterOptions.genders" :key="g" class="flex items-center gap-2 py-0.5">
+              <input :id="'mg-'+g" type="checkbox" :checked="filters.gender?.includes(g)" @change="toggleFilter('gender', g)" class="w-3.5 h-3.5 accent-purple-600" />
+              <label :for="'mg-'+g" class="text-sm text-gray-700 cursor-pointer select-none">{{ g }}</label>
             </div>
-
-            <!-- Categories -->
-            <div class="mb-5">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Category</label>
-              <div class="space-y-1">
-                <button
-                  @click="filters.category_id = undefined; filters.page = 1; onFilterChange()"
-                  class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-xl transition"
-                  :class="!filters.category_id ? 'bg-purple-100 text-purple-700 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700'"
-                >
-                  <span>All Categories</span>
-                  <span class="text-xs text-gray-400">{{ store.meta?.total ?? 0 }}</span>
-                </button>
-                <button
-                  v-for="cat in store.categories"
-                  :key="cat.id"
-                  @click="filters.category_id = cat.id; filters.page = 1; onFilterChange()"
-                  class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-xl transition"
-                  :class="filters.category_id === cat.id ? 'bg-purple-100 text-purple-700 font-semibold' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700'"
-                >
-                  <span>{{ cat.name }}</span>
-                  <span class="text-xs text-gray-400">{{ cat.products_count }}</span>
-                </button>
-              </div>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Brand</div>
+            <div v-for="b in filterOptions.brands" :key="b" class="flex items-center gap-2 py-0.5">
+              <input :id="'mb-'+b" type="checkbox" :checked="filters.brand?.includes(b)" @change="toggleFilter('brand', b)" class="w-3.5 h-3.5 accent-purple-600" />
+              <label :for="'mb-'+b" class="text-sm text-gray-700 cursor-pointer select-none">{{ b }}</label>
             </div>
-
-            <!-- Price Range -->
-            <div class="mb-5">
-              <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Price Range</label>
-              <div class="flex items-center gap-2">
-                <input
-                  v-model.number="filters.min_price"
-                  type="number"
-                  min="0"
-                  placeholder="Min"
-                  @change="filters.page = 1; onFilterChange()"
-                  class="w-full px-3 py-2.5 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50/30"
-                />
-                <span class="text-gray-300 flex-shrink-0">—</span>
-                <input
-                  v-model.number="filters.max_price"
-                  type="number"
-                  min="0"
-                  placeholder="Max"
-                  @change="filters.page = 1; onFilterChange()"
-                  class="w-full px-3 py-2.5 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50/30"
-                />
-              </div>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Type</div>
+            <div v-for="t in filterOptions.types" :key="t" class="flex items-center gap-2 py-0.5">
+              <input :id="'mt-'+t" type="checkbox" :checked="filters.type?.includes(t)" @change="toggleFilter('type', t)" class="w-3.5 h-3.5 accent-purple-600" />
+              <label :for="'mt-'+t" class="text-sm text-gray-700 cursor-pointer select-none">{{ t }}</label>
             </div>
-
-            <button
-              @click="handleReset"
-              class="w-full text-sm text-gray-500 hover:text-red-500 border border-gray-200 hover:border-red-200 rounded-xl py-2.5 transition flex items-center justify-center gap-1.5"
-            >
-              <i class="ti ti-refresh text-sm" aria-hidden="true" />
-              Reset Filters
+          </div>
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Department</div>
+            <div v-for="d in filterOptions.departments" :key="d" class="flex items-center gap-2 py-0.5">
+              <input :id="'md-'+d" type="checkbox" :checked="filters.department?.includes(d)" @change="toggleFilter('department', d)" class="w-3.5 h-3.5 accent-purple-600" />
+              <label :for="'md-'+d" class="text-sm text-gray-700 cursor-pointer select-none">{{ d }}</label>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Price range</div>
+            <input type="range" :min="0" :max="maxPrice" :value="maxPrice" step="5" @input="onPriceInput" class="w-full accent-purple-600" />
+            <div class="flex items-center justify-between text-xs text-gray-400 mt-1">
+              <span>$0</span>
+              <span>up to ${{ currentPrice }}</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-700">In stock only</span>
+            <button type="button" role="switch" :aria-checked="filters.in_stock !== false" @click="filters.in_stock = filters.in_stock === false ? undefined : false; onFilterChange()"
+              class="relative inline-flex h-4.5 w-8 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200"
+              :class="filters.in_stock !== false ? 'bg-purple-600' : 'bg-gray-300'">
+              <span class="pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow ring-0 transition duration-200"
+                :class="filters.in_stock !== false ? 'translate-x-[14px]' : 'translate-x-0'" />
             </button>
+          </div>
+          <div class="flex gap-2 pt-2">
+            <button @click="showMobileFilters = false; loadProducts()" class="flex-1 btn-primary text-sm py-2">Apply</button>
+            <button @click="handleReset" class="flex-1 btn-outline text-sm py-2">Reset</button>
+          </div>
+        </div>
+      </Transition>
+
+      <!-- Desktop Layout -->
+      <div class="flex gap-4 items-start">
+        <!-- Sidebar -->
+        <aside class="hidden lg:block w-[200px] shrink-0">
+          <div class="space-y-3">
+            <!-- Gender -->
+            <div class="bg-white border border-purple-200/60 rounded-xl p-3">
+              <div class="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-2">Gender</div>
+              <div v-for="g in filterOptions.genders" :key="g" class="flex items-center justify-between py-0.5 cursor-pointer select-none" @click="toggleFilter('gender', g)">
+                <label class="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                  <input type="checkbox" :checked="filters.gender?.includes(g)" @click.stop="toggleFilter('gender', g)" class="w-3.5 h-3.5 accent-purple-600 cursor-pointer" />
+                  {{ g }}
+                </label>
+                <span class="text-[11px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">{{ countsBy('gender', g) }}</span>
+              </div>
+            </div>
+
+            <!-- Brand -->
+            <div class="bg-white border border-purple-200/60 rounded-xl p-3">
+              <div class="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-2">Brand</div>
+              <div v-for="b in filterOptions.brands" :key="b" class="flex items-center justify-between py-0.5 cursor-pointer select-none" @click="toggleFilter('brand', b)">
+                <label class="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                  <input type="checkbox" :checked="filters.brand?.includes(b)" @click.stop="toggleFilter('brand', b)" class="w-3.5 h-3.5 accent-purple-600 cursor-pointer" />
+                  {{ b }}
+                </label>
+                <span class="text-[11px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">{{ countsBy('brand', b) }}</span>
+              </div>
+            </div>
+
+            <!-- Type -->
+            <div class="bg-white border border-purple-200/60 rounded-xl p-3">
+              <div class="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-2">Type</div>
+              <div v-for="t in filterOptions.types" :key="t" class="flex items-center justify-between py-0.5 cursor-pointer select-none" @click="toggleFilter('type', t)">
+                <label class="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                  <input type="checkbox" :checked="filters.type?.includes(t)" @click.stop="toggleFilter('type', t)" class="w-3.5 h-3.5 accent-purple-600 cursor-pointer" />
+                  {{ t }}
+                </label>
+                <span class="text-[11px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">{{ countsBy('type', t) }}</span>
+              </div>
+            </div>
+
+            <!-- Department -->
+            <div class="bg-white border border-purple-200/60 rounded-xl p-3">
+              <div class="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-2">Department</div>
+              <div v-for="d in filterOptions.departments" :key="d" class="flex items-center justify-between py-0.5 cursor-pointer select-none" @click="toggleFilter('department', d)">
+                <label class="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                  <input type="checkbox" :checked="filters.department?.includes(d)" @click.stop="toggleFilter('department', d)" class="w-3.5 h-3.5 accent-purple-600 cursor-pointer" />
+                  {{ d }}
+                </label>
+                <span class="text-[11px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">{{ countsBy('department', d) }}</span>
+              </div>
+            </div>
+
+            <!-- Price range -->
+            <div class="bg-white border border-purple-200/60 rounded-xl p-3">
+              <div class="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-2">Price range</div>
+              <input type="range" :min="0" :max="maxPrice" :value="currentPrice" step="5" @input="onPriceInput" class="w-full accent-purple-600" />
+              <div class="flex items-center justify-between text-xs text-gray-400 mt-1">
+                <span>$0</span>
+                <span>up to ${{ currentPrice }}</span>
+              </div>
+            </div>
+
+            <!-- Availability -->
+            <div class="bg-white border border-purple-200/60 rounded-xl p-3">
+              <div class="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-2">Availability</div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-700">In stock only</span>
+                <button type="button" role="switch" :aria-checked="filters.in_stock !== false" @click="filters.in_stock = filters.in_stock === false ? undefined : false; onFilterChange()"
+                  class="relative inline-flex h-4.5 w-8 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200"
+                  :class="filters.in_stock !== false ? 'bg-purple-600' : 'bg-gray-300'">
+                  <span class="pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow ring-0 transition duration-200"
+                    :class="filters.in_stock !== false ? 'translate-x-[14px]' : 'translate-x-0'" />
+                </button>
+              </div>
+            </div>
           </div>
         </aside>
 
-        <!-- Main content -->
+        <!-- Products -->
         <div class="flex-1 min-w-0">
-          <!-- Mobile filter button -->
-          <div class="lg:hidden flex gap-2 mb-4">
-            <button
-              @click="showMobileFilters = !showMobileFilters"
-              class="flex items-center gap-1.5 text-sm border border-purple-200 bg-white px-4 py-2.5 rounded-xl text-gray-700 hover:bg-purple-50 transition font-medium"
-            >
-              <i class="ti ti-filter text-purple-500 text-sm" aria-hidden="true" />
-              Filters
-              <span v-if="activeFilterCount" class="bg-purple-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
-                {{ activeFilterCount }}
-              </span>
-            </button>
-          </div>
-
-          <!-- Mobile filters panel -->
-          <Transition name="collapse">
-            <div v-if="showMobileFilters" class="lg:hidden card-luxury p-5 mb-4">
-              <!-- Search -->
-              <div class="mb-4">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Search</label>
-                <div class="relative">
-                  <i class="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-                  <input v-model="filters.search" type="text" placeholder="Search fragrances..."
-                    class="w-full pl-9 pr-3 py-2.5 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50/30" />
-                </div>
-              </div>
-              <!-- Price -->
-              <div class="mb-4">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Price Range</label>
-                <div class="flex gap-2">
-                  <input v-model.number="filters.min_price" type="number" placeholder="Min"
-                    class="flex-1 px-3 py-2.5 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50/30" />
-                  <input v-model.number="filters.max_price" type="number" placeholder="Max"
-                    class="flex-1 px-3 py-2.5 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 bg-purple-50/30" />
-                </div>
-              </div>
-              <div class="flex gap-2">
-                <button @click="onFilterChange(); showMobileFilters = false" class="flex-1 btn-primary text-sm py-2.5">Apply</button>
-                <button @click="handleReset" class="flex-1 btn-outline text-sm py-2.5">Reset</button>
-              </div>
-            </div>
-          </Transition>
-
-          <!-- Skeleton -->
-          <div
-            v-if="store.loading"
-            :class="viewMode === 'grid'
-              ? 'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4'
-              : 'space-y-3'"
-          >
-            <div v-for="n in 12" :key="n" class="card-luxury overflow-hidden animate-pulse"
-              :class="viewMode === 'list' ? 'flex gap-4 p-4' : ''">
-              <div :class="viewMode === 'grid' ? 'skeleton' : 'w-24 h-24 skeleton rounded-xl flex-shrink-0'"
-                :style="viewMode === 'grid' ? 'aspect-ratio:3/4; max-height:200px' : ''" />
-              <div class="p-4 space-y-2 flex-1" :class="viewMode === 'list' ? 'p-0' : ''">
-                <div class="h-3 skeleton w-1/4" />
+          <!-- Loading -->
+          <div v-if="store.loading" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div v-for="n in 12" :key="n" class="bg-white border border-purple-200/60 rounded-xl overflow-hidden animate-pulse">
+              <div class="aspect-square skeleton" />
+              <div class="p-3 space-y-2">
+                <div class="h-3 skeleton w-2/3" />
                 <div class="h-4 skeleton w-3/4" />
                 <div class="h-3 skeleton w-1/2" />
-                <div class="h-8 skeleton mt-2" />
               </div>
             </div>
           </div>
 
           <!-- Error -->
-          <div v-else-if="store.error" class="text-center py-20 text-gray-400">
+          <div v-else-if="store.error" class="text-center py-16 text-gray-400">
             <i class="ti ti-alert-circle text-4xl block mb-3 text-purple-200" aria-hidden="true" />
             <p class="text-sm">{{ store.error }}</p>
             <button @click="loadProducts" class="mt-4 btn-primary text-sm py-2 px-5">Try again</button>
           </div>
 
           <!-- Empty -->
-          <div v-else-if="!store.products.length" class="text-center py-20 text-gray-400">
-            <i class="ti ti-search-off text-4xl block mb-3 text-purple-200" aria-hidden="true" />
-            <p class="text-sm font-bold text-gray-600 mb-1">No products found</p>
-            <p class="text-sm">Try adjusting your search or filters.</p>
-            <button @click="handleReset" class="mt-5 btn-outline text-sm py-2.5 px-6">Clear Filters</button>
+          <div v-else-if="!store.products.length" class="text-center py-16 text-gray-400">
+            <i class="ti ti-mood-empty text-4xl block mb-2 text-purple-200" aria-hidden="true" />
+            <p class="text-sm">No products match your filters</p>
+            <button @click="handleReset" class="mt-4 btn-outline text-sm py-2 px-5">Clear filters</button>
           </div>
 
           <!-- Grid -->
-          <div
-            v-else-if="viewMode === 'grid'"
-            class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
-          >
-            <ProductCard
+          <div v-else class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div
               v-for="p in store.products"
               :key="p.id"
-              :product="p"
-              @quick-view="quickViewProduct = p"
-            />
-          </div>
-
-          <!-- List -->
-          <div v-else class="space-y-3">
-            <div
-              v-for="product in store.products"
-              :key="product.id"
-              class="card-luxury p-4 flex gap-4"
+              class="product-card"
             >
-              <RouterLink :to="`/products/${product.id}`" class="flex-shrink-0">
-                <div class="w-24 h-24 rounded-xl bg-purple-50 overflow-hidden border border-purple-100">
-                  <img v-if="product.image_url" :src="imageUrl(product.image_url)" :alt="product.name"
-                    class="w-full h-full object-cover" loading="lazy" />
-                  <div v-else class="w-full h-full flex items-center justify-center">
-                    <i class="ti ti-photo text-2xl text-purple-200" aria-hidden="true" />
-                  </div>
+              <RouterLink :to="`/products/${p.id}`" class="block">
+                <div class="relative aspect-square bg-purple-50/60 flex items-center justify-center overflow-hidden">
+                  <img
+                    v-if="p.image_url"
+                    :src="imageUrl(p.image_url)"
+                    :alt="p.name"
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <i v-else class="ti ti-sparkles text-4xl text-purple-200" aria-hidden="true" />
+                  <span
+                    class="absolute top-2 left-2 text-[10px] font-medium px-1.5 py-0.5 rounded"
+                    :class="p.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                  >
+                    {{ p.stock > 0 ? 'In stock' : 'Out of stock' }}
+                  </span>
+                  <button
+                    @click.prevent="toggleWishlist(p.id)"
+                    class="absolute top-1.5 right-1.5 text-lg p-1 leading-none"
+                    :class="wishlistStore.isWishlisted(p.id) ? 'text-pink-500' : 'text-gray-400 hover:text-pink-400'"
+                    aria-label="Toggle wishlist"
+                  >
+                    <i class="ti ti-heart" aria-hidden="true" />
+                  </button>
                 </div>
               </RouterLink>
-              <div class="flex-1 min-w-0">
-                <span v-if="product.category" class="text-[11px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-                  {{ product.category.name }}
-                </span>
-                <RouterLink :to="`/products/${product.id}`">
-                  <h3 class="text-sm font-bold text-gray-900 hover:text-purple-700 transition mt-1 line-clamp-1">
-                    {{ product.name }}
-                  </h3>
+              <div class="p-2.5">
+                <div class="text-[11px] text-gray-400 mb-0.5">{{ p.brand || p.category?.name || '' }}</div>
+                <RouterLink :to="`/products/${p.id}`">
+                  <div class="text-sm font-medium text-gray-900 leading-tight mb-0.5 line-clamp-1">{{ p.name }}</div>
                 </RouterLink>
-                <p class="text-xs text-gray-400 mt-1 line-clamp-2">{{ product.description }}</p>
-                <div v-if="product.rating_avg" class="flex items-center gap-1 mt-1">
-                  <i v-for="n in 5" :key="n" class="ti ti-star-filled text-xs"
-                    :class="n <= Math.round(product.rating_avg!) ? 'text-amber-400' : 'text-gray-200'" aria-hidden="true" />
-                  <span class="text-xs text-gray-400">({{ product.rating_count }})</span>
+                <div class="text-[11px] text-gray-500 mb-2">
+                  {{ p.type || '' }}{{ p.type && p.gender ? ' · ' : '' }}{{ p.gender || '' }}{{ p.rating_avg ? ' · ★ ' + p.rating_avg : '' }}
                 </div>
-              </div>
-              <div class="flex flex-col items-end justify-between flex-shrink-0">
-                <span class="text-base font-black text-gray-900">${{ product.price.toFixed(2) }}</span>
-                <AddToCartButton :product="product" size="sm" />
+                <div class="flex items-center justify-between gap-1">
+                  <span class="text-sm font-medium text-gray-900">{{ formatPrice(p.price) }}</span>
+                  <AddToCartButton :product="p" size="sm" />
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Pagination -->
-          <div v-if="store.meta && store.meta.last_page > 1" class="mt-10 flex items-center justify-center gap-1.5">
+          <div v-if="store.meta && store.meta.last_page > 1" class="mt-8 flex items-center justify-center gap-1.5">
             <button
               @click="goToPage(store.meta.current_page - 1)"
               :disabled="store.meta.current_page === 1"
-              class="w-9 h-9 rounded-xl border border-purple-200 text-gray-500 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center"
+              class="w-8 h-8 rounded-lg border border-purple-200 text-gray-500 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center"
             >
               <i class="ti ti-chevron-left text-sm" aria-hidden="true" />
             </button>
-
             <template v-for="page in paginationPages" :key="page">
-              <span v-if="page === '...'" class="px-2 text-gray-400 text-sm">…</span>
+              <span v-if="page === '...'" class="px-1.5 text-gray-400 text-sm">&hellip;</span>
               <button
                 v-else
                 @click="goToPage(Number(page))"
-                class="w-9 h-9 rounded-xl text-sm border transition font-semibold"
-                :class="page === store.meta.current_page
-                  ? 'bg-purple-600 text-white border-purple-600'
-                  : 'border-purple-200 text-gray-600 hover:bg-purple-50 hover:text-purple-700'"
+                class="w-8 h-8 rounded-lg text-sm border transition font-semibold"
+                :class="page === store.meta.current_page ? 'bg-purple-600 text-white border-purple-600' : 'border-purple-200 text-gray-600 hover:bg-purple-50 hover:text-purple-700'"
               >
                 {{ page }}
               </button>
             </template>
-
             <button
               @click="goToPage(store.meta.current_page + 1)"
               :disabled="store.meta.current_page === store.meta.last_page"
-              class="w-9 h-9 rounded-xl border border-purple-200 text-gray-500 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center"
+              class="w-8 h-8 rounded-lg border border-purple-200 text-gray-500 hover:bg-purple-50 hover:text-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center"
             >
               <i class="ti ti-chevron-right text-sm" aria-hidden="true" />
             </button>
@@ -317,12 +314,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/product'
+import { useWishlistStore } from '@/stores/wishlist'
+import { productService } from '@/services/productService'
 import { imageUrl } from '@/utils/image'
+import { formatPrice } from '@/utils/price'
 import type { ProductParams } from '@/services/productService'
-import type { Product } from '@/types/product'
+import type { Product, FilterValues } from '@/types/product'
+
+interface Filters {
+  search:      string
+  category_id: number | undefined
+  gender:      string[] | undefined
+  brand:       string[] | undefined
+  type:        string[] | undefined
+  department:  string[] | undefined
+  min_price:   number | undefined
+  max_price:   number | undefined
+  in_stock:    boolean | undefined
+  sort:        ProductParams['sort']
+  per_page:    number
+  page:        number
+}
 
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -334,33 +349,106 @@ import ProductQuickView from '@/components/product/ProductQuickView.vue'
 import AddToCartButton from '@/components/product/AddToCartButton.vue'
 
 const store = useProductStore()
+const wishlistStore = useWishlistStore()
 const route = useRoute()
 const router = useRouter()
 
-const viewMode = ref<'grid' | 'list'>('grid')
 const showMobileFilters = ref(false)
 const searchOpen = ref(false)
 const cartOpen = ref(false)
 const quickViewProduct = ref<Product | null>(null)
+const currentPrice = ref(300)
 
-const filters = ref<ProductParams>({
+const filterOptions = reactive<FilterValues>({
+  genders: [],
+  brands: [],
+  types: [],
+  departments: [],
+})
+
+function parseArr(key: string): string[] | undefined {
+  const v = route.query[key] as string | undefined
+  if (!v) return undefined
+  return v.split(',')
+}
+
+const filters = ref<Filters>({
   search: (route.query.search as string) || '',
   category_id: route.query.category_id ? Number(route.query.category_id) : undefined,
-  min_price: route.query.min_price ? Number(route.query.min_price) : undefined,
+  gender: parseArr('gender'),
+  brand: parseArr('brand'),
+  type: parseArr('type'),
+  department: parseArr('department'),
+  min_price: undefined,
   max_price: route.query.max_price ? Number(route.query.max_price) : undefined,
+  in_stock: route.query.in_stock !== undefined ? route.query.in_stock !== 'false' : undefined,
   sort: (route.query.sort as ProductParams['sort']) || 'newest',
   per_page: 12,
   page: route.query.page ? Number(route.query.page) : 1,
 })
 
-const activeFilterCount = computed(() => {
-  let count = 0
-  if (filters.value.search) count++
-  if (filters.value.category_id) count++
-  if (filters.value.min_price) count++
-  if (filters.value.max_price) count++
-  return count
+const maxPrice = computed(() => {
+  const prices = store.products.map(p => Number(p.price))
+  return prices.length ? Math.max(...prices, 300) : 300
 })
+
+function toggleFilter(key: 'gender' | 'brand' | 'type' | 'department', value: string) {
+  const arr = filters.value[key]
+  if (!arr) {
+    filters.value[key] = [value]
+  } else {
+    const idx = arr.indexOf(value)
+    if (idx >= 0) {
+      arr.splice(idx, 1)
+      if (arr.length === 0) filters.value[key] = undefined
+    } else {
+      arr.push(value)
+    }
+  }
+  filters.value.page = 1
+  onFilterChange()
+}
+
+function onPriceInput(e: Event) {
+  const val = Number((e.target as HTMLInputElement).value)
+  currentPrice.value = val
+  filters.value.max_price = val >= maxPrice.value ? undefined : val
+  filters.value.page = 1
+  onFilterChange()
+}
+
+function countsBy(field: string, value: string): number {
+  return store.products.filter((p: Record<string, unknown>) => String(p[field] ?? '') === value).length
+}
+
+const activeChips = computed(() => {
+  const chips: { key: string; value: string; label: string; remove: () => void }[] = []
+  const fields = ['gender', 'brand', 'type', 'department'] as const
+  for (const f of fields) {
+    const arr = filters.value[f]
+    if (arr) {
+      for (const v of arr) {
+        chips.push({
+          key: f,
+          value: v,
+          label: v,
+          remove: () => toggleFilter(f, v),
+        })
+      }
+    }
+  }
+  if (filters.value.in_stock === false) {
+    chips.push({
+      key: 'in_stock',
+      value: 'false',
+      label: 'In stock',
+      remove: () => { filters.value.in_stock = undefined; onFilterChange() },
+    })
+  }
+  return chips
+})
+
+const filteredCount = computed(() => store.products.length)
 
 const paginationPages = computed(() => {
   if (!store.meta) return []
@@ -389,15 +477,33 @@ function syncQueryParams() {
   const q: Record<string, string> = {}
   if (filters.value.search) q.search = filters.value.search
   if (filters.value.category_id) q.category_id = String(filters.value.category_id)
-  if (filters.value.min_price) q.min_price = String(filters.value.min_price)
+  if (filters.value.gender?.length) q.gender = filters.value.gender.join(',')
+  if (filters.value.brand?.length) q.brand = filters.value.brand.join(',')
+  if (filters.value.type?.length) q.type = filters.value.type.join(',')
+  if (filters.value.department?.length) q.department = filters.value.department.join(',')
   if (filters.value.max_price) q.max_price = String(filters.value.max_price)
+  if (filters.value.in_stock === false) q.in_stock = 'false'
   if (filters.value.sort) q.sort = filters.value.sort
   if (filters.value.page && filters.value.page > 1) q.page = String(filters.value.page)
   router.replace({ query: q })
 }
 
 function loadProducts() {
-  store.fetchProducts({ ...filters.value })
+  const params: ProductParams = {
+    search: filters.value.search || undefined,
+    category_id: filters.value.category_id,
+    gender: filters.value.gender?.join(','),
+    brand: filters.value.brand?.join(','),
+    type: filters.value.type?.join(','),
+    department: filters.value.department?.join(','),
+    min_price: undefined,
+    max_price: filters.value.max_price,
+    in_stock: filters.value.in_stock,
+    sort: filters.value.sort,
+    per_page: 12,
+    page: filters.value.page,
+  }
+  store.fetchProducts(params)
 }
 
 function goToPage(page: number) {
@@ -409,8 +515,26 @@ function goToPage(page: number) {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+function toggleWishlist(productId: number) {
+  wishlistStore.toggle(productId)
+}
+
 function handleReset() {
-  filters.value = { search: '', category_id: undefined, min_price: undefined, max_price: undefined, sort: 'newest', per_page: 12, page: 1 }
+  filters.value = {
+    search: '',
+    category_id: undefined,
+    gender: undefined,
+    brand: undefined,
+    type: undefined,
+    department: undefined,
+    min_price: undefined,
+    max_price: undefined,
+    in_stock: undefined,
+    sort: 'newest',
+    per_page: 12,
+    page: 1,
+  }
+  currentPrice.value = 300
   router.replace({ query: {} })
   loadProducts()
 }
@@ -418,12 +542,59 @@ function handleReset() {
 watch(() => filters.value.search, () => onFilterChange())
 
 onMounted(async () => {
-  await store.fetchCategories()
+  const maxP = route.query.max_price ? Number(route.query.max_price) : 300
+  currentPrice.value = maxP
+  await Promise.all([
+    store.fetchCategories(),
+    productService.getFilters().then(({ data }) => {
+      filterOptions.genders = data.genders
+      filterOptions.brands = data.brands
+      filterOptions.types = data.types
+      filterOptions.departments = data.departments
+    }).catch(() => {}),
+  ])
   loadProducts()
 })
 </script>
 
 <style scoped>
-.collapse-enter-active, .collapse-leave-active { transition: all 0.25s ease; }
-.collapse-enter-from, .collapse-leave-to { opacity: 0; transform: translateY(-10px); }
+.collapse-enter-active,
+.collapse-leave-active {
+  transition: all 0.25s ease;
+}
+.collapse-enter-from,
+.collapse-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.sort-select {
+  padding: 5px 26px 5px 10px;
+  border: 0.5px solid #ddd6fe;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  outline: none;
+}
+.sort-select:focus {
+  ring: 2px solid #a78bfa;
+  border-color: #a78bfa;
+}
+
+.product-card {
+  background: white;
+  border: 0.5px solid #e9ddfe;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.product-card:hover {
+  border-color: #c4b5fd;
+}
 </style>
