@@ -42,7 +42,7 @@
             </div>
 
             <div class="flex items-baseline gap-2 mb-4">
-              <span class="text-3xl font-black text-gray-900">${{ product.price.toFixed(2) }}</span>
+              <span class="text-3xl font-black text-gray-900">{{ formatPrice(product.price) }}</span>
             </div>
 
             <span class="inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full w-fit mb-4"
@@ -55,7 +55,7 @@
 
             <div class="flex items-center gap-3 mt-auto flex-wrap">
               <button
-                v-if="product.stock > 0 && auth.isLoggedIn"
+                v-if="product.stock > 0"
                 @click="handleAddToCart"
                 :disabled="adding"
                 class="flex-1 btn-primary py-3 text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
@@ -65,18 +65,13 @@
                 {{ adding ? 'Adding...' : 'Add to Cart' }}
               </button>
 
-              <WishlistButton v-if="auth.isLoggedIn" :product-id="product.id" size="lg" />
+              <WishlistButton :product-id="product.id" size="lg" />
 
               <RouterLink :to="`/products/${product.id}`" @click="$emit('close')"
                 class="text-sm font-semibold text-purple-600 hover:text-purple-700 transition flex items-center gap-1">
                 Details <i class="ti ti-arrow-right" aria-hidden="true" />
               </RouterLink>
             </div>
-
-            <p v-if="!auth.isLoggedIn" class="text-xs text-gray-400 mt-3">
-              <RouterLink to="/login" class="text-purple-500 hover:underline font-medium">Sign in</RouterLink>
-              to shop
-            </p>
           </div>
         </div>
       </div>
@@ -86,21 +81,20 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { imageUrl } from '@/utils/image'
+import { formatPrice } from '@/utils/price'
 import type { Product } from '@/types/product'
 import WishlistButton from './WishlistButton.vue'
 
 const props = defineProps<{ product: Product | null }>()
 defineEmits<{ close: [] }>()
 
-const auth = useAuthStore()
 const cartStore = useCartStore()
 const adding = ref(false)
 
 async function handleAddToCart() {
-  if (!props.product || !auth.isLoggedIn) return
+  if (!props.product) return
   adding.value = true
   try {
     await cartStore.addToCart(props.product.id)
