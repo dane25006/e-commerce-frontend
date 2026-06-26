@@ -68,7 +68,7 @@
                 <p class="text-sm font-semibold text-gray-900 group-hover:text-purple-700 transition line-clamp-1">
                   {{ product.name }}
                 </p>
-                <p class="text-xs text-purple-500 font-medium">${{ product.price.toFixed(2) }}</p>
+                <p class="text-xs text-purple-500 font-medium">{{ formatPrice(product.price) }}</p>
               </div>
               <i class="ti ti-arrow-right text-gray-300 group-hover:text-purple-400 transition" aria-hidden="true" />
             </div>
@@ -115,6 +115,7 @@ import { ref, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { productService } from '@/services/productService'
 import { imageUrl } from '@/utils/image'
+import { formatPrice } from '@/utils/price'
 import type { Product } from '@/types/product'
 
 const props = defineProps<{ modelValue: boolean }>()
