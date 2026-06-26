@@ -79,47 +79,40 @@
       <!-- Price + Cart -->
       <div class="mt-auto flex items-center justify-between gap-2">
         <span class="text-lg font-bold text-gray-900">
-          ${{ product.price.toFixed(2) }}
+          {{ formatPrice(product.price) }}
         </span>
 
         <button
           v-if="product.stock > 0"
           @click.prevent="handleAddToCart"
-          :disabled="adding || !auth.isLoggedIn"
+          :disabled="adding"
           class="flex items-center gap-1.5 btn-primary text-xs px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
-          :title="!auth.isLoggedIn ? 'Sign in to add to cart' : ''"
         >
           <i v-if="adding" class="ti ti-loader-2 animate-spin text-sm" aria-hidden="true" />
           <i v-else class="ti ti-shopping-bag text-sm" aria-hidden="true" />
           {{ adding ? '...' : 'Add' }}
         </button>
       </div>
-
-      <p v-if="!auth.isLoggedIn" class="text-[10px] text-gray-400 mt-2 text-center">
-        <RouterLink to="/login" class="text-purple-500 hover:underline font-medium">Sign in</RouterLink> to shop
-      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { imageUrl } from '@/utils/image'
+import { formatPrice } from '@/utils/price'
 import type { Product } from '@/types/product'
 import WishlistButton from './WishlistButton.vue'
 
 const props = defineProps<{ product: Product }>()
 defineEmits<{ quickView: [product: Product] }>()
 
-const auth = useAuthStore()
 const cartStore = useCartStore()
 const adding = ref(false)
 const hovered = ref(false)
 
 async function handleAddToCart() {
-  if (!auth.isLoggedIn) return
   adding.value = true
   try {
     await cartStore.addToCart(props.product.id)
