@@ -9,16 +9,6 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
   },
   {
-    path: '/products',
-    name: 'products',
-    component: () => import('@/views/products/ProductsView.vue'),
-  },
-  {
-    path: '/products/:id',
-    name: 'product',
-    component: () => import('@/views/products/ProductDetailView.vue'),
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/auth/LoginView.vue'),
@@ -31,16 +21,24 @@ const routes: RouteRecordRaw[] = [
     meta: { guest: true },
   },
   {
+    path: '/products',
+    name: 'products',
+    component: () => import('@/views/products/ProductsView.vue'),
+  },
+  {
+    path: '/products/:id',
+    name: 'product',
+    component: () => import('@/views/products/ProductDetailView.vue'),
+  },
+  {
     path: '/cart',
     name: 'cart',
     component: () => import('@/views/cart/CartView.vue'),
-    meta: { auth: true },
   },
   {
     path: '/wishlist',
     name: 'wishlist',
     component: () => import('@/views/wishlist/WishlistView.vue'),
-    meta: { auth: true },
   },
   {
     path: '/orders',
