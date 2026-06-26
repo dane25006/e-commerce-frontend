@@ -1,149 +1,118 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 flex items-center justify-center px-4 py-12">
-    <!-- Background decoration -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-20 -left-20 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
-      <div class="absolute -bottom-10 -right-10 w-72 h-72 bg-violet-200/40 rounded-full blur-3xl" />
+  <AuthModal
+    eyebrow="Create profile"
+    title="Create account"
+    subtitle="Enter your details to start shopping today."
+    title-id="register-title"
+    @close="goHome"
+  >
+    <div
+      v-if="auth.error"
+      class="mb-5 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-700"
+    >
+      <i class="ti ti-alert-circle mt-0.5 shrink-0" aria-hidden="true" />
+      <span>{{ auth.error }}</span>
     </div>
 
-    <div class="relative w-full max-w-md">
-      <!-- Logo -->
-      <div class="text-center mb-8">
-        <RouterLink to="/" class="inline-flex items-center gap-2.5">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-300/40">
-            <i class="ti ti-sparkles text-white text-xl" aria-hidden="true" />
-          </div>
-          <div class="text-left">
-            <div class="text-lg font-black text-gray-900 tracking-wide">SCENTIQUE</div>
-            <div class="text-[9px] text-purple-500 tracking-[0.2em] font-bold">PERFUMES</div>
-          </div>
-        </RouterLink>
+    <form class="space-y-5" novalidate @submit.prevent="handleSubmit">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <AuthTextField
+          id="name"
+          v-model="form.name"
+          label="Full name"
+          autocomplete="name"
+          placeholder="Enter your name"
+          :error="errors.name"
+          @blur="validateField('name')"
+        />
+
+        <AuthTextField
+          id="email"
+          v-model="form.email"
+          label="Email"
+          type="email"
+          autocomplete="email"
+          placeholder="Enter your email"
+          :error="errors.email"
+          @blur="validateField('email')"
+        />
       </div>
 
-      <!-- Card -->
-      <div class="card-luxury p-8">
-        <div class="text-center mb-8">
-          <h1 class="text-2xl font-black text-gray-900">Create Account</h1>
-          <p class="text-sm text-gray-500 mt-1">Join Scentique and discover luxury fragrances</p>
+      <div class="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+        <div class="mb-4 flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-sm font-semibold text-slate-900">Password security</h2>
+            <p class="mt-1 text-xs text-slate-500">Use at least 8 characters.</p>
+          </div>
+          <span class="rounded-full bg-white px-3 py-1 text-xs font-medium" :class="strength.textColor">
+            {{ strength.label || 'Empty' }}
+          </span>
         </div>
 
-        <form @submit.prevent="handleRegister" class="space-y-4">
-          <!-- Name -->
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">Full Name</label>
-            <div class="relative">
-              <i class="ti ti-user absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400" aria-hidden="true" />
-              <input
-                v-model="form.name"
-                type="text"
-                required
-                autocomplete="name"
-                placeholder="Jane Doe"
-                class="w-full pl-10 pr-4 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20 transition"
-              />
-            </div>
-          </div>
-
-          <!-- Email -->
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">Email Address</label>
-            <div class="relative">
-              <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400" aria-hidden="true" />
-              <input
-                v-model="form.email"
-                type="email"
-                required
-                autocomplete="email"
-                placeholder="you@example.com"
-                class="w-full pl-10 pr-4 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20 transition"
-              />
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">Password</label>
-            <div class="relative">
-              <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400" aria-hidden="true" />
-              <input
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                required
-                autocomplete="new-password"
-                placeholder="Min. 8 characters"
-                class="w-full pl-10 pr-11 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20 transition"
-              />
-              <button type="button" @click="showPassword = !showPassword"
-                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition"
-                :aria-label="showPassword ? 'Hide password' : 'Show password'">
-                <i :class="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">Confirm Password</label>
-            <div class="relative">
-              <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400" aria-hidden="true" />
-              <input
-                v-model="form.password_confirmation"
-                :type="showPassword ? 'text' : 'password'"
-                required
-                autocomplete="new-password"
-                placeholder="Repeat password"
-                class="w-full pl-10 pr-4 py-3 text-sm border rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20 transition"
-                :class="passwordMismatch ? 'border-red-300 focus:ring-red-300' : 'border-purple-200'"
-              />
-            </div>
-            <p v-if="passwordMismatch" class="text-xs text-red-500 mt-1 flex items-center gap-1">
-              <i class="ti ti-alert-circle" aria-hidden="true" />
-              Passwords don't match
-            </p>
-          </div>
-
-          <!-- Error -->
-          <div v-if="auth.error" class="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-            <i class="ti ti-alert-circle flex-shrink-0" aria-hidden="true" />
-            {{ auth.error }}
-          </div>
-
-          <button
-            type="submit"
-            :disabled="auth.loading || passwordMismatch"
-            class="w-full btn-primary py-3.5 text-sm flex items-center justify-center gap-2 disabled:opacity-60 disabled:transform-none disabled:shadow-none"
+        <div class="grid gap-4 sm:grid-cols-2">
+          <AuthPasswordField
+            id="password"
+            v-model="form.password"
+            label="Password"
+            placeholder="Enter your password"
+            :error="errors.password"
+            @blur="validateField('password')"
           >
-            <i v-if="auth.loading" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
-            {{ auth.loading ? 'Creating account...' : 'Create Account' }}
-          </button>
-        </form>
+            <div class="mt-2 flex gap-1">
+              <span
+                v-for="n in 4"
+                :key="n"
+                class="h-1 flex-1 rounded-full transition-colors duration-300"
+                :class="n <= strength.score ? strength.color : 'bg-slate-200'"
+              />
+            </div>
+          </AuthPasswordField>
 
-        <!-- Divider -->
-        <div class="flex items-center gap-3 my-5">
-          <div class="flex-1 h-px bg-purple-100" />
-          <span class="text-xs text-gray-400 font-medium">or</span>
-          <div class="flex-1 h-px bg-purple-100" />
+          <AuthPasswordField
+            id="confirm"
+            v-model="form.password_confirmation"
+            label="Confirm password"
+            placeholder="Confirm your password"
+            :error="errors.password_confirmation"
+            @blur="validateField('password_confirmation')"
+          />
         </div>
-
-        <p class="text-center text-sm text-gray-500">
-          Already have an account?
-          <RouterLink to="/login" class="text-purple-600 hover:text-purple-800 font-bold ml-1">Sign in</RouterLink>
-        </p>
       </div>
 
-      <p class="text-center text-xs text-gray-400 mt-6">
-        <RouterLink to="/" class="hover:text-purple-600 transition">← Back to home</RouterLink>
-      </p>
+      <button
+        type="submit"
+        :disabled="auth.loading"
+        class="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <i v-if="auth.loading" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
+        <span>{{ auth.loading ? 'Creating account...' : 'Create account' }}</span>
+      </button>
+    </form>
+
+    <div class="my-5 flex items-center gap-3">
+      <div class="h-px flex-1 bg-slate-200" />
+      <span class="text-xs text-slate-400">or</span>
+      <div class="h-px flex-1 bg-slate-200" />
     </div>
-  </div>
+
+    <p class="text-center text-sm text-slate-500">
+      Already have an account?
+      <RouterLink to="/login" class="font-medium text-indigo-600 hover:underline">Sign in</RouterLink>
+    </p>
+  </AuthModal>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { computed, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import AuthModal from '@/components/auth/AuthModal.vue'
+import AuthPasswordField from '@/components/auth/AuthPasswordField.vue'
+import AuthTextField from '@/components/auth/AuthTextField.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
-const showPassword = ref(false)
+const router = useRouter()
+
 const form = reactive({
   name: '',
   email: '',
@@ -151,14 +120,75 @@ const form = reactive({
   password_confirmation: '',
 })
 
-const passwordMismatch = computed(() =>
-  form.password_confirmation.length > 0 && form.password !== form.password_confirmation
-)
+const errors = reactive({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
+})
 
-async function handleRegister() {
-  if (passwordMismatch.value) return
+const strength = computed(() => {
+  const pw = form.password
+  if (!pw) return { score: 0, label: '', color: 'bg-slate-200', textColor: 'text-slate-400' }
+
+  let score = 0
+  if (pw.length >= 8) score++
+  if (/[A-Z]/.test(pw)) score++
+  if (/[0-9]/.test(pw)) score++
+  if (/[^A-Za-z0-9]/.test(pw)) score++
+
+  const strengthMap: Record<number, { label: string; color: string; textColor: string }> = {
+    1: { label: 'Weak', color: 'bg-red-400', textColor: 'text-red-500' },
+    2: { label: 'Fair', color: 'bg-amber-400', textColor: 'text-amber-600' },
+    3: { label: 'Good', color: 'bg-blue-400', textColor: 'text-blue-600' },
+    4: { label: 'Strong', color: 'bg-green-500', textColor: 'text-green-600' },
+  }
+
+  return { score, ...strengthMap[score] }
+})
+
+type Field = keyof typeof form
+
+function goHome() {
+  router.push('/')
+}
+
+function validateField(field: Field) {
+  switch (field) {
+    case 'name':
+      errors.name = form.name ? '' : 'Full name is required.'
+      break
+    case 'email':
+      if (!form.email) errors.email = 'Email is required.'
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+        errors.email = 'Enter a valid email address.'
+      else errors.email = ''
+      break
+    case 'password':
+      if (!form.password) errors.password = 'Password is required.'
+      else if (form.password.length < 8) errors.password = 'Password must be at least 8 characters.'
+      else errors.password = ''
+      if (form.password_confirmation) validateField('password_confirmation')
+      break
+    case 'password_confirmation':
+      errors.password_confirmation =
+        form.password_confirmation !== form.password ? 'Passwords do not match.' : ''
+      break
+  }
+}
+
+function validateAll(): boolean {
+  ;(['name', 'email', 'password', 'password_confirmation'] as Field[]).forEach(validateField)
+  return Object.values(errors).every((error) => !error)
+}
+
+async function handleSubmit() {
+  if (!validateAll()) return
+
   try {
-    await auth.register(form)
-  } catch { /* handled by store */ }
+    await auth.register({ ...form })
+  } catch {
+    /* error set in store */
+  }
 }
 </script>
