@@ -74,7 +74,88 @@
       </div>
     </section>
 
-    <PromoBanner />
+    <!-- New Arrivals — horizontal scroll -->
+    <section class="py-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between mb-6">
+          <div>
+            <span class="section-label block mb-1">Fresh drops just landed</span>
+            <h2 class="text-2xl md:text-3xl font-black text-gray-900">New Arrivals</h2>
+          </div>
+          <RouterLink to="/products?sort=newest" class="btn-outline text-sm py-2 px-4 hidden sm:flex items-center gap-1.5">
+            View All
+            <i class="ti ti-arrow-right text-sm" aria-hidden="true" />
+          </RouterLink>
+        </div>
+        <div
+          class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
+          style="-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory"
+        >
+          <div v-if="newArrivalsLoading" class="flex gap-4">
+            <div v-for="n in 5" :key="n" class="w-52 shrink-0 card-luxury overflow-hidden animate-pulse">
+              <div class="skeleton" style="aspect-ratio:3/4" />
+              <div class="p-3 space-y-2">
+                <div class="h-3 skeleton w-2/3" />
+                <div class="h-3 skeleton w-1/2" />
+              </div>
+            </div>
+          </div>
+          <ProductCard
+            v-for="product in newArrivals"
+            :key="product.id"
+            :product="product"
+            class="w-52 shrink-0 snap-start"
+            @quick-view="openQuickView"
+          />
+        </div>
+        <div class="text-center mt-4 sm:hidden">
+          <RouterLink to="/products?sort=newest" class="btn-outline text-sm py-2 px-5">View All New Arrivals</RouterLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- Best Sellers — horizontal scroll -->
+    <section class="py-10 bg-white/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between mb-6">
+          <div>
+            <span class="section-label block mb-1">Most loved by customers</span>
+            <h2 class="text-2xl md:text-3xl font-black text-gray-900">Best Sellers</h2>
+          </div>
+          <RouterLink to="/products?sort=rating" class="btn-outline text-sm py-2 px-4 hidden sm:flex items-center gap-1.5">
+            View All
+            <i class="ti ti-arrow-right text-sm" aria-hidden="true" />
+          </RouterLink>
+        </div>
+        <div
+          class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
+          style="-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory"
+        >
+          <div v-if="bestSellersLoading" class="flex gap-4">
+            <div v-for="n in 5" :key="n" class="w-52 shrink-0 card-luxury overflow-hidden animate-pulse">
+              <div class="skeleton" style="aspect-ratio:3/4" />
+              <div class="p-3 space-y-2">
+                <div class="h-3 skeleton w-2/3" />
+                <div class="h-3 skeleton w-1/2" />
+              </div>
+            </div>
+          </div>
+          <ProductCard
+            v-for="product in bestSellers"
+            :key="product.id"
+            :product="product"
+            class="w-52 shrink-0 snap-start"
+            @quick-view="openQuickView"
+          />
+        </div>
+        <div class="text-center mt-4 sm:hidden">
+          <RouterLink to="/products?sort=rating" class="btn-outline text-sm py-2 px-5">View All Best Sellers</RouterLink>
+        </div>
+      </div>
+    </section>
+
+    <PromotionSection :promotions="promotions" />
+    <BannerSlider />
     <WhyChooseUs />
     <TestimonialsSection />
     <BlogSection />
@@ -129,7 +210,10 @@ import { useAuthStore } from '@/stores/auth'
 import { useProductStore } from '@/stores/product'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
+import { productService } from '@/services/productService'
+import { promotionService } from '@/services/promotionService'
 import type { Product } from '@/types/product'
+import type { Promotion } from '@/types/promotion'
 
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -139,10 +223,11 @@ import SearchModal from '@/components/layout/SearchModal.vue'
 
 import HeroBanner from '@/components/home/HeroBanner.vue'
 import CategorySection from '@/components/home/CategorySection.vue'
-import PromoBanner from '@/components/home/PromoBanner.vue'
+import BannerSlider from '@/components/home/BannerSlider.vue'
 import WhyChooseUs from '@/components/home/WhyChooseUs.vue'
 import TestimonialsSection from '@/components/home/TestimonialsSection.vue'
 import BlogSection from '@/components/home/BlogSection.vue'
+import PromotionSection from '@/components/home/PromotionSection.vue'
 
 import ProductCard from '@/components/product/ProductCard.vue'
 import ProductQuickView from '@/components/product/ProductQuickView.vue'
@@ -156,6 +241,11 @@ const selectedCategory = ref<number | null>(null)
 const searchOpen = ref(false)
 const cartOpen = ref(false)
 const quickViewProduct = ref<Product | null>(null)
+const newArrivals = ref<Product[]>([])
+const bestSellers = ref<Product[]>([])
+const promotions = ref<Promotion[]>([])
+const newArrivalsLoading = ref(false)
+const bestSellersLoading = ref(false)
 
 function onCategorySelect(id: number) {
   selectedCategory.value = selectedCategory.value === id ? null : id
@@ -172,9 +262,27 @@ watch(selectedCategory, (catId) => {
 onMounted(async () => {
   await productStore.fetchCategories()
   await productStore.fetchProducts({ per_page: 10 })
-  if (auth.isLoggedIn) {
-    await cartStore.fetchCart()
-    await wishlistStore.fetchWishlist()
-  }
+
+  newArrivalsLoading.value = true
+  bestSellersLoading.value = true
+
+  await Promise.all([
+    productService.getAll({ sort: 'newest', per_page: 8, page: 1 }).then(({ data }) => {
+      newArrivals.value = data.products.data
+    }).catch(() => {}).finally(() => { newArrivalsLoading.value = false }),
+
+    productService.getAll({ sort: 'rating', per_page: 8, page: 1 }).then(({ data }) => {
+      bestSellers.value = data.products.data
+    }).catch(() => {}).finally(() => { bestSellersLoading.value = false }),
+  ])
+
+  promotionService.getAll().then(({ data }) => {
+    promotions.value = data.promotions
+  }).catch(() => {})
+
+  await Promise.all([
+    cartStore.fetchCart(),
+    wishlistStore.fetchWishlist(),
+  ])
 })
 </script>
