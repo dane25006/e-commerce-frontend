@@ -251,8 +251,9 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useProductStore } from '@/stores/product'
 import { useAuthStore } from '@/stores/auth'
+import { useProductStore } from '@/stores/product'
+import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
 import { imageUrl } from '@/utils/image'
 import api from '@/plugins/axios'
@@ -268,6 +269,7 @@ import WishlistButton from '@/components/product/WishlistButton.vue'
 const route = useRoute()
 const store = useProductStore()
 const auth = useAuthStore()
+const cartStore = useCartStore()
 const wishlist = useWishlistStore()
 
 const searchOpen = ref(false)
@@ -316,8 +318,11 @@ function formatDate(dateStr: string): string {
 
 async function load() {
   const id = Number(route.params.id)
-  await store.fetchProduct(id)
-  if (auth.isLoggedIn) await wishlist.fetchWishlist()
+  await Promise.all([
+    store.fetchProduct(id),
+    cartStore.fetchCart(),
+    wishlist.fetchWishlist(),
+  ])
 }
 
 watch(() => route.params.id, load)
