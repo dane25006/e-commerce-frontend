@@ -11,7 +11,13 @@ export interface Product {
   slug: string
   description: string
   price: number
+  sale_price: number | null
   stock: number
+  is_new: boolean
+  gender?: string | null
+  brand?: string | null
+  type?: string | null
+  department?: string | null
   image_url: string | null
   category: Category | null
   created_at: string
@@ -19,6 +25,13 @@ export interface Product {
   rating_count?: number
   reviews?: Review[]
   related?: RelatedProduct[]
+}
+
+export interface FilterValues {
+  genders:     string[]
+  brands:      string[]
+  types:       string[]
+  departments: string[]
 }
 
 export interface Review {
