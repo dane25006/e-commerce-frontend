@@ -1,22 +1,41 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import api from '@/plugins/axios'
+import { getGuestToken } from '@/utils/guest'
 
-interface WishlistItem {
+export interface WishlistItem {
   wishlist_id: number
-  product: { id: number; name: string; price: number; image_url: string | null }
+  product: {
+    id: number
+    name: string
+    slug: string
+    description: string
+    price: number
+    sale_price: number | null
+    stock: number
+    is_new: boolean
+    image_url: string | null
+    category: { id: number; name: string; slug: string } | null
+    created_at: string
+  }
 }
 
 export const useWishlistStore = defineStore('wishlist', () => {
   const items = ref<WishlistItem[]>([])
 
+  const itemIds = computed(() => new Set(items.value.map(w => w.product.id)))
+
   function isWishlisted(productId: number): boolean {
-    return items.value.some(w => w.product.id === productId)
+    return itemIds.value.has(productId)
   }
 
   async function fetchWishlist() {
     try {
-      const { data } = await api.get<{ wishlist: WishlistItem[] }>('/wishlist')
+      const params: Record<string, string> = {}
+      const token = getGuestToken()
+      if (token) params.guest_token = token
+
+      const { data } = await api.get<{ wishlist: WishlistItem[]; count: number }>('/wishlist', { params })
       items.value = data.wishlist
     } catch {
       items.value = []
@@ -24,9 +43,12 @@ export const useWishlistStore = defineStore('wishlist', () => {
   }
 
   async function toggle(productId: number) {
-    await api.post('/wishlist/toggle', { product_id: productId })
+    await api.post('/wishlist/toggle', {
+      product_id: productId,
+      guest_token: getGuestToken(),
+    })
     await fetchWishlist()
   }
 
-  return { items, isWishlisted, fetchWishlist, toggle }
+  return { items, itemIds, isWishlisted, fetchWishlist, toggle }
 })
