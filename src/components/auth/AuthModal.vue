@@ -32,13 +32,13 @@
                 <i class="ti ti-shopping-bag text-xl" aria-hidden="true" />
               </div>
               <p class="text-sm font-medium uppercase tracking-[0.18em] text-indigo-200">
-                New account
+                {{ eyebrow }}
               </p>
-              <h2 class="mt-3 text-3xl font-semibold leading-tight">
-                Shop faster with a personal account.
+              <h2 :id="titleId" class="mt-3 text-3xl font-semibold leading-tight">
+                {{ title }}
               </h2>
               <p class="mt-4 text-sm leading-6 text-slate-300">
-                Save your profile, track orders, and keep checkout details ready for next time.
+                {{ subtitle }}
               </p>
             </div>
 
