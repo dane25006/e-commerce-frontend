@@ -56,38 +56,23 @@
     </div>
 
     <!-- price range -->
-    <div>
-      <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-        Price range
-      </label>
-      <div class="flex items-center gap-2">
-        <input
-          :value="modelValue.min_price"
-          @input="emit('update:modelValue', {
-            ...modelValue,
-            min_price: Number(($event.target as HTMLInputElement).value) || undefined,
-            page: 1,
-          })"
-          type="number"
-          min="0"
-          placeholder="Min"
-          class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none
-                 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-        />
-        <span class="text-gray-300 flex-shrink-0">—</span>
-        <input
-          :value="modelValue.max_price"
-          @input="emit('update:modelValue', {
-            ...modelValue,
-            max_price: Number(($event.target as HTMLInputElement).value) || undefined,
-            page: 1,
-          })"
-          type="number"
-          min="0"
-          placeholder="Max"
-          class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none
-                 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-        />
+    <div class="border-t border-gray-100 pt-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-gray-900">Price</h3>
+        <i class="ti ti-chevron-up text-gray-400 text-sm" aria-hidden="true" />
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button
+          v-for="r in priceRanges"
+          :key="r.label"
+          @click="emit('update:modelValue', { ...modelValue, min_price: r.min, max_price: r.max, page: 1 })"
+          class="px-4 py-2 text-sm font-medium rounded-md border transition duration-300"
+          :class="isActive(r)
+            ? 'bg-purple-600 text-white border-purple-600'
+            : 'bg-white text-gray-700 border-gray-300 hover:border-purple-400 hover:bg-purple-50'"
+        >
+          {{ r.label }}
+        </button>
       </div>
     </div>
 
@@ -105,10 +90,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { ProductParams } from '@/services/productService'
 import type { Category } from '@/types/product'
 
-defineProps<{
+const props = defineProps<{
   modelValue:    ProductParams
   categories:    Category[]
   totalProducts: number
@@ -118,4 +104,15 @@ const emit = defineEmits<{
   'update:modelValue': [val: ProductParams]
   'reset':             []
 }>()
+
+const priceRanges = [
+  { label: 'Under $10',  min: 0,   max: 10 },
+  { label: '$10 – $25',  min: 10,  max: 25 },
+  { label: '$25 – $50',  min: 25,  max: 50 },
+  { label: '$50+',       min: 50,  max: undefined },
+]
+
+function isActive(r: typeof priceRanges[number]): boolean {
+  return props.modelValue.min_price === r.min && props.modelValue.max_price === r.max
+}
 </script>
