@@ -22,13 +22,38 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import api from '@/plugins/axios'
 
 const auth = useAuthStore()
+const route = useRoute()
+const router = useRouter()
 const ready = ref(false)
 
 onMounted(async () => {
-  await auth.boot()
+  const token = route.query.auth_token as string | undefined
+
+  if (token && token !== 'undefined' && token !== 'null') {
+    localStorage.setItem('scentique_auth_token', token)
+    localStorage.setItem('scentique_has_session', 'true')
+
+    try {
+      const { data } = await api.get<{ user: import('@/types/auth').User }>('/profile', {
+        skipAuthRedirect: true,
+      })
+      auth.user = data.user
+      auth.hasSession = true
+    } catch {
+      localStorage.removeItem('scentique_auth_token')
+      localStorage.removeItem('scentique_has_session')
+    }
+
+    router.replace({ query: {} })
+  } else {
+    await auth.boot()
+  }
+
   ready.value = true
 })
 </script>
