@@ -5,6 +5,7 @@ import { getGuestToken } from '@/utils/guest'
 
 export interface WishlistItem {
   wishlist_id: number
+  status: string
   product: {
     id: number
     name: string
