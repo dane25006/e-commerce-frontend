@@ -5,6 +5,12 @@ export interface Category {
   products_count?: number
 }
 
+export interface ProductImage {
+  id: number
+  image_url: string
+  sort_order: number
+}
+
 export interface Product {
   id: number
   name: string
@@ -19,6 +25,7 @@ export interface Product {
   type?: string | null
   department?: string | null
   image_url: string | null
+  images?: ProductImage[]
   category: Category | null
   created_at: string
   rating_avg?: number | null

@@ -3,6 +3,8 @@ export interface User {
   name: string
   email: string
   role: 'customer' | 'admin'
+  avatar: string | null
+  google_id: string | null
   created_at: string
 }
 
@@ -25,6 +27,7 @@ export interface ChangePasswordPayload {
 }
 
 export interface AuthResponse {
+  success: boolean
   message: string
   user: User
   token?: string

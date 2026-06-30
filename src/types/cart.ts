@@ -11,6 +11,7 @@ export interface CartProduct {
 export interface CartItem {
   cart_id: number
   quantity: number
+  status: string
   subtotal: number
   product: CartProduct
 }
