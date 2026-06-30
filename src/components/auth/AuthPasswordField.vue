@@ -1,28 +1,37 @@
 <template>
-  <div>
-    <label :for="id" class="mb-1 block text-sm font-medium text-slate-700">{{ label }}</label>
-    <div class="relative">
+  <div class="field-wrapper">
+    <div
+      class="field-inner"
+      :class="{ 'field-error': error }"
+      :style="{
+        borderRadius: 'var(--radius-sm)',
+        border: error ? '1px solid #E53935' : '1px solid var(--border)',
+        background: error ? '#FFF5F5' : 'var(--surface)',
+      }"
+    >
       <input
         :id="id"
         v-model="model"
         :type="visible ? 'text' : 'password'"
         :autocomplete="autocomplete"
-        :placeholder="placeholder"
-        class="w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-        :class="inputClasses"
+        :placeholder="placeholder || ' '"
+        class="field-input"
+        :style="{ color: 'var(--text)', paddingRight: '44px' }"
         @blur="emit('blur')"
       />
+      <label :for="id" class="field-label" :style="{ color: error ? '#E53935' : 'var(--text-muted)' }">
+        {{ label }}
+      </label>
       <button
         type="button"
-        class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700"
+        class="field-toggle"
         :aria-label="visible ? 'Hide password' : 'Show password'"
         @click="visible = !visible"
       >
         <i :class="visible ? 'ti ti-eye-off' : 'ti ti-eye'" class="text-lg" aria-hidden="true" />
       </button>
     </div>
-    <p v-if="error" class="mt-1 text-xs text-red-600">{{ error }}</p>
-
+    <p v-if="error" class="mt-1.5 text-xs font-medium px-1" style="color: #E53935;">{{ error }}</p>
     <slot />
   </div>
 </template>
@@ -52,10 +61,92 @@ const emit = defineEmits<{
 }>()
 
 const visible = ref(false)
-
-const inputClasses = computed(() =>
-  props.error
-    ? 'border-red-400 bg-red-50/80 text-red-900 placeholder-red-300'
-    : 'border-slate-300 bg-white/80 text-slate-950 placeholder-slate-400',
-)
 </script>
+
+<style scoped>
+.field-wrapper {
+  width: 100%;
+}
+
+.field-inner {
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.field-inner:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(184, 138, 68, 0.12);
+  background: var(--surface);
+}
+
+.field-inner.field-error:focus-within {
+  border-color: #E53935 !important;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+}
+
+.field-input {
+  width: 100%;
+  padding: 22px 44px 6px 14px;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  outline: none;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.field-input::placeholder {
+  color: transparent;
+}
+
+.field-label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+  font-weight: 400;
+}
+
+.field-input:focus ~ .field-label,
+.field-input:not(:placeholder-shown) ~ .field-label {
+  top: 10px;
+  transform: translateY(0);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.field-input:focus ~ .field-label {
+  color: var(--primary) !important;
+}
+
+.field-error .field-input:focus ~ .field-label {
+  color: #E53935 !important;
+}
+
+.field-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s;
+  color: var(--text-muted);
+}
+
+.field-toggle:hover {
+  color: var(--primary);
+}
+</style>

@@ -4,64 +4,94 @@
 
     <button
       type="button"
-      class="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-md"
+      class="fixed inset-0 z-40"
+      :style="{ background: 'rgba(34,34,34,0.5)', backdropFilter: 'blur(8px)' }"
       aria-label="Close auth dialog"
       @click="emit('close')"
     />
 
     <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto px-4 py-8">
-      <Transition name="slide-up" appear>
+      <Transition name="modal" appear>
         <section
-          class="relative my-auto grid w-full max-w-4xl overflow-hidden rounded-2xl border border-white/40 bg-white/90 shadow-2xl ring-1 ring-black/5 backdrop-blur-xl md:grid-cols-[0.9fr_1.1fr]"
+          class="relative my-auto grid w-full max-w-4xl overflow-hidden"
+          :style="{
+            borderRadius: 'var(--radius)',
+            background: 'var(--surface)',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.12)',
+          }"
           role="dialog"
           aria-modal="true"
           :aria-labelledby="titleId"
         >
           <button
             type="button"
-            class="absolute right-4 top-4 z-10 rounded-lg p-1.5 text-slate-400 transition hover:bg-white/70 hover:text-slate-700"
+            class="absolute right-5 top-5 z-10 flex h-8 w-8 items-center justify-center rounded-full transition"
+            :style="{ color: 'var(--text-muted)' }"
             aria-label="Close"
             @click="emit('close')"
           >
             <i class="ti ti-x text-lg" aria-hidden="true" />
           </button>
 
-          <aside class="hidden bg-slate-950 p-8 text-white md:flex md:flex-col md:justify-between">
+          <aside
+            class="hidden md:flex md:flex-col md:justify-between p-10"
+            :style="{
+              background: 'linear-gradient(160deg, #2C2C2C, #1A1A1A)',
+              color: '#FFFFFF',
+            }"
+          >
             <div>
-              <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
-                <i class="ti ti-shopping-bag text-xl" aria-hidden="true" />
+              <div
+                class="mb-6 flex h-12 w-12 items-center justify-center"
+                :style="{
+                  background: 'linear-gradient(135deg, var(--primary), var(--primary-hover))',
+                  borderRadius: 'var(--radius-sm)',
+                }"
+              >
+                <i class="ti ti-sparkles text-xl text-white" aria-hidden="true" />
               </div>
-              <p class="text-sm font-medium uppercase tracking-[0.18em] text-indigo-200">
+              <p class="text-xs font-semibold uppercase tracking-[0.2em]" :style="{ color: 'rgba(255,255,255,0.5)' }">
                 {{ eyebrow }}
               </p>
-              <h2 :id="titleId" class="mt-3 text-3xl font-semibold leading-tight">
+              <h2 :id="titleId" class="mt-4 text-3xl font-bold leading-tight" style="font-family: 'Playfair Display', serif;">
                 {{ title }}
               </h2>
-              <p class="mt-4 text-sm leading-6 text-slate-300">
+              <p class="mt-4 text-sm leading-relaxed" :style="{ color: 'rgba(255,255,255,0.6)' }">
                 {{ subtitle }}
               </p>
             </div>
 
-            <div class="grid gap-3 text-sm text-slate-200">
+            <!-- Gold accent line -->
+            <div class="my-8 h-px w-16" :style="{ background: 'var(--primary)' }" />
+
+            <div class="grid gap-4 text-sm" :style="{ color: 'rgba(255,255,255,0.55)' }">
               <div class="flex items-center gap-3">
-                <i class="ti ti-shield-check text-indigo-300" aria-hidden="true" />
+                <i class="ti ti-shield-check" :style="{ color: 'var(--primary)' }" aria-hidden="true" />
                 <span>Secure customer profile</span>
               </div>
               <div class="flex items-center gap-3">
-                <i class="ti ti-truck-delivery text-indigo-300" aria-hidden="true" />
+                <i class="ti ti-truck-delivery" :style="{ color: 'var(--primary)' }" aria-hidden="true" />
                 <span>Order history in one place</span>
               </div>
             </div>
           </aside>
 
-          <div class="p-6 sm:p-8">
-            <header class="mb-6 pr-8">
-              <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 md:hidden">
-                <i class="ti ti-shopping-bag text-base text-white" aria-hidden="true" />
+          <div class="p-8 sm:p-10">
+            <header class="mb-8 pr-8">
+              <div
+                class="mb-4 flex h-10 w-10 items-center justify-center md:hidden"
+                :style="{
+                  background: 'linear-gradient(135deg, var(--primary), var(--primary-hover))',
+                  borderRadius: 'var(--radius-sm)',
+                }"
+              >
+                <i class="ti ti-sparkles text-sm text-white" aria-hidden="true" />
               </div>
-              <p class="text-sm font-medium text-indigo-600">{{ eyebrow }}</p>
-              <h1 :id="titleId" class="mt-1 text-2xl font-semibold text-slate-950">{{ title }}</h1>
-              <p class="mt-1 text-sm text-slate-500">{{ subtitle }}</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em]" :style="{ color: 'var(--primary)' }">{{ eyebrow }}</p>
+              <h1 :id="titleId" class="mt-2 text-2xl font-bold" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">{{ title }}</h1>
+              <!-- Gold accent line -->
+              <div class="mt-3 h-0.5 w-10" :style="{ background: 'var(--primary)' }" />
+              <p class="mt-3 text-sm" :style="{ color: 'var(--text-muted)' }">{{ subtitle }}</p>
             </header>
 
             <slot />
@@ -103,18 +133,18 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.slide-up-enter-active {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.modal-enter-active {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.slide-up-leave-active {
+.modal-leave-active {
   transition: all 0.2s ease-in;
 }
-.slide-up-enter-from {
+.modal-enter-from {
   opacity: 0;
-  transform: translateY(32px) scale(0.97);
+  transform: translateY(30px) scale(0.96);
 }
-.slide-up-leave-to {
+.modal-leave-to {
   opacity: 0;
-  transform: translateY(16px) scale(0.97);
+  transform: translateY(15px) scale(0.96);
 }
 </style>
