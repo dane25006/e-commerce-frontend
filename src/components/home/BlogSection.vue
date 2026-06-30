@@ -1,48 +1,38 @@
 <template>
-  <section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between mb-10">
+  <section class="blog-section">
+    <div class="section-container">
+      <div class="section-header">
         <div>
-          <span class="section-label block mb-2">From Our Blog</span>
-          <h2 class="text-3xl md:text-4xl font-black text-gray-900">News, Tips &amp; Inspiration</h2>
+          <span class="section-label">From Our Blog</span>
+          <h2 class="section-title">Perfume Journal</h2>
         </div>
-        <button class="btn-outline text-sm py-2 px-5 hidden sm:block">View All Posts</button>
+        <button class="btn-secondary desktop-btn">View All Posts</button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="blog-grid">
         <article
           v-for="post in posts"
           :key="post.slug"
-          class="card-luxury overflow-hidden group cursor-pointer"
+          class="card blog-card"
         >
-          <!-- Image -->
-          <div class="relative overflow-hidden aspect-video bg-gradient-to-br"
-            :class="post.gradient">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <i :class="`ti ${post.icon} text-5xl text-white/60`" aria-hidden="true" />
-            </div>
-            <!-- Date badge -->
-            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold text-purple-700 px-2.5 py-1 rounded-full">
-              {{ post.date }}
-            </div>
+          <div class="blog-image" :style="{ background: post.gradient }">
+            <i :class="`ti ${post.icon}`" class="blog-image-icon" aria-hidden="true" />
+            <span class="blog-date">{{ post.date }}</span>
           </div>
 
-          <!-- Content -->
-          <div class="p-5">
-            <span class="text-[10px] font-bold text-purple-500 uppercase tracking-wider">{{ post.category }}</span>
-            <h3 class="text-sm font-bold text-gray-900 mt-1 mb-2 leading-snug group-hover:text-purple-700 transition line-clamp-2">
-              {{ post.title }}
-            </h3>
-            <p class="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-2">{{ post.excerpt }}</p>
-            <div class="flex items-center text-xs font-semibold text-purple-600 hover:text-purple-800 transition">
-              Read More <i class="ti ti-arrow-right ml-1" aria-hidden="true" />
+          <div class="blog-body">
+            <span class="blog-category">{{ post.category }}</span>
+            <h3 class="blog-title">{{ post.title }}</h3>
+            <p class="blog-excerpt">{{ post.excerpt }}</p>
+            <div class="blog-read-more">
+              Read More <i class="ti ti-arrow-right" aria-hidden="true" />
             </div>
           </div>
         </article>
       </div>
 
-      <div class="text-center mt-8 sm:hidden">
-        <button class="btn-outline text-sm py-2.5 px-6">View All Posts</button>
+      <div class="mobile-btn-wrap">
+        <button class="btn-secondary">View All Posts</button>
       </div>
     </div>
   </section>
@@ -57,7 +47,7 @@ const posts = [
     title: 'The Top 5 Fragrances Taking Over 2025',
     excerpt: 'Discover the scents that have been flying off shelves this season and why experts are raving about them.',
     icon: 'ti-sparkles',
-    gradient: 'from-pink-200 to-purple-300',
+    gradient: 'linear-gradient(135deg, #C9A96E50, #B08D5740)',
   },
   {
     slug: 'how-to-choose-perfume',
@@ -66,7 +56,7 @@ const posts = [
     title: 'How to Choose the Perfect Perfume for Any Occasion',
     excerpt: 'A fragrance expert\'s guide to matching your scent to your mood, event, and season.',
     icon: 'ti-heart',
-    gradient: 'from-violet-200 to-indigo-300',
+    gradient: 'linear-gradient(135deg, #B08D5740, #4A403A30)',
   },
   {
     slug: 'fragrance-layering',
@@ -75,7 +65,155 @@ const posts = [
     title: 'The Art of Fragrance Layering: Make Your Scent Last Longer',
     excerpt: 'Learn the secrets professional perfumers use to create a unique, long-lasting signature scent.',
     icon: 'ti-layers',
-    gradient: 'from-fuchsia-200 to-purple-300',
+    gradient: 'linear-gradient(135deg, #B08D5730, #C9A96E40)',
   },
 ]
 </script>
+
+<style scoped>
+.blog-section {
+  padding: 80px 24px;
+  background: var(--background);
+}
+
+.section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text);
+  margin: 8px 0 0;
+}
+
+.desktop-btn {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .desktop-btn {
+    display: inline-flex;
+  }
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .blog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.blog-card {
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+}
+
+.blog-image {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.blog-image-icon {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.blog-date {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 100px;
+  color: var(--primary);
+}
+
+.blog-body {
+  padding: 24px;
+}
+
+.blog-category {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.blog-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 8px 0 10px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.blog-excerpt {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.blog-read-more {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  transition: gap 0.2s;
+}
+
+.blog-card:hover .blog-read-more {
+  gap: 10px;
+}
+
+.mobile-btn-wrap {
+  text-align: center;
+  margin-top: 32px;
+}
+
+@media (min-width: 640px) {
+  .mobile-btn-wrap {
+    display: none;
+  }
+}
+</style>

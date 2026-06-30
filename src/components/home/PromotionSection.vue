@@ -1,59 +1,51 @@
 <template>
-  <section v-if="promotions.length" class="py-14">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between mb-8">
+  <section v-if="promotions.length" class="promo-section">
+    <div class="section-container">
+      <div class="section-header">
         <div>
-          <span class="section-label block mb-2">Hot Deals</span>
-          <h2 class="text-3xl md:text-4xl font-black text-gray-900">
-            Special Promotions
-          </h2>
+          <span class="section-label">Hot Deals</span>
+          <h2 class="section-title">Special Promotions</h2>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="promo-grid">
         <div
           v-for="promo in promotions"
           :key="promo.id"
-          class="card-luxury overflow-hidden group relative"
+          class="card promo-card"
         >
-          <!-- Image -->
-          <div class="aspect-[16/9] overflow-hidden bg-gradient-to-br from-purple-100 to-violet-200 relative">
-            <div v-if="promo.image_url" class="w-full h-full">
+          <div class="promo-image">
+            <div v-if="promo.image_url" class="promo-img-wrap">
               <img
                 :src="promo.image_url"
                 :alt="promo.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                class="promo-img"
               />
             </div>
-            <div v-else class="w-full h-full flex items-center justify-center">
-              <i class="ti ti-discount text-6xl text-purple-300/60" aria-hidden="true" />
+            <div v-else class="promo-img-placeholder">
+              <i class="ti ti-discount promo-placeholder-icon" aria-hidden="true" />
             </div>
-            <!-- Badge -->
-            <div class="absolute top-3 right-3 bg-gradient-to-r from-purple-600 to-violet-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+            <div class="promo-discount-badge">
               {{ promo.discount_type === 'percentage' ? `${promo.discount_value}% OFF` : `$${promo.discount_value} OFF` }}
             </div>
-            <div v-if="promo.coupon_code" class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm text-purple-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">
+            <div v-if="promo.coupon_code" class="promo-coupon">
               Code: {{ promo.coupon_code }}
             </div>
           </div>
 
-          <!-- Content -->
-          <div class="p-5">
-            <h3 class="text-base font-bold text-gray-900 mb-1 line-clamp-1">{{ promo.title }}</h3>
-            <p v-if="promo.description" class="text-sm text-gray-500 line-clamp-2 mb-3">{{ promo.description }}</p>
+          <div class="promo-body">
+            <h3 class="promo-title">{{ promo.title }}</h3>
+            <p v-if="promo.description" class="promo-desc">{{ promo.description }}</p>
 
-            <div v-if="promo.product" class="flex items-center justify-between mt-3 pt-3 border-t border-purple-100">
-              <span class="text-sm text-gray-600">{{ promo.product.name }}</span>
-              <span class="text-sm font-bold text-purple-700">${{ promo.product.price.toFixed(2) }}</span>
+            <div v-if="promo.product" class="promo-product">
+              <span class="promo-product-name">{{ promo.product.name }}</span>
+              <span class="promo-product-price">${{ promo.product.price.toFixed(2) }}</span>
             </div>
 
-            <!-- Countdown -->
-            <div v-if="promo.ends_at" class="mt-3 pt-3 border-t border-purple-100">
-              <div class="flex items-center gap-2">
-                <i class="ti ti-clock text-purple-400 text-sm" aria-hidden="true" />
-                <span class="text-xs text-gray-500 font-medium">Ends in</span>
-                <span class="text-xs font-bold text-purple-700">{{ timeLeft(promo.ends_at) }}</span>
-              </div>
+            <div v-if="promo.ends_at" class="promo-timer">
+              <i class="ti ti-clock promo-timer-icon" aria-hidden="true" />
+              <span class="promo-timer-label">Ends in</span>
+              <span class="promo-timer-value">{{ timeLeft(promo.ends_at) }}</span>
             </div>
           </div>
         </div>
@@ -77,3 +69,189 @@ function timeLeft(dateStr: string): string {
   return `${hours}h ${mins}m left`
 }
 </script>
+
+<style scoped>
+.promo-section {
+  padding: 80px 24px;
+  background: var(--surface);
+}
+
+.section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text);
+  margin: 8px 0 0;
+}
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .promo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .promo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.promo-card {
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+}
+
+.promo-image {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(135deg, #EDE7DE, #E3DACF);
+}
+
+.promo-img-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.promo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.promo-card:hover .promo-img {
+  transform: scale(1.05);
+}
+
+.promo-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.promo-placeholder-icon {
+  font-size: 64px;
+  color: rgba(184,138,68,0.18);
+}
+
+.promo-discount-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 14px;
+  color: var(--surface);
+  background: linear-gradient(135deg, var(--primary), #8E6F3E);
+  box-shadow: 0 4px 12px rgba(184,138,68,0.3);
+}
+
+.promo-coupon {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 100px;
+  color: var(--primary);
+}
+
+.promo-body {
+  padding: 20px 24px 24px;
+}
+
+.promo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.promo-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.promo-product {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.promo-product-name {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.promo-product-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.promo-timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.promo-timer-icon {
+  font-size: 13px;
+  color: var(--primary);
+}
+
+.promo-timer-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.promo-timer-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+}
+</style>

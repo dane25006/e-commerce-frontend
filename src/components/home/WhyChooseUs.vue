@@ -1,21 +1,22 @@
 <template>
-  <section class="py-14 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-10">
-        <span class="section-label">Why Choose Scentique?</span>
+  <section class="why-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-label">Why Scentique?</span>
+        <h2 class="section-title">The Luxury Difference</h2>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+      <div class="features-grid">
         <div
           v-for="feature in features"
           :key="feature.title"
-          class="flex flex-col items-center text-center p-4 md:p-5 rounded-2xl hover:bg-purple-50 transition-all duration-300 group cursor-default"
+          class="card feature-card"
         >
-          <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-purple-50 group-hover:bg-purple-100 flex items-center justify-center mb-3 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-purple-200/50">
-            <i :class="`ti ${feature.icon} text-xl md:text-2xl text-purple-600`" aria-hidden="true" />
+          <div class="feature-icon-wrap">
+            <i :class="`ti ${feature.icon}`" aria-hidden="true" />
           </div>
-          <h3 class="text-xs md:text-sm font-bold text-gray-900 mb-1 leading-tight">{{ feature.title }}</h3>
-          <p class="text-[11px] md:text-xs text-gray-500 leading-relaxed">{{ feature.desc }}</p>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-desc">{{ feature.desc }}</p>
         </div>
       </div>
     </div>
@@ -24,11 +25,93 @@
 
 <script setup lang="ts">
 const features = [
-  { icon: 'ti-diamond', title: 'Premium Quality', desc: 'Finest ingredients from around the world' },
-  { icon: 'ti-clock', title: 'Long Lasting', desc: 'Scents that stay with you all day' },
-  { icon: 'ti-leaf', title: 'Cruelty Free', desc: 'We never test on animals' },
-  { icon: 'ti-shield-lock', title: 'Secure Payment', desc: '100% secure & safe checkout' },
+  { icon: 'ti-diamond', title: '100% Authentic', desc: 'Guaranteed genuine luxury perfumes' },
+  { icon: 'ti-truck', title: 'Fast Delivery', desc: 'Free shipping on orders over $100' },
+  { icon: 'ti-shield-lock', title: 'Secure Payment', desc: '100% safe & secure checkout' },
   { icon: 'ti-refresh', title: 'Easy Returns', desc: 'Hassle-free return within 30 days' },
-  { icon: 'ti-world', title: 'Worldwide Shipping', desc: 'Fast delivery to your doorstep' },
 ]
 </script>
+
+<style scoped>
+.why-section {
+  padding: 80px 24px;
+  background: var(--background);
+}
+
+.section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text);
+  margin: 8px 0 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.feature-card {
+  text-align: center;
+  padding: 40px 24px;
+  cursor: default;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.feature-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  background: rgba(184, 138, 68, 0.1);
+  font-size: 24px;
+  color: var(--primary);
+  transition: all 0.4s ease;
+}
+
+.feature-card:hover .feature-icon-wrap {
+  background: var(--primary);
+  color: var(--surface);
+  transform: scale(1.05);
+}
+
+.feature-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.feature-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+</style>

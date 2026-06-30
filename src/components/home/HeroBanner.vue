@@ -1,105 +1,84 @@
 <template>
-  <section class="relative overflow-hidden bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50" style="min-height: 520px;">
-    <!-- Background decorations -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-20 -right-20 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
-      <div class="absolute -bottom-10 -left-10 w-72 h-72 bg-violet-200/40 rounded-full blur-3xl" />
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-fuchsia-100/20 rounded-full blur-3xl" />
-    </div>
-
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      <div class="flex flex-col md:flex-row items-center gap-12">
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-inner">
 
         <!-- Left Content -->
-        <div class="md:w-1/2 text-center md:text-left slide-up">
-          <span class="inline-block section-label mb-4">
-            ✦ Dare to be Unforgettable
-          </span>
+        <div class="hero-content">
+          <div class="fade-up">
+            <span class="hero-badge">
+              <i class="ti ti-sparkles" aria-hidden="true" />
+              New Collection 2026
+            </span>
 
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-6">
-            Fragrance That<br />
-            Defines <em class="text-gradient not-italic">You</em>
-          </h1>
+            <h1 class="hero-title">
+              Discover Your<br />
+              <span class="hero-title-accent">Signature Scent</span>
+            </h1>
 
-          <p class="text-base md:text-lg text-gray-500 leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
-            Discover luxury scents crafted with passion to leave a lasting impression.
-          </p>
+            <p class="hero-description">
+              Luxury fragrances crafted with the finest ingredients from around the world. Elevate every moment with our exclusive collection.
+            </p>
 
-          <div class="flex items-center gap-4 justify-center md:justify-start">
-            <RouterLink to="/products" class="btn-primary flex items-center gap-2 text-sm py-3 px-6">
-              Shop Now
-              <i class="ti ti-arrow-right" aria-hidden="true" />
-            </RouterLink>
+            <div class="hero-actions">
+              <RouterLink to="/products" class="btn-primary hero-btn-primary">
+                Shop Now
+                <i class="ti ti-arrow-right" aria-hidden="true" />
+              </RouterLink>
 
-            <button
-              @click="scrollToFeatured"
-              class="flex items-center gap-2.5 text-sm font-semibold text-gray-700 hover:text-purple-700 transition"
-            >
-              <div class="w-10 h-10 rounded-full border-2 border-gray-300 hover:border-purple-400 flex items-center justify-center transition">
-                <i class="ti ti-player-play-filled text-sm text-gray-500" aria-hidden="true" />
+              <RouterLink to="/products?sort=newest" class="hero-btn-secondary">
+                <span class="hero-btn-circle">
+                  <i class="ti ti-eye" aria-hidden="true" />
+                </span>
+                Explore Collection
+              </RouterLink>
+            </div>
+
+            <!-- Trust badges -->
+            <div class="hero-badges">
+              <div v-for="badge in badges" :key="badge.label" class="hero-badge-item">
+                <div class="hero-badge-icon">
+                  <i :class="badge.icon" aria-hidden="true" />
+                </div>
+                <span class="hero-badge-label">{{ badge.label }}</span>
               </div>
-              Watch Video
-            </button>
-          </div>
-
-          <!-- Trust badges -->
-          <div class="flex items-center gap-6 mt-10 justify-center md:justify-start">
-            <div v-for="badge in badges" :key="badge.label" class="flex items-center gap-1.5">
-              <i :class="badge.icon" class="text-purple-500" aria-hidden="true" />
-              <span class="text-xs text-gray-500 font-medium">{{ badge.label }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Right Image Area -->
-        <div class="md:w-1/2 flex items-center justify-center fade-in">
-          <div class="relative w-72 h-72 md:w-96 md:h-96">
-            <!-- Glow -->
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-300/40 to-violet-400/30 rounded-full blur-3xl scale-110" />
+        <!-- Right Image -->
+        <div class="hero-visual">
+          <div class="hero-image-wrapper fade-up" style="animation-delay: 0.2s;">
+            <div class="hero-image-glow" />
 
-            <!-- Main circle background -->
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-100 to-violet-200 rounded-full" />
+            <div class="hero-image-frame">
+              <img
+                src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&q=80"
+                alt="Luxury perfume collection"
+                class="hero-image"
+                loading="eager"
+              />
 
-            <!-- Decorative circles -->
-            <div class="absolute -top-4 -right-4 w-20 h-20 bg-purple-200/60 rounded-full blur-sm" />
-            <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-violet-200/60 rounded-full blur-sm" />
-            <div class="absolute top-1/4 -left-8 w-12 h-12 bg-fuchsia-200/80 rounded-full" />
+              <!-- Glass overlay -->
+              <div class="hero-image-overlay" />
 
-            <!-- Perfume bottle placeholder -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="text-center">
-                <div class="w-32 h-48 md:w-40 md:h-56 bg-gradient-to-b from-purple-300 via-violet-400 to-purple-600 rounded-t-full rounded-b-2xl mx-auto shadow-2xl shadow-purple-400/40 flex items-end justify-center pb-4">
-                  <span class="text-white/80 text-xs font-bold tracking-widest uppercase">Scentique</span>
-                </div>
-                <!-- Bottle cap -->
-                <div class="-mt-2 w-10 h-6 md:w-12 md:h-8 bg-gray-900 rounded-t-lg mx-auto" />
-              </div>
-            </div>
-
-            <!-- Floating flowers (decorative) -->
-            <div class="absolute top-4 right-8 text-2xl" aria-hidden="true">🌸</div>
-            <div class="absolute bottom-8 right-4 text-xl" aria-hidden="true">🌺</div>
-            <div class="absolute top-1/3 left-2 text-lg" aria-hidden="true">✦</div>
-
-            <!-- Badge -->
-            <div class="absolute -right-4 top-1/4 bg-white rounded-2xl shadow-lg shadow-purple-200/40 px-4 py-3 border border-purple-100">
-              <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center">
-                  <i class="ti ti-star-filled text-amber-400 text-sm" aria-hidden="true" />
+              <!-- Rating badge -->
+              <div class="hero-rating-badge fade-up" style="animation-delay: 0.5s;">
+                <div class="hero-rating-icon">
+                  <i class="ti ti-star-filled" aria-hidden="true" />
                 </div>
                 <div>
-                  <p class="text-xs font-black text-gray-900">4.9/5</p>
-                  <p class="text-[10px] text-gray-400">2k+ reviews</p>
+                  <p class="hero-rating-value">4.9/5</p>
+                  <p class="hero-rating-reviews">2k+ reviews</p>
                 </div>
               </div>
-            </div>
 
-            <div class="absolute -left-6 bottom-1/4 bg-white rounded-2xl shadow-lg shadow-purple-200/40 px-3 py-2 border border-purple-100">
-              <div class="flex items-center gap-1.5">
-                <i class="ti ti-truck text-purple-500 text-sm" aria-hidden="true" />
+              <!-- Shipping badge -->
+              <div class="hero-shipping-badge fade-up" style="animation-delay: 0.7s;">
+                <i class="ti ti-truck" aria-hidden="true" />
                 <div>
-                  <p class="text-[10px] font-bold text-gray-900">Free Ship</p>
-                  <p class="text-[9px] text-gray-400">On $100+</p>
+                  <p class="hero-shipping-title">Free Shipping</p>
+                  <p class="hero-shipping-sub">On orders $100+</p>
                 </div>
               </div>
             </div>
@@ -114,11 +93,402 @@
 <script setup lang="ts">
 const badges = [
   { icon: 'ti ti-award', label: 'Premium Quality' },
-  { icon: 'ti ti-leaf', label: 'Cruelty Free' },
-  { icon: 'ti ti-shield-check', label: 'Secure Payment' },
+  { icon: 'ti ti-leaf', label: 'Authentic Products' },
+  { icon: 'ti ti-truck', label: 'Free Shipping' },
 ]
-
-function scrollToFeatured() {
-  document.getElementById('featured-products')?.scrollIntoView({ behavior: 'smooth' })
-}
 </script>
+
+<style scoped>
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+  background: linear-gradient(135deg, var(--background) 0%, #F5F0EB 50%, var(--surface) 100%);
+}
+
+.hero-container {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .hero-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-container {
+    padding: 0 2rem;
+  }
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 600px;
+  gap: 2.5rem;
+  padding: 4rem 0;
+}
+
+@media (min-width: 1024px) {
+  .hero-inner {
+    flex-direction: row;
+    gap: 4rem;
+    padding: 0;
+  }
+}
+
+/* ---------- Left Content ---------- */
+.hero-content {
+  width: 100%;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    width: 50%;
+    text-align: left;
+  }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  background: rgba(184, 138, 68, 0.1);
+  color: var(--primary);
+}
+
+.hero-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  font-family: 'Playfair Display', serif;
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title {
+    font-size: 3.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-title {
+    font-size: 4.5rem;
+  }
+}
+
+.hero-title-accent {
+  color: var(--primary);
+}
+
+.hero-description {
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+}
+
+@media (min-width: 1024px) {
+  .hero-description {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-actions {
+    justify-content: flex-start;
+  }
+}
+
+.hero-btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(184, 138, 68, 0.35);
+}
+
+.hero-btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 6px 28px rgba(184, 138, 68, 0.45);
+  transform: translateY(-1px);
+}
+
+.hero-btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.hero-btn-secondary:hover {
+  color: var(--primary);
+}
+
+.hero-btn-circle {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.hero-btn-secondary:hover .hero-btn-circle {
+  border-color: var(--primary);
+  background: rgba(184, 138, 68, 0.08);
+}
+
+.hero-btn-circle i {
+  font-size: 0.875rem;
+  color: var(--primary);
+  transition: color 0.3s ease;
+}
+
+/* ---------- Trust Badges ---------- */
+.hero-badges {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .hero-badges {
+    justify-content: flex-start;
+  }
+}
+
+.hero-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.hero-badge-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(184, 138, 68, 0.1);
+}
+
+.hero-badge-icon i {
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+.hero-badge-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ---------- Right Visual ---------- */
+.hero-visual {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+@media (min-width: 1024px) {
+  .hero-visual {
+    width: 50%;
+    padding: 0;
+  }
+}
+
+.hero-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 32rem;
+}
+
+.hero-image-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: radial-gradient(circle, rgba(184, 138, 68, 0.1), transparent 70%);
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.hero-image-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 40px rgba(184, 138, 68, 0.1);
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  max-height: 540px;
+  object-fit: cover;
+}
+
+.hero-image-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 40%, rgba(184, 138, 68, 0.05) 60%, rgba(255,255,255,0.06) 100%);
+}
+
+/* ---------- Badge Overlays ---------- */
+.hero-rating-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.625rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(184, 138, 68, 0.06);
+}
+
+.hero-rating-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(184, 138, 68, 0.1);
+  margin-bottom: 0.25rem;
+}
+
+.hero-rating-icon i {
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+.hero-rating-value {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.hero-rating-reviews {
+  font-size: 0.5625rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.hero-shipping-badge {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.625rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(184, 138, 68, 0.06);
+}
+
+.hero-shipping-badge i {
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+.hero-shipping-title {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.hero-shipping-sub {
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+/* ---------- Animations ---------- */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
