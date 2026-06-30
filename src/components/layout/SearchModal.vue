@@ -2,103 +2,94 @@
   <Transition name="fade">
     <div
       v-if="modelValue"
-      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center pt-20 px-4"
+      class="search-overlay"
       @click.self="$emit('update:modelValue', false)"
     >
-      <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl shadow-purple-200/40 overflow-hidden">
-        <!-- Search Input -->
-        <div class="flex items-center gap-3 px-5 py-4 border-b border-purple-100">
-          <i class="ti ti-search text-purple-400 text-xl flex-shrink-0" aria-hidden="true" />
+      <div class="search-modal">
+        <div class="search-bar">
+          <i class="ti ti-search search-bar-icon" aria-hidden="true" />
           <input
             ref="inputRef"
+            id="search-query"
+            name="query"
             v-model="query"
             type="text"
             placeholder="Search fragrances, collections..."
-            class="flex-1 text-base text-gray-900 outline-none placeholder-gray-400"
+            class="search-input"
             @keydown.escape="$emit('update:modelValue', false)"
             @keydown.enter="goToSearch"
           />
           <button
             v-if="query"
             @click="query = ''"
-            class="p-1 text-gray-400 hover:text-gray-700 transition"
+            class="clear-btn"
             aria-label="Clear"
           >
-            <i class="ti ti-x text-sm" aria-hidden="true" />
+            <i class="ti ti-x" aria-hidden="true" />
           </button>
-          <kbd class="hidden sm:block text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-lg font-mono">ESC</kbd>
+          <kbd class="esc-key">ESC</kbd>
         </div>
 
-        <!-- Results -->
-        <div class="max-h-96 overflow-y-auto">
-          <!-- Loading -->
-          <div v-if="loading" class="p-5 space-y-3">
-            <div v-for="n in 4" :key="n" class="flex gap-3 animate-pulse">
-              <div class="w-12 h-12 rounded-xl skeleton flex-shrink-0" />
-              <div class="flex-1 space-y-2 pt-1">
-                <div class="h-3 skeleton w-2/3" />
-                <div class="h-3 skeleton w-1/3" />
+        <div class="search-results">
+          <div v-if="loading" class="loading-results">
+            <div v-for="n in 4" :key="n" class="skeleton-result">
+              <div class="skeleton-thumb" />
+              <div class="skeleton-text">
+                <div class="skeleton-line w-2-3" />
+                <div class="skeleton-line w-1-3" />
               </div>
             </div>
           </div>
 
-          <!-- Suggestions -->
           <div v-else-if="results.length">
-            <div class="px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Products
-            </div>
+            <div class="results-label">Products</div>
             <div
               v-for="product in results"
               :key="product.id"
               @click="goToProduct(product.id)"
-              class="flex items-center gap-4 px-5 py-3 hover:bg-purple-50 cursor-pointer transition group"
+              class="result-item"
             >
-              <div class="w-12 h-12 rounded-xl overflow-hidden bg-purple-50 flex-shrink-0 border border-purple-100">
+              <div class="result-thumb">
                 <img
                   v-if="product.image_url"
                   :src="imageUrl(product.image_url)"
                   :alt="product.name"
-                  class="w-full h-full object-cover"
+                  class="result-img"
                 />
-                <div v-else class="w-full h-full flex items-center justify-center">
-                  <i class="ti ti-photo text-purple-200 text-lg" aria-hidden="true" />
+                <div v-else class="result-img-ph">
+                  <i class="ti ti-photo" aria-hidden="true" />
                 </div>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 group-hover:text-purple-700 transition line-clamp-1">
-                  {{ product.name }}
-                </p>
-                <p class="text-xs text-purple-500 font-medium">{{ formatPrice(product.price) }}</p>
+              <div class="result-info">
+                <p class="result-name">{{ product.name }}</p>
+                <p class="result-price">{{ formatPrice(product.price) }}</p>
               </div>
-              <i class="ti ti-arrow-right text-gray-300 group-hover:text-purple-400 transition" aria-hidden="true" />
+              <i class="ti ti-arrow-right result-arrow" aria-hidden="true" />
             </div>
 
-            <!-- View All -->
-            <div class="border-t border-purple-100 px-5 py-3">
+            <div class="view-all-wrap">
               <button
                 @click="goToSearch"
-                class="w-full text-center text-sm font-semibold text-purple-600 hover:text-purple-700 transition"
+                class="view-all-btn"
               >
-                View all results for "{{ query }}" →
+                View all results for "{{ query }}" &rarr;
               </button>
             </div>
           </div>
 
-          <!-- Empty -->
-          <div v-else-if="query.length >= 2 && !loading" class="py-12 text-center">
-            <i class="ti ti-search-off text-3xl text-purple-200 block mb-2" aria-hidden="true" />
-            <p class="text-sm text-gray-500">No products found for "{{ query }}"</p>
+          <div v-else-if="query.length >= 2 && !loading" class="no-results">
+            <i class="ti ti-search-off" aria-hidden="true" />
+            <p>No products found for "{{ query }}"</p>
           </div>
 
-          <!-- Quick Links -->
-          <div v-else-if="!query" class="p-5">
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Popular Searches</p>
-            <div class="flex flex-wrap gap-2">
+          <div v-else-if="!query" class="quick-searches">
+            <p class="quick-label">Popular Searches</p>
+            <div class="quick-tags">
               <button
                 v-for="tag in quickSearches"
                 :key="tag"
                 @click="query = tag"
-                class="text-sm text-purple-600 bg-purple-50 hover:bg-purple-100 px-3 py-1.5 rounded-full transition font-medium"
+                class="quick-tag"
               >
                 {{ tag }}
               </button>
@@ -168,6 +159,304 @@ function goToSearch() {
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 80px 16px 0;
+  background: rgba(58,50,42,0.5);
+  backdrop-filter: blur(12px);
+}
+
+.search-modal {
+  width: 100%;
+  max-width: 640px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 12px 60px rgba(58,50,42,0.18);
+  border: 1px solid var(--border);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-bar-icon {
+  font-size: 20px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 15px;
+  outline: none;
+  border: none;
+  background: none;
+  color: var(--text);
+}
+
+.search-input::placeholder {
+  color: #bbb;
+}
+
+.clear-btn {
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background: rgba(184,138,68,0.08);
+  color: var(--text);
+}
+
+.esc-key {
+  display: none;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  background: var(--background);
+  color: var(--text-muted);
+}
+
+@media (min-width: 640px) {
+  .esc-key {
+    display: block;
+  }
+}
+
+.search-results {
+  max-height: 384px;
+  overflow-y: auto;
+}
+
+.loading-results {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-result {
+  display: flex;
+  gap: 12px;
+}
+
+.skeleton-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #f0ece6 25%, #e8e2d8 50%, #f0ece6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0ece6 25%, #e8e2d8 50%, #f0ece6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.w-2-3 { width: 66.67%; }
+.w-1-3 { width: 33.33%; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.results-label {
+  padding: 12px 20px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.result-item:hover {
+  background: var(--background);
+}
+
+.result-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--background);
+  border: 1px solid var(--border);
+}
+
+.result-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.result-img-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-img-ph i {
+  font-size: 18px;
+  color: rgba(184,138,68,0.15);
+}
+
+.result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.result-item:hover .result-name {
+  color: var(--primary);
+}
+
+.result-price {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.result-arrow {
+  font-size: 14px;
+  color: var(--border);
+  transition: all 0.2s;
+}
+
+.result-item:hover .result-arrow {
+  color: var(--primary);
+  transform: translateX(2px);
+}
+
+.view-all-wrap {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.view-all-btn {
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.view-all-btn:hover {
+  opacity: 0.8;
+}
+
+.no-results {
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.no-results i {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(184,138,68,0.2);
+}
+
+.no-results p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.quick-searches {
+  padding: 20px;
+}
+
+.quick-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.quick-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-tag {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 500;
+  border: none;
+  background: rgba(184,138,68,0.1);
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-tag:hover {
+  background: rgba(184,138,68,0.2);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

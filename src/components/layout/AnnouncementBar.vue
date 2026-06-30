@@ -1,53 +1,46 @@
 <template>
   <div
     v-if="visible"
-    class="relative bg-gradient-to-r from-purple-600 via-purple-500 to-violet-600 text-white overflow-hidden"
+    class="announcement-bar"
   >
-    <!-- Animated background shimmer -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" style="background-size: 200% 100%" />
-    </div>
+    <div class="announcement-shimmer" />
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-10 sm:h-9">
-
-        <!-- Left: rotating messages -->
-        <div class="flex-1 flex items-center justify-center sm:justify-start min-w-0">
-          <div class="relative h-5 w-full overflow-hidden">
+    <div class="announcement-container">
+      <div class="announcement-row">
+        <div class="announcement-message-wrap">
+          <div class="announcement-message-inner">
             <Transition name="message-slide" mode="out-in">
               <div
                 :key="currentIndex"
-                class="absolute inset-0 flex items-center justify-center sm:justify-start text-xs font-medium"
+                class="announcement-message"
               >
-                <span class="flex items-center gap-1.5 truncate">
-                  <i :class="currentMessage?.icon" class="flex-shrink-0 text-purple-200" aria-hidden="true" />
-                  <span class="truncate">{{ currentMessage?.text }}</span>
+                <span class="announcement-text">
+                  <i :class="currentMessage?.icon" class="announcement-icon" aria-hidden="true" />
+                  <span class="announcement-label">{{ currentMessage?.text }}</span>
                 </span>
               </div>
             </Transition>
           </div>
         </div>
 
-        <!-- Right links (hidden on small screens) -->
-        <div class="hidden md:flex items-center gap-4 text-xs font-medium flex-shrink-0">
-          <RouterLink to="/orders" class="flex items-center gap-1 hover:text-purple-200 transition">
-            <i class="ti ti-map-pin text-xs" aria-hidden="true" />
+        <div class="announcement-links">
+          <RouterLink to="/orders" class="announcement-link">
+            <i class="ti ti-map-pin" aria-hidden="true" />
             Track Order
           </RouterLink>
-          <span class="text-purple-400">|</span>
-          <a href="#" class="flex items-center gap-1 hover:text-purple-200 transition">
-            <i class="ti ti-headset text-xs" aria-hidden="true" />
+          <span class="announcement-divider">|</span>
+          <a href="#" class="announcement-link">
+            <i class="ti ti-headset" aria-hidden="true" />
             Help Center
           </a>
         </div>
 
-        <!-- Close button -->
         <button
           @click="dismiss"
-          class="ml-3 p-1 text-purple-200 hover:text-white hover:bg-white/10 rounded-lg transition flex-shrink-0"
+          class="announcement-close"
           aria-label="Close announcement"
         >
-          <i class="ti ti-x text-sm" aria-hidden="true" />
+          <i class="ti ti-x" aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -97,6 +90,163 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.announcement-bar {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #3D352E, #2B241E);
+}
+
+.announcement-shimmer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.announcement-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(184,138,68,0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.announcement-container {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.announcement-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+}
+
+@media (min-width: 640px) {
+  .announcement-row {
+    height: 36px;
+  }
+}
+
+.announcement-message-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .announcement-message-wrap {
+    justify-content: flex-start;
+  }
+}
+
+.announcement-message-inner {
+  position: relative;
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.announcement-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .announcement-message {
+    justify-content: flex-start;
+  }
+}
+
+.announcement-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.announcement-icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.announcement-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.announcement-links {
+  display: none;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .announcement-links {
+    display: flex;
+  }
+}
+
+.announcement-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.announcement-link:hover {
+  color: rgba(255,255,255,0.9);
+}
+
+.announcement-divider {
+  color: rgba(255,255,255,0.15);
+  font-size: 12px;
+}
+
+.announcement-close {
+  margin-left: 12px;
+  padding: 4px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,0.35);
+  cursor: pointer;
+  transition: color 0.2s;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-close:hover {
+  color: rgba(255,255,255,0.7);
+}
+
 .message-slide-enter-active,
 .message-slide-leave-active {
   transition: all 0.35s ease;

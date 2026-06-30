@@ -1,47 +1,41 @@
 <template>
   <nav
     ref="navRef"
-    class="sticky top-0 z-50 transition-all duration-300"
+    class="sticky top-0 z-50 transition-all duration-500"
     :class="[
       navVisible ? 'translate-y-0' : '-translate-y-full',
-      scrolled
-        ? 'bg-white/80 backdrop-blur-xl shadow-lg shadow-purple-100/30 border-b border-purple-100/50'
-        : 'bg-white/95 backdrop-blur-md border-b border-purple-100/30'
+      scrolled ? 'glass shadow-sm' : 'bg-transparent'
     ]"
   >
-    <!-- Scroll Progress Bar -->
-    <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-100/50">
-      <div
-        class="h-full bg-gradient-to-r from-purple-500 to-violet-500 transition-all duration-150 ease-linear"
-        :style="{ width: `${scrollProgress}%` }"
-      />
-    </div>
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
+      <div class="flex items-center justify-between h-16 md:h-18">
 
         <!-- Mobile Menu Trigger -->
         <button
           @click="mobileOpen = true"
-          class="lg:hidden p-2 -ml-2 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition"
+          class="lg:hidden p-2 -ml-2 rounded-lg transition"
+          style="color: var(--secondary);"
           aria-label="Open menu"
         >
           <i class="ti ti-menu-2 text-xl" aria-hidden="true" />
         </button>
 
         <!-- Logo -->
-        <RouterLink to="/" class="flex items-center gap-2.5 flex-shrink-0 group">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-md shadow-purple-300/40 group-hover:shadow-lg group-hover:shadow-purple-300/50 transition-shadow">
-            <i class="ti ti-sparkles text-white text-base" aria-hidden="true" />
+        <RouterLink to="/" class="flex items-center gap-3 flex-shrink-0 group">
+          <div
+            class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
+            style="background: var(--primary);"
+          >
+            <span class="text-white text-lg font-bold tracking-tight" style="font-family: 'Georgia', serif;">S</span>
           </div>
           <div class="leading-none">
-            <div class="text-sm font-bold text-gray-900 tracking-wide">SCENTIQUE</div>
-            <div class="text-[9px] text-purple-500 tracking-[0.18em] font-semibold uppercase">Perfumes</div>
+            <div class="text-sm tracking-[0.2em] font-semibold uppercase" style="color: var(--secondary); font-family: 'Georgia', serif;">Scentique</div>
+            <div class="text-[8px] tracking-[0.25em] font-medium uppercase" style="color: var(--primary);">Essences</div>
           </div>
         </RouterLink>
 
-        <!-- Desktop Nav with Mega Menu -->
-        <div class="hidden lg:flex items-center gap-1">
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex items-center gap-0">
           <div
             v-for="link in navLinks"
             :key="link.to"
@@ -51,31 +45,31 @@
           >
             <RouterLink
               :to="link.to"
-              class="px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 flex items-center gap-1"
-              :class="isActive(link.to)
-                ? 'text-purple-700 bg-purple-50'
-                : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50/50'"
+              class="px-3.5 py-2 text-[10px] tracking-[0.15em] font-medium uppercase rounded-lg transition-all duration-300 flex items-center gap-1 nav-link"
+              :class="isActive(link.to) ? 'active' : ''"
+              style="color: var(--secondary);"
             >
               {{ link.label }}
-              <i v-if="link.children" class="ti ti-chevron-down text-[10px] transition-transform duration-200" :class="{ 'rotate-180': hoveredMenu === link.label }" aria-hidden="true" />
+              <i v-if="link.children" class="ti ti-chevron-down text-[9px] transition-transform duration-200" :class="{ 'rotate-180': hoveredMenu === link.label }" aria-hidden="true" />
             </RouterLink>
 
-            <!-- Mega Menu Dropdown -->
             <Transition name="mega">
               <div
                 v-if="link.children && hoveredMenu === link.label"
-                class="absolute top-full left-0 mt-1 w-64 bg-white rounded-2xl shadow-2xl shadow-purple-200/30 border border-purple-100/80 p-3 z-50"
+                class="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl z-50 p-2"
+                style="border: 1px solid var(--border);"
               >
                 <RouterLink
                   v-for="child in link.children"
                   :key="child.to"
                   :to="child.to"
-                  class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition"
+                  class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs transition-all duration-200 hover-lift"
+                  style="color: var(--secondary);"
                 >
-                  <i :class="child.icon" class="text-purple-400 text-base w-5 text-center" aria-hidden="true" />
+                  <i :class="child.icon" class="text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
                   <div>
-                    <p class="font-medium">{{ child.label }}</p>
-                    <p v-if="child.desc" class="text-[11px] text-gray-400">{{ child.desc }}</p>
+                    <p class="font-medium text-[13px]" style="color: var(--secondary);">{{ child.label }}</p>
+                    <p v-if="child.desc" class="text-[10px] tracking-wide" style="color: #999999;">{{ child.desc }}</p>
                   </div>
                 </RouterLink>
               </div>
@@ -84,81 +78,47 @@
         </div>
 
         <!-- Right Section -->
-        <div class="flex items-center gap-0.5">
-
-          <!-- Inline Search -->
-          <div class="hidden sm:flex items-center relative" :class="searchExpanded ? 'w-64' : 'w-9'">
-            <Transition name="search-expand">
-              <input
-                v-if="searchExpanded"
-                ref="searchInput"
-                v-model="searchQuery"
-                type="text"
-                placeholder="Search products..."
-                class="w-full pl-10 pr-4 py-2 text-sm bg-purple-50/60 border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all placeholder:text-gray-400"
-                @blur="collapseSearch"
-                @keydown.escape="collapseSearch"
-                @keydown.enter="doSearch"
-              />
-            </Transition>
-            <button
-              v-if="!searchExpanded"
-              @click="expandSearch"
-              class="p-2.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200"
-              aria-label="Search"
-            >
-              <i class="ti ti-search text-lg" aria-hidden="true" />
-            </button>
-            <i
-              v-if="searchExpanded"
-              class="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-sm pointer-events-none"
-              aria-hidden="true"
-            />
-            <button
-              v-if="searchQuery && searchExpanded"
-              @click="searchQuery = ''"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-0.5"
-              aria-label="Clear search"
-            >
-              <i class="ti ti-x text-sm" aria-hidden="true" />
-            </button>
-          </div>
-
-          <!-- Mobile Search Trigger -->
+        <div class="flex items-center gap-0">
+          <!-- Search -->
           <button
             @click="$emit('openSearch')"
-            class="sm:hidden p-2.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition"
+            class="p-2.5 rounded-lg transition-all duration-300 icon-btn"
+            style="color: var(--secondary);"
             aria-label="Search"
           >
             <i class="ti ti-search text-lg" aria-hidden="true" />
           </button>
 
-          <!-- Wishlist — always visible -->
+          <!-- Wishlist -->
           <RouterLink
             to="/wishlist"
-            class="relative p-2.5 text-gray-500 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-all duration-200 group"
+            class="relative p-2.5 rounded-lg transition-all duration-300 icon-btn"
+            style="color: var(--secondary);"
             aria-label="Wishlist"
           >
-            <i class="ti ti-heart text-lg group-hover:animate-heartbeat" aria-hidden="true" />
+            <i class="ti ti-heart text-lg" aria-hidden="true" />
             <span
               v-if="wishlistCount > 0"
-              class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-pink-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1 animate-scale-in"
+              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[8px] font-bold rounded-full text-white animate-scale-in"
+              style="background: var(--primary);"
             >
               {{ wishlistCount > 9 ? '9+' : wishlistCount }}
             </span>
           </RouterLink>
 
-          <!-- Cart — always visible -->
+          <!-- Cart -->
           <button
             @click="$emit('openCart')"
-            class="relative p-2.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200 group"
+            class="relative p-2.5 rounded-lg transition-all duration-300 icon-btn"
             :class="{ 'cart-animate': cartAnimating }"
+            style="color: var(--secondary);"
             aria-label="Cart"
           >
             <i class="ti ti-shopping-bag text-lg" aria-hidden="true" />
             <span
               v-if="cartCount > 0"
-              class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-purple-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-1 animate-scale-in"
+              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[8px] font-bold rounded-full text-white animate-scale-in"
+              style="background: var(--primary);"
             >
               {{ cartCount > 9 ? '9+' : cartCount }}
             </span>
@@ -168,211 +128,250 @@
           <template v-if="!auth.isLoggedIn">
             <RouterLink
               to="/login"
-              class="hidden sm:block text-sm font-medium text-gray-600 hover:text-purple-600 px-3 py-2 rounded-xl hover:bg-purple-50 transition"
+              class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-3 py-2 rounded-lg transition-all duration-300"
+              style="color: var(--secondary);"
             >
               Sign in
             </RouterLink>
             <RouterLink
               to="/register"
-              class="btn-primary text-sm px-4 py-2 hidden sm:block"
+              class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-4 py-2 rounded-lg transition-all duration-300"
+              style="background: var(--primary); color: white;"
             >
               Register
             </RouterLink>
           </template>
 
-          <!-- User Dropdown (logged in) -->
           <template v-else>
             <div class="relative" ref="dropdownRef">
               <button
                 @click="dropdownOpen = !dropdownOpen"
-                class="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-xl hover:bg-purple-50 transition text-sm text-gray-700 group"
+                class="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-lg transition-all duration-300 text-xs group"
+                style="color: var(--secondary);"
               >
-                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-purple-400 to-violet-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-purple-200 group-hover:ring-purple-300 transition-all">
+                <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold ring-2 transition-all duration-300"
+                  style="background: var(--primary);">
                   {{ initials }}
                 </div>
-                <span class="hidden sm:block font-medium max-w-[80px] truncate">{{ auth.userName }}</span>
-                <i class="ti ti-chevron-down text-gray-400 text-xs transition-transform duration-200" :class="{ 'rotate-180': dropdownOpen }" aria-hidden="true" />
+                <span class="hidden sm:block font-medium max-w-[80px] truncate text-[12px]">{{ auth.userName }}</span>
+                <i class="ti ti-chevron-down text-[10px] transition-transform duration-200"
+                  :class="{ 'rotate-180': dropdownOpen }" style="color: var(--primary);" aria-hidden="true" />
               </button>
 
               <Transition name="dropdown">
                 <div
                   v-if="dropdownOpen"
-                  class="absolute right-0 mt-2 w-52 bg-white border border-purple-100 rounded-2xl shadow-xl shadow-purple-100/50 py-2 z-50"
+                  class="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-xl py-2 z-50"
+                  style="border: 1px solid var(--border);"
                 >
-                  <div class="px-4 py-2 border-b border-purple-50 mb-1">
-                    <p class="text-xs font-semibold text-gray-900 truncate">{{ auth.userName }}</p>
-                    <p class="text-[11px] text-gray-400 truncate">{{ auth.user?.email }}</p>
+                  <div class="px-4 py-2 border-b mb-1 min-w-0" style="border-color: var(--border);">
+                    <p class="text-[12px] font-semibold truncate" style="color: var(--secondary);" :title="auth.userName">{{ auth.userName }}</p>
+                    <p class="text-[10px] truncate" style="color: #999999;" :title="auth.user?.email">{{ auth.user?.email }}</p>
                   </div>
                   <RouterLink
                     to="/profile"
                     @click="dropdownOpen = false"
-                    class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition"
+                    class="flex items-center gap-2.5 px-4 py-2 text-xs transition-all duration-200"
+                    style="color: var(--secondary);"
                   >
-                    <i class="ti ti-user text-purple-400 text-sm" aria-hidden="true" />
+                    <i class="ti ti-user text-sm" style="color: var(--primary);" aria-hidden="true" />
                     My Profile
                   </RouterLink>
                   <RouterLink
                     to="/orders"
                     @click="dropdownOpen = false"
-                    class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition"
+                    class="flex items-center gap-2.5 px-4 py-2 text-xs transition-all duration-200"
+                    style="color: var(--secondary);"
                   >
-                    <i class="ti ti-package text-purple-400 text-sm" aria-hidden="true" />
+                    <i class="ti ti-package text-sm" style="color: var(--primary);" aria-hidden="true" />
                     My Orders
                   </RouterLink>
                   <RouterLink
                     to="/wishlist"
                     @click="dropdownOpen = false"
-                    class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition"
+                    class="flex items-center gap-2.5 px-4 py-2 text-xs transition-all duration-200"
+                    style="color: var(--secondary);"
                   >
-                    <i class="ti ti-heart text-purple-400 text-sm" aria-hidden="true" />
+                    <i class="ti ti-heart text-sm" style="color: var(--primary);" aria-hidden="true" />
                     Wishlist
                   </RouterLink>
-                  <div class="border-t border-purple-50 my-1" />
+                  <RouterLink
+                    to="/settings/telegram"
+                    @click="dropdownOpen = false"
+                    class="flex items-center gap-2.5 px-4 py-2 text-xs transition-all duration-200"
+                    style="color: var(--secondary);"
+                  >
+                    <i class="ti ti-brand-telegram text-sm" style="color: var(--primary);" aria-hidden="true" />
+                    Telegram
+                  </RouterLink>
+                  <div class="border-t my-1" style="border-color: var(--border);" />
                   <button
                     @click="handleLogout"
-                    class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition"
+                    class="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-500 hover:text-red-700 hover:bg-red-50 font-semibold transition-all duration-200"
                   >
-                    <i class="ti ti-logout text-red-400 text-sm" aria-hidden="true" />
-                    Sign out
+                    <i class="ti ti-logout text-sm" aria-hidden="true" />
+                    Logout
                   </button>
                 </div>
               </Transition>
             </div>
-
           </template>
         </div>
       </div>
     </div>
 
-    <!-- Mobile Drawer (right side) -->
+    <!-- Mobile Drawer Backdrop -->
     <Transition name="drawer-backdrop">
       <div
         v-if="mobileOpen"
-        class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
+        class="fixed inset-0 z-40 lg:hidden"
+        style="background: rgba(43,43,43,0.5); backdrop-filter: blur(4px);"
         @click="mobileOpen = false"
       />
     </Transition>
 
+    <!-- Mobile Drawer -->
     <Transition name="drawer-slide">
       <div
         v-if="mobileOpen"
         class="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 lg:hidden flex flex-col"
       >
-        <!-- Drawer Header -->
-        <div class="flex items-center justify-between px-5 py-4 border-b border-purple-100">
+        <div class="flex items-center justify-between px-5 py-4" style="border-bottom: 1px solid var(--border);">
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-md">
-              <i class="ti ti-sparkles text-white text-sm" aria-hidden="true" />
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: var(--primary);">
+              <span class="text-white text-sm font-bold" style="font-family: 'Georgia', serif;">S</span>
             </div>
             <div class="leading-none">
-              <div class="text-xs font-bold text-gray-900 tracking-wide">SCENTIQUE</div>
-              <div class="text-[8px] text-purple-500 tracking-[0.18em] font-semibold uppercase">Perfumes</div>
+              <div class="text-xs tracking-[0.2em] font-semibold uppercase" style="color: var(--secondary); font-family: 'Georgia', serif;">Scentique</div>
+              <div class="text-[7px] tracking-[0.25em] font-medium uppercase" style="color: var(--primary);">Essences</div>
             </div>
           </div>
           <button
             @click="mobileOpen = false"
-            class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition"
+            class="p-2 rounded-lg transition-all duration-200"
+            style="color: var(--secondary);"
             aria-label="Close menu"
           >
             <i class="ti ti-x text-lg" aria-hidden="true" />
           </button>
         </div>
 
-        <!-- Drawer Nav Links -->
         <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
           <div v-for="link in navLinks" :key="link.to">
             <RouterLink
               :to="link.to"
               @click="mobileOpen = false"
-              class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition"
-              :class="isActive(link.to) ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700'"
+              class="flex items-center justify-between px-4 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-200"
+              :class="isActive(link.to) ? 'active-mobile' : ''"
+              style="color: var(--secondary);"
             >
               {{ link.label }}
-              <i v-if="link.children" class="ti ti-chevron-right text-gray-400 text-xs" aria-hidden="true" />
+              <i v-if="link.children" class="ti ti-chevron-right text-[10px]" style="color: var(--primary);" aria-hidden="true" />
             </RouterLink>
 
-            <!-- Mobile sub-links -->
             <div v-if="link.children" class="ml-4 mt-1 space-y-0.5">
               <RouterLink
                 v-for="child in link.children"
                 :key="child.to"
                 :to="child.to"
                 @click="mobileOpen = false"
-                class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-gray-500 hover:text-purple-700 hover:bg-purple-50/50 transition"
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
+                style="color: #999999;"
               >
-                <i :class="child.icon" class="text-purple-400 text-sm w-4 text-center" aria-hidden="true" />
+                <i :class="child.icon" class="text-sm w-4 text-center" style="color: var(--primary);" aria-hidden="true" />
                 <span>{{ child.label }}</span>
               </RouterLink>
             </div>
           </div>
 
-          <div v-if="!auth.isLoggedIn" class="pt-4 mt-4 border-t border-purple-100 space-y-2 px-2">
-            <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center btn-outline text-sm py-2.5">
+          <div v-if="!auth.isLoggedIn" class="pt-4 mt-4 space-y-2 px-2" style="border-top: 1px solid var(--border);">
+            <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="border: 1px solid var(--primary); color: var(--primary);">
               Sign in
             </RouterLink>
-            <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center btn-primary text-sm py-2.5">
+            <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="background: var(--primary); color: white;">
               Register
             </RouterLink>
           </div>
 
-          <!-- Mobile auth links (logged in) -->
           <template v-if="auth.isLoggedIn">
-            <div class="pt-4 mt-4 border-t border-purple-100 px-2">
+            <div class="pt-4 mt-4 px-2" style="border-top: 1px solid var(--border);">
               <div class="flex items-center gap-3 px-2 py-2 mb-2">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-violet-600 flex items-center justify-center text-white text-sm font-bold">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: var(--primary);">
                   {{ initials }}
                 </div>
-                <div>
-                  <p class="text-sm font-semibold text-gray-900">{{ auth.userName }}</p>
-                  <p class="text-xs text-gray-400">{{ auth.user?.email }}</p>
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold truncate" style="color: var(--secondary);" :title="auth.userName">{{ auth.userName }}</p>
+                  <p class="text-xs truncate" style="color: #999999;" :title="auth.user?.email">{{ auth.user?.email }}</p>
                 </div>
               </div>
             </div>
             <RouterLink
               to="/profile"
               @click="mobileOpen = false"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
+              style="color: var(--secondary);"
             >
-              <i class="ti ti-user text-purple-400 text-sm w-5 text-center" aria-hidden="true" />
+              <i class="ti ti-user text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
               My Profile
             </RouterLink>
             <RouterLink
               to="/orders"
               @click="mobileOpen = false"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
+              style="color: var(--secondary);"
             >
-              <i class="ti ti-package text-purple-400 text-sm w-5 text-center" aria-hidden="true" />
+              <i class="ti ti-package text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
               My Orders
             </RouterLink>
             <RouterLink
               to="/wishlist"
               @click="mobileOpen = false"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
+              style="color: var(--secondary);"
             >
-              <i class="ti ti-heart text-purple-400 text-sm w-5 text-center" aria-hidden="true" />
+              <i class="ti ti-heart text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
               Wishlist
             </RouterLink>
-            <div class="border-t border-purple-100 my-2 mx-2" />
+            <RouterLink
+              to="/settings/telegram"
+              @click="mobileOpen = false"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
+              style="color: var(--secondary);"
+            >
+              <i class="ti ti-brand-telegram text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
+              Telegram
+            </RouterLink>
+            <div class="border-t my-2 mx-2" style="border-color: var(--border);" />
             <button
               @click="handleLogout"
-              class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-50 transition w-full mx-2"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs text-red-500 hover:text-red-700 hover:bg-red-50 font-semibold transition-all duration-200 w-full mx-2"
             >
-              <i class="ti ti-logout text-red-400 text-sm w-5 text-center" aria-hidden="true" />
-              Sign out
+              <i class="ti ti-logout text-sm w-5 text-center" aria-hidden="true" />
+              Logout
             </button>
           </template>
         </div>
       </div>
     </Transition>
   </nav>
+
+  <ConfirmModal
+    ref="logoutModal"
+    title="Logout?"
+    message="Are you sure you want to logout of your account?"
+    confirm-text="Yes, Logout"
+    cancel-text="Cancel"
+    @confirm="confirmLogout"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
+import ConfirmModal from '@/components/common/ConfirmModal.vue'
 
 defineEmits<{ openSearch: []; openCart: [] }>()
 
@@ -390,10 +389,7 @@ const navVisible = ref(true)
 const navRef = ref<HTMLElement | null>(null)
 const cartAnimating = ref(false)
 const hoveredMenu = ref<string | null>(null)
-const searchExpanded = ref(false)
-const searchQuery = ref('')
-const searchInput = ref<HTMLInputElement | null>(null)
-const scrollProgress = ref(0)
+const logoutModal = ref<InstanceType<typeof ConfirmModal> | null>(null)
 
 const cartCount = computed(() => cartStore.itemCount)
 const wishlistCount = computed(() => wishlistStore.items.length)
@@ -408,11 +404,16 @@ const navLinks = [
     label: 'Shop',
     children: [
       { to: '/products', label: 'All Products', icon: 'ti ti-bottle', desc: 'Browse our full collection' },
-      { to: '/products?sort=newest', label: 'New Arrivals', icon: 'ti ti-sparkles', desc: 'Fresh drops just landed' },
-      { to: '/products?sort=rating', label: 'Best Sellers', icon: 'ti ti-star', desc: 'Most loved by customers' },
+      { to: '/new-arrivals', label: 'New Arrivals', icon: 'ti ti-sparkles', desc: 'Fresh drops just landed' },
+      { to: '/best-sellers', label: 'Best Sellers', icon: 'ti ti-star', desc: 'Most loved by customers' },
       { to: '/products?sort=price_desc', label: 'Luxury Collection', icon: 'ti ti-crown', desc: 'Premium & exclusive scents' },
     ],
   },
+  { to: '/collections', label: 'Collections' },
+  { to: '/brands', label: 'Brands' },
+  { to: '/about', label: 'About' },
+  { to: '/contact', label: 'Contact' },
+  { to: '/orders', label: 'My Orders' },
 ]
 
 function isActive(to: string) {
@@ -420,29 +421,15 @@ function isActive(to: string) {
   return route.path.startsWith(to.split('?')[0] ?? '')
 }
 
-async function handleLogout() {
+function handleLogout() {
   dropdownOpen.value = false
   mobileOpen.value = false
+  logoutModal.value?.open()
+}
+
+async function confirmLogout() {
   await auth.logout()
-}
-
-function expandSearch() {
-  searchExpanded.value = true
-  nextTick(() => searchInput.value?.focus())
-}
-
-function collapseSearch() {
-  if (searchQuery.value === '') {
-    searchExpanded.value = false
-  }
-}
-
-function doSearch() {
-  if (searchQuery.value.trim()) {
-    router.push(`/products?search=${encodeURIComponent(searchQuery.value.trim())}`)
-    searchExpanded.value = false
-    searchQuery.value = ''
-  }
+  logoutModal.value?.close()
 }
 
 function handleClickOutside(e: MouseEvent) {
@@ -457,11 +444,6 @@ function handleScroll() {
   const currentScrollY = window.scrollY
   scrolled.value = currentScrollY > 10
 
-  // Scroll progress
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight
-  scrollProgress.value = docHeight > 0 ? (currentScrollY / docHeight) * 100 : 0
-
-  // Smart auto-hide
   if (currentScrollY > 80) {
     navVisible.value = currentScrollY < lastScrollY
   } else {
@@ -482,6 +464,60 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+:root {
+  --primary: #B88A44;
+  --secondary: #2B2B2B;
+  --text: #222222;
+  --border: #E7E1D8;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Navigation link underline effect */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: var(--primary);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 60%;
+}
+
+/* Icon buttons */
+.icon-btn:hover {
+  color: var(--primary) !important;
+}
+
+/* Dropdown hover lift */
+.hover-lift:hover {
+  background: rgba(184, 138, 68, 0.06);
+  transform: translateX(2px);
+}
+
+/* Mobile active link */
+.active-mobile {
+  background: rgba(184, 138, 68, 0.08);
+  color: var(--primary) !important;
+}
+
+/* Transitions */
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: all 0.2s ease;
@@ -520,13 +556,12 @@ onUnmounted(() => {
   transform: translateX(100%);
 }
 
-.search-expand-enter-active,
-.search-expand-leave-active {
-  transition: all 0.2s ease;
+/* Scale in animation for badges */
+.animate-scale-in {
+  animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.search-expand-enter-from,
-.search-expand-leave-to {
-  opacity: 0;
-  width: 0;
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 </style>
