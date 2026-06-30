@@ -1,20 +1,21 @@
 <template>
   <div v-if="ready">
     <RouterView />
+    <ToastNotification />
   </div>
-  <div v-else class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-violet-100">
-    <div class="flex flex-col items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-xl shadow-purple-300/40 animate-pulse">
-        <i class="ti ti-sparkles text-white text-2xl" aria-hidden="true" />
+  <div v-else class="loading">
+    <div class="loading-inner">
+      <div class="logo-box">
+        <span class="logo-letter">S</span>
       </div>
-      <div class="text-center">
-        <p class="text-sm font-black text-gray-900 tracking-wide">SCENTIQUE</p>
-        <p class="text-xs text-purple-400 tracking-widest">Loading...</p>
+      <div class="loading-text">
+        <p class="brand-name">Scentique</p>
+        <p class="loading-label">Loading...</p>
       </div>
-      <div class="flex gap-1.5 mt-2">
-        <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0ms" />
-        <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 150ms" />
-        <div class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 300ms" />
+      <div class="loading-dots">
+        <div class="dot" style="animation-delay: 0ms" />
+        <div class="dot" style="animation-delay: 200ms" />
+        <div class="dot" style="animation-delay: 400ms" />
       </div>
     </div>
   </div>
@@ -25,6 +26,8 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import api from '@/plugins/axios'
+import { getGuestToken } from '@/utils/guest'
+import ToastNotification from '@/components/common/ToastNotification.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -33,6 +36,13 @@ const ready = ref(false)
 
 onMounted(async () => {
   const token = route.query.auth_token as string | undefined
+  const error = route.query.error as string | undefined
+
+  if (error) {
+    router.replace({ path: '/login', query: { error } })
+    ready.value = true
+    return
+  }
 
   if (token && token !== 'undefined' && token !== 'null') {
     localStorage.setItem('scentique_auth_token', token)
@@ -44,6 +54,12 @@ onMounted(async () => {
       })
       auth.user = data.user
       auth.hasSession = true
+
+      const guestToken = getGuestToken()
+      await Promise.allSettled([
+        api.post('/cart/merge', { guest_token: guestToken }),
+        api.post('/wishlist/merge', { guest_token: guestToken }),
+      ])
     } catch {
       localStorage.removeItem('scentique_auth_token')
       localStorage.removeItem('scentique_has_session')
@@ -57,3 +73,77 @@ onMounted(async () => {
   ready.value = true
 })
 </script>
+
+<style scoped>
+.loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FAF8F5;
+}
+.loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.logo-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #B88A44, #C9A96E);
+  box-shadow: 0 8px 24px rgba(184,138,68,0.3);
+}
+.logo-letter {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-family: 'Playfair Display', serif;
+}
+.loading-text {
+  text-align: center;
+}
+.brand-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  color: #222222;
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+}
+.loading-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: #B88A44;
+  margin: 4px 0 0;
+}
+.loading-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.dot:nth-child(1) { background: #B88A44; }
+.dot:nth-child(2) { background: #C9A96E; }
+.dot:nth-child(3) { background: #A7772F; }
+
+@keyframes pulse {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
