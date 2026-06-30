@@ -1,83 +1,62 @@
 <template>
-  <div class="min-h-screen bg-[#F8F5FF]">
+  <div class="profile-page">
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <!-- Header -->
-    <div class="bg-gradient-to-br from-purple-600 to-violet-700 py-10">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span class="text-purple-200 text-xs font-bold uppercase tracking-widest block mb-1">Account</span>
-        <h1 class="text-3xl font-black text-white">My Profile</h1>
+    <section class="hero-section">
+      <div class="hero-bg">
+        <span class="hero-label">Account</span>
+        <h1 class="hero-title">My Profile</h1>
       </div>
-    </div>
+    </section>
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
-
-      <!-- Profile Card -->
-      <div class="card-luxury p-6 sm:p-8">
-        <!-- User header -->
-        <div class="flex items-center gap-5 mb-8 pb-6 border-b border-purple-100">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-400 to-violet-600 flex items-center justify-center text-white text-2xl font-black flex-shrink-0 shadow-lg shadow-purple-200/50">
-            {{ initials }}
-          </div>
+    <div class="page-body">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar">{{ initials }}</div>
           <div>
-            <h2 class="text-xl font-black text-gray-900">{{ auth.userName }}</h2>
-            <p class="text-sm text-gray-400">{{ auth.user?.email }}</p>
-            <span class="inline-flex items-center gap-1 mt-1 text-xs font-semibold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full capitalize">
-              <i class="ti ti-award text-xs" aria-hidden="true" />
+            <h2 class="profile-name">{{ auth.userName }}</h2>
+            <p class="profile-email">{{ auth.user?.email }}</p>
+            <span class="badge-gold profile-role">
+              <i class="ti ti-award" aria-hidden="true" />
               {{ auth.user?.role }}
             </span>
           </div>
         </div>
 
-        <!-- Update Profile Form -->
-        <div>
-          <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <i class="ti ti-user text-purple-500" aria-hidden="true" />
+        <div class="profile-section">
+          <h3 class="section-label-title">
+            <i class="ti ti-user" aria-hidden="true" />
             Profile Information
           </h3>
-          <form @submit.prevent="handleUpdateProfile" class="space-y-4 max-w-lg">
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1.5">Full Name</label>
-              <div class="relative">
-                <i class="ti ti-user absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-                <input
-                  v-model="profileForm.name"
-                  type="text"
-                  required
-                  class="w-full pl-10 pr-4 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20"
-                />
+          <form @submit.prevent="handleUpdateProfile" class="profile-form">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <div class="input-icon-wrap">
+                <i class="ti ti-user input-icon" aria-hidden="true" />
+                <input id="profile-name" name="name" v-model="profileForm.name" type="text" required class="input-field has-icon" />
               </div>
             </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1.5">Email Address</label>
-              <div class="relative">
-                <i class="ti ti-mail absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-                <input
-                  v-model="profileForm.email"
-                  type="email"
-                  required
-                  class="w-full pl-10 pr-4 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20"
-                />
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <div class="input-icon-wrap">
+                <i class="ti ti-mail input-icon" aria-hidden="true" />
+                <input id="profile-email" name="email" v-model="profileForm.email" type="email" required class="input-field has-icon" />
               </div>
             </div>
 
             <Transition name="fade">
-              <div v-if="profileSuccess" class="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+              <div v-if="profileSuccess" class="msg-banner success">
                 <i class="ti ti-circle-check" aria-hidden="true" />
-                Profile updated successfully!
+                Your profile has been updated.
               </div>
-              <div v-else-if="profileError" class="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+              <div v-else-if="profileError" class="msg-banner error">
                 <i class="ti ti-alert-circle" aria-hidden="true" />
                 {{ profileError }}
               </div>
             </Transition>
 
-            <button
-              type="submit"
-              :disabled="savingProfile"
-              class="btn-primary text-sm py-2.5 px-6 flex items-center gap-2 disabled:opacity-60 disabled:transform-none disabled:shadow-none"
-            >
+            <button type="submit" :disabled="savingProfile" class="btn-primary save-btn">
               <i v-if="savingProfile" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
               {{ savingProfile ? 'Saving...' : 'Save Changes' }}
             </button>
@@ -85,112 +64,89 @@
         </div>
       </div>
 
-      <!-- Change Password -->
-      <div class="card-luxury p-6 sm:p-8">
-        <h3 class="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <i class="ti ti-lock text-purple-500" aria-hidden="true" />
+      <div class="profile-card">
+        <h3 class="section-label-title">
+          <i class="ti ti-lock" aria-hidden="true" />
           Change Password
         </h3>
-        <form @submit.prevent="handleChangePassword" class="space-y-4 max-w-lg">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">Current Password</label>
-            <div class="relative">
-              <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-              <input
-                v-model="passwordForm.current_password"
-                :type="showCurrentPw ? 'text' : 'password'"
-                required
-                class="w-full pl-10 pr-11 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20"
-              />
-              <button type="button" @click="showCurrentPw = !showCurrentPw"
-                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition"
-                :aria-label="showCurrentPw ? 'Hide' : 'Show'">
+        <form @submit.prevent="handleChangePassword" class="profile-form">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <div class="input-icon-wrap">
+              <i class="ti ti-lock input-icon" aria-hidden="true" />
+              <input id="profile-current-password" name="current_password" v-model="passwordForm.current_password" :type="showCurrentPw ? 'text' : 'password'" required class="input-field has-icon" />
+              <button type="button" @click="showCurrentPw = !showCurrentPw" class="toggle-pw" :aria-label="showCurrentPw ? 'Hide' : 'Show'">
                 <i :class="showCurrentPw ? 'ti ti-eye-off' : 'ti ti-eye'" aria-hidden="true" />
               </button>
             </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">New Password</label>
-            <div class="relative">
-              <i class="ti ti-lock-check absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-              <input
-                v-model="passwordForm.password"
-                :type="showNewPw ? 'text' : 'password'"
-                required
-                class="w-full pl-10 pr-11 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20"
-              />
-              <button type="button" @click="showNewPw = !showNewPw"
-                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition"
-                :aria-label="showNewPw ? 'Hide' : 'Show'">
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <div class="input-icon-wrap">
+              <i class="ti ti-lock-check input-icon" aria-hidden="true" />
+              <input id="profile-new-password" name="password" v-model="passwordForm.password" :type="showNewPw ? 'text' : 'password'" required class="input-field has-icon" />
+              <button type="button" @click="showNewPw = !showNewPw" class="toggle-pw" :aria-label="showNewPw ? 'Hide' : 'Show'">
                 <i :class="showNewPw ? 'ti ti-eye-off' : 'ti ti-eye'" aria-hidden="true" />
               </button>
             </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1.5">Confirm New Password</label>
-            <div class="relative">
-              <i class="ti ti-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-sm" aria-hidden="true" />
-              <input
-                v-model="passwordForm.password_confirmation"
-                :type="showNewPw ? 'text' : 'password'"
-                required
-                class="w-full pl-10 pr-4 py-3 text-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 bg-purple-50/20"
-                :class="pwMismatch ? 'border-red-300' : ''"
-              />
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <div class="input-icon-wrap">
+              <i class="ti ti-lock input-icon" aria-hidden="true" />
+              <input id="profile-confirm-password" name="password_confirmation" v-model="passwordForm.password_confirmation" :type="showNewPw ? 'text' : 'password'" required class="input-field has-icon" />
             </div>
-            <p v-if="pwMismatch" class="text-xs text-red-500 mt-1">Passwords don't match</p>
+            <p v-if="pwMismatch" class="pw-hint">Passwords don't match</p>
           </div>
 
           <Transition name="fade">
-            <div v-if="passwordError" class="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <div v-if="passwordSuccess" class="msg-banner success">
+              <i class="ti ti-circle-check" aria-hidden="true" />
+              Your password has been changed.
+            </div>
+            <div v-else-if="passwordError" class="msg-banner error">
               <i class="ti ti-alert-circle" aria-hidden="true" />
               {{ passwordError }}
             </div>
           </Transition>
 
-          <button
-            type="submit"
-            :disabled="savingPassword || pwMismatch"
-            class="btn-primary text-sm py-2.5 px-6 flex items-center gap-2 disabled:opacity-60 disabled:transform-none disabled:shadow-none"
-          >
+          <button type="submit" :disabled="savingPassword || pwMismatch" class="btn-primary save-btn">
             <i v-if="savingPassword" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
             {{ savingPassword ? 'Updating...' : 'Update Password' }}
           </button>
         </form>
       </div>
 
-      <!-- Quick links -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <RouterLink
-          v-for="link in quickLinks"
-          :key="link.to"
-          :to="link.to"
-          class="card-luxury p-5 text-center hover:bg-purple-50 transition group"
-        >
-          <div class="w-12 h-12 rounded-2xl bg-purple-50 group-hover:bg-purple-100 flex items-center justify-center mx-auto mb-3 transition">
-            <i :class="`ti ${link.icon} text-xl text-purple-600`" aria-hidden="true" />
+      <div class="quick-links">
+        <RouterLink v-for="link in quickLinks" :key="link.to" :to="link.to" class="quick-link-card">
+          <div class="quick-link-icon">
+            <i :class="`ti ${link.icon}`" aria-hidden="true" />
           </div>
-          <p class="text-xs font-bold text-gray-700 group-hover:text-purple-700 transition">{{ link.label }}</p>
+          <p class="quick-link-label">{{ link.label }}</p>
         </RouterLink>
       </div>
 
-      <!-- Danger zone -->
-      <div class="card-luxury p-6 border border-red-100">
-        <h3 class="text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
-          <i class="ti ti-logout text-red-400" aria-hidden="true" />
+      <div class="signout-card">
+        <h3 class="section-label-title">
+          <i class="ti ti-logout" aria-hidden="true" />
           Account Actions
         </h3>
-        <p class="text-xs text-gray-400 mb-4">Sign out of your Scentique account.</p>
-        <button
-          @click="auth.logout()"
-          class="flex items-center gap-2 text-sm text-red-500 border border-red-200 hover:bg-red-50 px-4 py-2.5 rounded-xl transition font-semibold"
-        >
+        <p class="signout-desc">Ready to leave? Signing out will require you to log in again to access your account.</p>
+        <button @click="confirmModal?.open()" class="btn-cancel signout-btn">
           <i class="ti ti-logout" aria-hidden="true" />
           Sign Out
         </button>
       </div>
-
     </div>
+
+    <ConfirmModal
+      ref="confirmModal"
+      title="Sign Out"
+      message="Are you sure you want to sign out? You&rsquo;ll need to log in again to access your account."
+      confirm-text="Sign Out"
+      cancel-text="Cancel"
+      @confirm="auth.logout()"
+    />
 
     <AppFooter />
     <SearchModal v-model="searchOpen" />
@@ -208,15 +164,18 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
+import ConfirmModal from '@/components/common/ConfirmModal.vue'
 
 const auth = useAuthStore()
 const searchOpen = ref(false)
 const cartOpen = ref(false)
+const confirmModal = ref<InstanceType<typeof ConfirmModal> | null>(null)
 
 const savingProfile = ref(false)
 const profileSuccess = ref(false)
 const profileError = ref('')
 const savingPassword = ref(false)
+const passwordSuccess = ref(false)
 const passwordError = ref('')
 const showCurrentPw = ref(false)
 const showNewPw = ref(false)
@@ -254,7 +213,7 @@ async function handleUpdateProfile() {
     setTimeout(() => { profileSuccess.value = false }, 3000)
   } catch (err: unknown) {
     const e = err as { response?: { data?: { message?: string } } }
-    profileError.value = e.response?.data?.message ?? 'Failed to update profile.'
+    profileError.value = e.response?.data?.message ?? 'Something went wrong while updating your profile. Please try again.'
   } finally {
     savingProfile.value = false
   }
@@ -264,11 +223,18 @@ async function handleChangePassword() {
   if (pwMismatch.value) return
   savingPassword.value = true
   passwordError.value = ''
+  passwordSuccess.value = false
   try {
     await auth.changePassword(passwordForm)
+    passwordSuccess.value = true
+    passwordForm.current_password = ''
+    passwordForm.password = ''
+    passwordForm.password_confirmation = ''
+    setTimeout(() => { passwordSuccess.value = false }, 3000)
   } catch (err: unknown) {
     const e = err as { response?: { data?: { message?: string } } }
-    passwordError.value = e.response?.data?.message ?? 'Failed to change password.'
+    passwordError.value = e.response?.data?.message ?? 'Something went wrong while changing your password. Please try again.'
+  } finally {
     savingPassword.value = false
   }
 }
@@ -282,6 +248,337 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.profile-page {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #2B241E, #1A1614);
+  padding: 80px 24px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 16px;
+  border-radius: 100px;
+  background: rgba(184,138,68,0.12);
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  color: var(--surface);
+  margin: 0 0 12px;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+
+.page-body {
+  max-width: 896px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.profile-card {
+  padding: 28px 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.35s ease;
+}
+
+.profile-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #C9A96E);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(184,138,68,0.25);
+}
+
+.profile-name {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--text);
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 2px;
+}
+
+.profile-email {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.profile-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.section-label-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-label-title i {
+  color: var(--primary);
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 480px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.input-icon-wrap {
+  position: relative;
+}
+
+.input-icon-wrap .has-icon {
+  padding-left: 40px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  color: var(--primary);
+  pointer-events: none;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.toggle-pw:hover {
+  color: var(--text);
+}
+
+.pw-hint {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: var(--primary);
+}
+
+.msg-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.msg-banner.success {
+  background: rgba(46, 139, 87, 0.08);
+  color: var(--success);
+}
+
+.msg-banner.error {
+  background: rgba(184, 138, 68, 0.08);
+  color: var(--primary);
+}
+
+.save-btn {
+  align-self: flex-start;
+}
+
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.quick-link-card {
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-link-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: rgba(184,138,68,0.2);
+}
+
+.quick-link-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  background: rgba(184,138,68,0.08);
+  transition: all 0.3s ease;
+}
+
+.quick-link-card:hover .quick-link-icon {
+  background: var(--primary);
+}
+
+.quick-link-card:hover .quick-link-icon i {
+  color: #fff;
+}
+
+.quick-link-icon i {
+  font-size: 1.25rem;
+  color: var(--primary);
+  transition: color 0.3s ease;
+}
+
+.quick-link-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.quick-link-card:hover .quick-link-label {
+  color: var(--primary);
+}
+
+.signout-card {
+  padding: 28px 32px;
+  background: var(--surface);
+  border: 1px solid rgba(184,138,68,0.15);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.35s ease;
+}
+
+.signout-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.signout-desc {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.signout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .quick-links {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .profile-card,
+  .signout-card {
+    padding: 20px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .page-body {
+    gap: 20px;
+  }
+}
 </style>

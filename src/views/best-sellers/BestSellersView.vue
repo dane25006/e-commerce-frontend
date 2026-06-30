@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Exclusive Collection</span>
-        <h1 class="hero-title">All Fragrances</h1>
-        <p v-if="store.meta" class="hero-count">{{ store.meta.total }} premium scents available</p>
+        <span class="hero-label">Top Rated</span>
+        <h1 class="hero-title">Best Sellers</h1>
+        <p v-if="meta" class="hero-count">{{ meta.total }} best seller{{ meta.total !== 1 ? 's' : '' }}</p>
       </div>
     </section>
 
@@ -17,11 +17,11 @@
           <div class="search-wrapper">
             <i class="ti ti-search search-icon" aria-hidden="true" />
             <input
-              id="products-search"
+              id="bestsellers-search"
               name="search"
               v-model="filters.search"
               type="text"
-              placeholder="Search perfumes..."
+              placeholder="Search best sellers..."
               class="search-input"
             />
           </div>
@@ -29,17 +29,17 @@
         <div class="toolbar-right">
           <span class="product-count">{{ filteredCount }} product{{ filteredCount !== 1 ? 's' : '' }}</span>
           <select
-            id="products-sort"
+            id="bestsellers-sort"
             name="sort"
             v-model="filters.sort"
             @change="onFilterChange"
             class="sort-select"
           >
-            <option value="newest">Sort: featured</option>
+            <option value="rating">Sort: top rated</option>
+            <option value="newest">Newest first</option>
             <option value="price_asc">Price: low to high</option>
             <option value="price_desc">Price: high to low</option>
             <option value="name_asc">Name A–Z</option>
-            <option value="rating">Top rated</option>
           </select>
           <button
             @click="showMobileFilters = !showMobileFilters"
@@ -145,7 +145,7 @@
               </button>
               <Transition name="filter-collapse">
                 <div v-if="filterOpen.price" class="mobile-filter-options">
-                  <input id="products-price-mobile" name="price" type="range" :min="0" :max="maxPrice" :value="maxPrice" step="5" @input="onPriceInput" class="price-range" />
+                  <input id="bs-price-mobile" name="price" type="range" :min="0" :max="maxPrice" :value="currentPrice" step="5" @input="onPriceInput" class="price-range" />
                   <div class="price-labels">
                     <span>$0</span>
                     <span>up to ${{ currentPrice }}</span>
@@ -188,7 +188,7 @@
             <Transition name="filter-collapse">
               <div v-if="filterOpen.gender" class="filter-body">
                 <div v-for="g in filterOptions.genders" :key="g" class="filter-checkbox" @click="toggleFilter('gender', g)">
-                  <input :id="'ps-g-'+g" name="gender" type="checkbox" :checked="filters.gender?.includes(g)" class="checkbox-input" />
+                  <input :id="'bs-g-'+g" name="gender" type="checkbox" :checked="filters.gender?.includes(g)" class="checkbox-input" />
                   <label class="checkbox-label">{{ g }}</label>
                   <span class="filter-count">{{ countsBy('gender', g) }}</span>
                 </div>
@@ -216,7 +216,7 @@
             <Transition name="filter-collapse">
               <div v-if="filterOpen.brand" class="filter-body">
                 <div v-for="b in filterOptions.brands" :key="b" class="filter-checkbox" @click="toggleFilter('brand', b)">
-                  <input :id="'ps-b-'+b" name="brand" type="checkbox" :checked="filters.brand?.includes(b)" class="checkbox-input" />
+                  <input :id="'bs-b-'+b" name="brand" type="checkbox" :checked="filters.brand?.includes(b)" class="checkbox-input" />
                   <label class="checkbox-label">{{ b }}</label>
                   <span class="filter-count">{{ countsBy('brand', b) }}</span>
                 </div>
@@ -232,7 +232,7 @@
             <Transition name="filter-collapse">
               <div v-if="filterOpen.type" class="filter-body">
                 <div v-for="t in filterOptions.types" :key="t" class="filter-checkbox" @click="toggleFilter('type', t)">
-                  <input :id="'ps-t-'+t" name="type" type="checkbox" :checked="filters.type?.includes(t)" class="checkbox-input" />
+                  <input :id="'bs-t-'+t" name="type" type="checkbox" :checked="filters.type?.includes(t)" class="checkbox-input" />
                   <label class="checkbox-label">{{ t }}</label>
                   <span class="filter-count">{{ countsBy('type', t) }}</span>
                 </div>
@@ -248,7 +248,7 @@
             <Transition name="filter-collapse">
               <div v-if="filterOpen.department" class="filter-body">
                 <div v-for="d in filterOptions.departments" :key="d" class="filter-checkbox" @click="toggleFilter('department', d)">
-                  <input :id="'ps-d-'+d" name="department" type="checkbox" :checked="filters.department?.includes(d)" class="checkbox-input" />
+                  <input :id="'bs-d-'+d" name="department" type="checkbox" :checked="filters.department?.includes(d)" class="checkbox-input" />
                   <label class="checkbox-label">{{ d }}</label>
                   <span class="filter-count">{{ countsBy('department', d) }}</span>
                 </div>
@@ -263,7 +263,7 @@
             </button>
             <Transition name="filter-collapse">
               <div v-if="filterOpen.price" class="filter-body">
-                <input id="products-price-desktop" name="price" type="range" :min="0" :max="maxPrice" :value="currentPrice" step="5" @input="onPriceInput" class="price-range" />
+                <input id="bs-price-desktop" name="price" type="range" :min="0" :max="maxPrice" :value="currentPrice" step="5" @input="onPriceInput" class="price-range" />
                 <div class="price-labels">
                   <span>$0</span>
                   <span>up to ${{ currentPrice }}</span>
@@ -292,7 +292,7 @@
         </aside>
 
         <div class="main-content">
-          <div v-if="store.loading" class="product-grid">
+          <div v-if="loading" class="product-grid">
             <div v-for="n in 12" :key="n" class="card skeleton-card">
               <div class="skeleton skeleton-img" />
               <div class="skeleton-content">
@@ -305,31 +305,31 @@
             </div>
           </div>
 
-          <div v-else-if="store.error" class="state-card">
+          <div v-else-if="error" class="state-card">
             <i class="ti ti-alert-circle state-icon" aria-hidden="true" />
-            <p class="state-text">Something went wrong while loading products. Please try again.</p>
+            <p class="state-text">Something went wrong while loading best sellers. Please try again.</p>
             <button @click="loadProducts" class="btn-primary">Try again</button>
           </div>
 
-          <div v-else-if="!store.products.length" class="state-card">
+          <div v-else-if="!products.length" class="state-card">
             <i class="ti ti-mood-empty state-icon" aria-hidden="true" />
-            <p class="state-text">No products match your current filters. Try adjusting them to discover more.</p>
+            <p class="state-text">No best sellers match your current filters. Try adjusting them to discover our most-loved scents.</p>
             <button @click="handleReset" class="btn-secondary">Clear filters</button>
           </div>
 
           <div v-else class="product-grid">
             <ProductCard
-              v-for="p in store.products"
+              v-for="p in products"
               :key="p.id"
               :product="p"
               @quick-view="openQuickView"
             />
           </div>
 
-          <div v-if="store.meta && store.meta.last_page > 1" class="pagination">
+          <div v-if="meta && meta.last_page > 1" class="pagination">
             <button
-              @click="goToPage(store.meta.current_page - 1)"
-              :disabled="store.meta.current_page === 1"
+              @click="goToPage(meta.current_page - 1)"
+              :disabled="meta.current_page === 1"
               class="page-btn"
             >
               <i class="ti ti-chevron-left" aria-hidden="true" />
@@ -340,14 +340,14 @@
                 v-else
                 @click="goToPage(Number(page))"
                 class="page-btn"
-                :class="page === store.meta.current_page ? 'page-btn-active' : ''"
+                :class="page === meta.current_page ? 'page-btn-active' : ''"
               >
                 {{ page }}
               </button>
             </template>
             <button
-              @click="goToPage(store.meta.current_page + 1)"
-              :disabled="store.meta.current_page === store.meta.last_page"
+              @click="goToPage(meta.current_page + 1)"
+              :disabled="meta.current_page === meta.last_page"
               class="page-btn"
             >
               <i class="ti ti-chevron-right" aria-hidden="true" />
@@ -365,27 +365,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useProductStore } from '@/stores/product'
-import { productService, type ProductParams } from '@/services/productService'
-import type { Product, FilterValues } from '@/types/product'
-
-interface Filters {
-  search:      string
-  category_id: number | undefined
-  gender:      string[] | undefined
-  brand:       string[] | undefined
-  type:        string[] | undefined
-  department:  string[] | undefined
-  min_price:   number | undefined
-  max_price:   number | undefined
-  in_stock:    boolean | undefined
-  sort:        ProductParams['sort']
-  per_page:    number
-  page:        number
-}
-
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
@@ -394,238 +373,18 @@ import SearchModal from '@/components/layout/SearchModal.vue'
 import { CategoryFilter } from '@/features/categories'
 import ProductCard from '@/components/product/ProductCard.vue'
 import ProductQuickView from '@/components/product/ProductQuickView.vue'
+import { useProductFilters } from '@/composables/useProductFilters'
 
-const store = useProductStore()
-const route = useRoute()
-const router = useRouter()
-
-const quickViewProduct = ref<Product | null>(null)
-const openQuickView = (product: Product) => { quickViewProduct.value = product }
-
-const showMobileFilters = ref(false)
-const searchOpen = ref(false)
-const cartOpen = ref(false)
-const currentPrice = ref(300)
-const filterOpen = reactive<Record<string, boolean>>({
-  gender: true,
-  categories: true,
-  brand: true,
-  type: true,
-  department: true,
-  price: true,
-  availability: true,
-})
-
-const filterOptions = reactive<FilterValues>({
-  genders: [],
-  brands: [],
-  types: [],
-  departments: [],
-})
-
-function parseArr(key: string): string[] | undefined {
-  const v = route.query[key] as string | undefined
-  if (!v) return undefined
-  return v.split(',')
-}
-
-const filters = ref<Filters>({
-  search: (route.query.search as string) || '',
-  category_id: route.query.category_id ? Number(route.query.category_id) : undefined,
-  gender: parseArr('gender'),
-  brand: parseArr('brand'),
-  type: parseArr('type'),
-  department: parseArr('department'),
-  min_price: undefined,
-  max_price: route.query.max_price ? Number(route.query.max_price) : undefined,
-  in_stock: route.query.in_stock !== undefined ? route.query.in_stock !== 'false' : undefined,
-  sort: (route.query.sort as ProductParams['sort']) || 'newest',
-  per_page: 12,
-  page: route.query.page ? Number(route.query.page) : 1,
-})
-
-const maxPrice = computed(() => {
-  const prices = store.products.map(p => Number(p.price))
-  return prices.length ? Math.max(...prices, 300) : 300
-})
-
-function toggleFilter(key: 'gender' | 'brand' | 'type' | 'department', value: string) {
-  const arr = filters.value[key]
-  if (!arr) {
-    filters.value[key] = [value]
-  } else {
-    const idx = arr.indexOf(value)
-    if (idx >= 0) {
-      arr.splice(idx, 1)
-      if (arr.length === 0) filters.value[key] = undefined
-    } else {
-      arr.push(value)
-    }
-  }
-  filters.value.page = 1
-  onFilterChange()
-}
-
-function onPriceInput(e: Event) {
-  const val = Number((e.target as HTMLInputElement).value)
-  currentPrice.value = val
-  filters.value.max_price = val >= maxPrice.value ? undefined : val
-  filters.value.page = 1
-  onFilterChange()
-}
-
-function countsBy(field: string, value: string): number {
-  return store.products.filter((p: Record<string, unknown>) => String(p[field] ?? '') === value).length
-}
-
-const activeChips = computed(() => {
-  const chips: { key: string; value: string; label: string; remove: () => void }[] = []
-  const fields = ['gender', 'brand', 'type', 'department'] as const
-  for (const f of fields) {
-    const arr = filters.value[f]
-    if (arr) {
-      for (const v of arr) {
-        chips.push({
-          key: f,
-          value: v,
-          label: v,
-          remove: () => toggleFilter(f, v),
-        })
-      }
-    }
-  }
-  if (filters.value.in_stock === false) {
-    chips.push({
-      key: 'in_stock',
-      value: 'false',
-      label: 'In stock',
-      remove: () => { filters.value.in_stock = undefined; onFilterChange() },
-    })
-  }
-  return chips
-})
-
-const filteredCount = computed(() => store.products.length)
-
-const paginationPages = computed(() => {
-  if (!store.meta) return []
-  const { current_page, last_page } = store.meta
-  const pages: (number | string)[] = []
-  if (last_page <= 7) {
-    for (let i = 1; i <= last_page; i++) pages.push(i)
-  } else {
-    pages.push(1)
-    if (current_page > 3) pages.push('...')
-    for (let i = Math.max(2, current_page - 1); i <= Math.min(last_page - 1, current_page + 1); i++) pages.push(i)
-    if (current_page < last_page - 2) pages.push('...')
-    pages.push(last_page)
-  }
-  return pages
-})
-
-let searchTimer: ReturnType<typeof setTimeout>
-
-function onFilterChange() {
-  clearTimeout(searchTimer)
-  searchTimer = setTimeout(() => { syncQueryParams(); loadProducts() }, 350)
-}
-
-function syncQueryParams() {
-  const q: Record<string, string> = {}
-  if (filters.value.search) q.search = filters.value.search
-  if (filters.value.category_id) q.category_id = String(filters.value.category_id)
-  if (filters.value.gender?.length) q.gender = filters.value.gender.join(',')
-  if (filters.value.brand?.length) q.brand = filters.value.brand.join(',')
-  if (filters.value.type?.length) q.type = filters.value.type.join(',')
-  if (filters.value.department?.length) q.department = filters.value.department.join(',')
-  if (filters.value.max_price) q.max_price = String(filters.value.max_price)
-  if (filters.value.in_stock === false) q.in_stock = 'false'
-  if (filters.value.sort) q.sort = filters.value.sort
-  if (filters.value.page && filters.value.page > 1) q.page = String(filters.value.page)
-  router.replace({ query: q })
-}
-
-function loadProducts() {
-  const params: ProductParams = {
-    search: filters.value.search || undefined,
-    category_id: filters.value.category_id,
-    gender: filters.value.gender?.join(','),
-    brand: filters.value.brand?.join(','),
-    type: filters.value.type?.join(','),
-    department: filters.value.department?.join(','),
-    min_price: undefined,
-    max_price: filters.value.max_price,
-    in_stock: filters.value.in_stock,
-    sort: filters.value.sort,
-    per_page: 12,
-    page: filters.value.page,
-  }
-  store.fetchProducts(params)
-}
-
-function goToPage(page: number) {
-  if (!store.meta) return
-  if (page < 1 || page > store.meta.last_page) return
-  filters.value.page = page
-  syncQueryParams()
-  loadProducts()
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-function handleReset() {
-  filters.value = {
-    search: '',
-    category_id: undefined,
-    gender: undefined,
-    brand: undefined,
-    type: undefined,
-    department: undefined,
-    min_price: undefined,
-    max_price: undefined,
-    in_stock: undefined,
-    sort: 'newest',
-    per_page: 12,
-    page: 1,
-  }
-  currentPrice.value = 300
-  router.replace({ query: {} })
-  loadProducts()
-}
-
-watch(() => filters.value.search, () => onFilterChange())
-
-onMounted(async () => {
-  const maxP = route.query.max_price ? Number(route.query.max_price) : 300
-  currentPrice.value = maxP
-  await Promise.all([
-    store.fetchCategories(),
-    productService.getFilters().then(({ data }) => {
-      filterOptions.genders = data.genders
-      filterOptions.brands = data.brands
-      filterOptions.types = data.types
-      filterOptions.departments = data.departments
-    }).catch(() => {}),
-  ])
-  loadProducts()
-})
+const {
+  products, loading, error, meta, searchOpen, cartOpen, quickViewProduct,
+  showMobileFilters, currentPrice, filters, filterOptions, filterOpen,
+  maxPrice, filteredCount, activeChips, paginationPages,
+  openQuickView, toggleFilter, onPriceInput, onFilterChange, countsBy,
+  loadProducts, goToPage, handleReset,
+} = useProductFilters({ defaultSort: 'rating' })
 </script>
 
 <style scoped>
-:root {
-  --background: #FAF8F5;
-  --surface: #FFFFFF;
-  --primary: #B88A44;
-  --primary-hover: #A7772F;
-  --secondary: #2B2B2B;
-  --text: #222222;
-  --text-muted: #6F6F6F;
-  --border: #E7E1D8;
-  --radius: 18px;
-  --radius-sm: 10px;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,.04);
-  --shadow: 0 10px 30px rgba(0,0,0,.08);
-}
-
 .products-page {
   min-height: 100vh;
   background: var(--background);

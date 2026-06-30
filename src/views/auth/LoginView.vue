@@ -1,145 +1,163 @@
 <template>
-  <div class="min-h-screen relative">
-    <!-- Background with home content -->
-    <HomeView />
+  <div class="split-layout" :style="{ background: 'var(--background)' }">
+    <!-- Left: Form -->
+    <div class="form-panel">
+      <div class="form-container">
+        <!-- Close / Back -->
+        <RouterLink to="/" class="back-link" :style="{ color: 'var(--primary)' }">
+          <i class="ti ti-arrow-left text-sm" aria-hidden="true" />
+          Back to Home
+        </RouterLink>
 
-    <!-- Blur overlay backdrop -->
-    <div class="fixed inset-0 bg-black/40 backdrop-blur-md z-40" @click="goHome" />
+        <div class="form-card">
+          <div class="form-header">
+            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">Welcome Back</h1>
+            <div class="gold-accent" :style="{ background: 'var(--primary)' }" />
+            <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">Sign in to your Scentique account</p>
+          </div>
 
-    <!-- Glass modal card -->
-    <div class="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <Transition name="slide-up" appear>
-        <div
-          class="w-full max-w-md rounded-2xl shadow-2xl p-8 relative my-auto bg-white/80 backdrop-blur-md border border-white/30 ring-1 ring-black/5"
-        >
-          <!-- close -->
-          <button
-            @click="goHome"
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-white/50 rounded-lg p-1.5 transition"
-            aria-label="Close"
-          >
-            <i class="ti ti-x text-lg" aria-hidden="true" />
-          </button>
-
-          <!-- header -->
-          <div class="text-center mb-6">
+          <!-- API Error -->
+          <Transition name="fade">
             <div
-              class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-3"
+              v-if="auth.error"
+              class="api-error"
+              :style="{
+                background: 'rgba(184,138,68,0.08)',
+                color: '#8E6F3E',
+                border: '1px solid rgba(184,138,68,0.2)',
+                borderRadius: 'var(--radius-sm)',
+              }"
             >
-              <i class="ti ti-shopping-bag text-white text-base" aria-hidden="true" />
+              <i class="ti ti-alert-circle mt-0.5 flex-shrink-0 text-base" aria-hidden="true" />
+              <span>{{ auth.error }}</span>
             </div>
-            <h1 class="text-xl font-semibold text-gray-900">Welcome back</h1>
-            <p class="text-sm text-gray-500 mt-1">Sign in to your account</p>
-          </div>
+          </Transition>
 
-          <!-- api error -->
-          <div
-            v-if="auth.error"
-            class="mb-5 flex items-start gap-2 bg-red-50/90 backdrop-blur-sm border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3"
-          >
-            <i class="ti ti-alert-circle mt-0.5 flex-shrink-0" aria-hidden="true" />
-            <span>{{ auth.error }}</span>
-          </div>
-
-          <form @submit.prevent="handleSubmit" novalidate class="space-y-4">
-            <!-- email -->
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
-                id="email"
-                v-model.trim="form.email"
-                type="email"
-                autocomplete="email"
-                placeholder="Enter your email"
-                class="w-full px-3.5 py-2.5 text-sm rounded-lg border outline-none transition focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white/70 backdrop-blur-sm"
-                :class="
-                  errors.email
-                    ? 'border-red-400 bg-red-50/70 text-red-900 placeholder-red-300'
-                    : 'border-gray-300 bg-white/70 text-gray-900 placeholder-gray-400'
-                "
-                @blur="validateField('email')"
-              />
-              <p v-if="errors.email" class="mt-1 text-xs text-red-600">{{ errors.email }}</p>
+          <form @submit.prevent="handleSubmit" novalidate class="auth-form">
+            <!-- Email -->
+            <div class="field-group">
+              <div
+                class="field-box"
+                :class="{ 'field-box-error': errors.email }"
+                :style="{
+                  borderRadius: 'var(--radius-sm)',
+                  border: errors.email ? '1px solid #E53935' : '1px solid var(--border)',
+                  background: errors.email ? '#FFF5F5' : 'var(--surface)',
+                }"
+              >
+                <input
+                  id="email"
+                  v-model.trim="form.email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder=" "
+                  class="field-input"
+                  :style="{ color: 'var(--text)' }"
+                  @blur="validateField('email')"
+                />
+                <label for="email" class="field-label" :style="{ color: errors.email ? '#E53935' : 'var(--text-muted)' }">Email address</label>
+              </div>
+              <Transition name="fade">
+                <p v-if="errors.email" class="field-msg-error">{{ errors.email }}</p>
+              </Transition>
             </div>
 
-            <!-- password -->
-            <div>
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <div class="relative">
+            <!-- Password -->
+            <div class="field-group">
+              <div class="flex items-center justify-between mb-1.5 px-1">
+                <label for="password" class="field-inline-label" :style="{ color: 'var(--text-muted)' }">Password</label>
+                <a href="#" class="forgot-link" :style="{ color: 'var(--primary)' }">Forgot?</a>
+              </div>
+              <div
+                class="field-box"
+                :class="{ 'field-box-error': errors.password }"
+                :style="{
+                  borderRadius: 'var(--radius-sm)',
+                  border: errors.password ? '1px solid #E53935' : '1px solid var(--border)',
+                  background: errors.password ? '#FFF5F5' : 'var(--surface)',
+                }"
+              >
                 <input
                   id="password"
                   v-model="form.password"
                   :type="showPw ? 'text' : 'password'"
                   autocomplete="current-password"
-                  placeholder="Enter your password"
-                  class="w-full px-3.5 py-2.5 pr-10 text-sm rounded-lg border outline-none transition focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white/70 backdrop-blur-sm"
-                  :class="
-                    errors.password
-                      ? 'border-red-400 bg-red-50/70 text-red-900'
-                      : 'border-gray-300 bg-white/70 text-gray-900'
-                  "
+                  placeholder=" "
+                  class="field-input"
+                  :style="{ color: 'var(--text)', paddingRight: '44px' }"
                   @blur="validateField('password')"
                 />
+                <label for="password" class="field-label" :style="{ color: errors.password ? '#E53935' : 'var(--text-muted)' }">Enter your password</label>
                 <button
                   type="button"
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                  class="pw-toggle"
+                  :style="{ color: 'var(--primary)' }"
                   @click="showPw = !showPw"
                 >
-                  <i
-                    :class="showPw ? 'ti ti-eye-off' : 'ti ti-eye'"
-                    class="text-lg"
-                    aria-hidden="true"
-                  />
+                  <i :class="showPw ? 'ti ti-eye-off' : 'ti ti-eye'" class="text-lg" aria-hidden="true" />
                 </button>
               </div>
-              <p v-if="errors.password" class="mt-1 text-xs text-red-600">{{ errors.password }}</p>
+              <Transition name="fade">
+                <p v-if="errors.password" class="field-msg-error">{{ errors.password }}</p>
+              </Transition>
             </div>
 
-            <!-- submit -->
+            <!-- Submit -->
             <button
               type="submit"
               :disabled="auth.loading"
-              class="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg px-4 py-2.5 transition mt-2"
+              class="submit-btn"
+              :style="{
+                background: 'linear-gradient(135deg, var(--primary), var(--primary-hover))',
+                borderRadius: 'var(--radius-sm)',
+                boxShadow: '0 4px 16px rgba(184,138,68,0.3)',
+              }"
             >
-              <i v-if="auth.loading" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
+              <i v-if="auth.loading" class="ti ti-loader-2 animate-spin text-base" aria-hidden="true" />
               <span>{{ auth.loading ? 'Signing in...' : 'Sign in' }}</span>
             </button>
           </form>
 
-          <!-- divider -->
-          <div class="flex items-center gap-3 my-5">
-            <div class="flex-1 h-px bg-gray-200/60" />
-            <span class="text-xs text-gray-400">or</span>
-            <div class="flex-1 h-px bg-gray-200/60" />
+          <!-- Divider -->
+          <div class="divider">
+            <div class="divider-line" :style="{ background: 'var(--border)' }" />
+            <span class="divider-text" :style="{ color: 'var(--text-muted)' }">or continue with</span>
+            <div class="divider-line" :style="{ background: 'var(--border)' }" />
           </div>
 
-          <!-- Google login -->
-          <a
-            :href="googleUrl"
-            class="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg px-4 py-2.5 border border-gray-300 transition shadow-sm"
-          >
-            <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            <span>Sign in with Google</span>
-          </a>
+          <!-- Google Login -->
+          <GoogleButton :url="googleUrl" />
 
-          <!-- switch to register -->
-          <p class="text-center text-sm text-gray-500 mt-5">
+          <!-- Switch to Register -->
+          <p class="switch-text" :style="{ color: 'var(--text-muted)' }">
             Don't have an account?
-            <RouterLink to="/register" class="text-indigo-600 font-medium hover:underline">
+            <RouterLink to="/register" class="switch-link" :style="{ color: 'var(--primary)' }">
               Create one
             </RouterLink>
           </p>
         </div>
-      </Transition>
+      </div>
+    </div>
+
+    <!-- Right: Branding -->
+    <div class="brand-panel">
+      <div class="brand-overlay" :style="{ background: 'linear-gradient(135deg, #2C2C2C, #1A1A1A)' }">
+        <img
+          src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&q=85"
+          alt="Luxury perfume"
+          class="brand-image"
+        />
+      </div>
+      <div class="brand-gradient" :style="{ background: 'linear-gradient(45deg, rgba(44,44,44,0.6), transparent, rgba(184,138,68,0.15))' }" />
+      <div class="brand-content">
+        <div class="brand-card">
+          <div class="brand-icon-wrapper">
+            <i class="ti ti-sparkles text-white text-xl" aria-hidden="true" />
+          </div>
+          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">Discover Your Signature Scent</h3>
+          <p class="brand-description">Explore our curated collection of luxury fragrances from the world's finest houses.</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -148,9 +166,8 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import HomeView from '@/views/home/HomeView.vue'
-
 import config from '@/config/app'
+import GoogleButton from '@/components/GoogleButton.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -158,22 +175,18 @@ const showPw = ref(false)
 const form = reactive({ email: '', password: '' })
 const errors = reactive({ email: '', password: '' })
 
-const googleUrl = `${config.apiBaseUrl}/auth/google/redirect`
-
-function goHome() {
-  router.push('/')
-}
+const googleUrl = `${config.apiUrl}/auth/google/redirect`
 
 function validateField(field: 'email' | 'password') {
   if (field === 'email') {
-    if (!form.email) errors.email = 'Email is required.'
+    if (!form.email) errors.email = 'Please enter your email address'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      errors.email = 'Enter a valid email address.'
+      errors.email = 'That doesn\u2019t look like a valid email'
     else errors.email = ''
   }
   if (field === 'password') {
-    if (!form.password) errors.password = 'Password is required.'
-    else if (form.password.length < 8) errors.password = 'Password must be at least 8 characters.'
+    if (!form.password) errors.password = 'Please enter your password'
+    else if (form.password.length < 8) errors.password = 'Password needs to be at least 8 characters'
     else errors.password = ''
   }
 }
@@ -197,30 +210,362 @@ function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') goHome()
 }
 
+function goHome() {
+  router.push('/')
+}
+
 onMounted(() => {
   document.addEventListener('keydown', onKeydown)
-  document.body.style.overflow = 'hidden'
+  document.body.style.overflow = ''
+
+  const errorParam = new URLSearchParams(window.location.search).get('error')
+  if (errorParam) {
+    auth.error = decodeURIComponent(errorParam)
+  }
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', onKeydown)
-  document.body.style.overflow = ''
 })
 </script>
 
 <style scoped>
-.slide-up-enter-active {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.split-layout {
+  min-height: 100vh;
+  display: flex;
 }
-.slide-up-leave-active {
-  transition: all 0.2s ease-in;
+
+/* Left Panel */
+.form-panel {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
 }
-.slide-up-enter-from {
-  opacity: 0;
-  transform: translateY(32px) scale(0.97);
+
+@media (min-width: 1024px) {
+  .form-panel {
+    width: 50%;
+  }
 }
-.slide-up-leave-to {
-  opacity: 0;
-  transform: translateY(16px) scale(0.97);
+
+.form-container {
+  width: 100%;
+  max-width: 420px;
 }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin-bottom: 36px;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.back-link:hover {
+  opacity: 0.7;
+}
+
+.form-card {
+  padding: 40px 36px;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.06);
+}
+
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.gold-accent {
+  width: 36px;
+  height: 3px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+}
+
+/* API Error */
+.api-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+
+/* Form Fields */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-group {
+  width: 100%;
+}
+
+.field-inline-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.forgot-link {
+  font-size: 12px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.forgot-link:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+.field-box {
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.field-box:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(184, 138, 68, 0.12);
+  background: var(--surface);
+}
+
+.field-box.field-box-error:focus-within {
+  border-color: #E53935 !important;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+}
+
+.field-input {
+  width: 100%;
+  padding: 22px 14px 6px;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  outline: none;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.field-input::placeholder {
+  color: transparent;
+}
+
+.field-label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+  font-weight: 400;
+}
+
+.field-input:focus ~ .field-label,
+.field-input:not(:placeholder-shown) ~ .field-label {
+  top: 10px;
+  transform: translateY(0);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.field-input:focus ~ .field-label {
+  color: var(--primary) !important;
+}
+
+.field-box-error .field-input:focus ~ .field-label {
+  color: #E53935 !important;
+}
+
+.pw-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.pw-toggle:hover {
+  opacity: 0.7;
+}
+
+.field-msg-error {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding-left: 4px;
+  color: #E53935;
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(184,138,68,0.35) !important;
+}
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+}
+
+.divider-text {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+
+
+/* Switch */
+.switch-text {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 32px;
+}
+
+.switch-link {
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.switch-link:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+/* Right Panel */
+.brand-panel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .brand-panel {
+    display: block;
+    width: 50%;
+  }
+}
+
+.brand-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.brand-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.65;
+  mix-blend-mode: overlay;
+}
+
+.brand-gradient {
+  position: absolute;
+  inset: 0;
+}
+
+.brand-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 48px;
+}
+
+.brand-card {
+  padding: 40px 36px;
+  border-radius: var(--radius);
+  max-width: 340px;
+  backdrop-filter: blur(16px);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.brand-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+}
+
+.brand-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.brand-description {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+}
+
+/* Transitions */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>

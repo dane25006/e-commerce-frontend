@@ -1,125 +1,244 @@
 <template>
-  <AuthModal
-    eyebrow="Create profile"
-    title="Create account"
-    subtitle="Enter your details to start shopping today."
-    title-id="register-title"
-    @close="goHome"
-  >
-    <div
-      v-if="auth.error"
-      class="mb-5 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-700"
-    >
-      <i class="ti ti-alert-circle mt-0.5 shrink-0" aria-hidden="true" />
-      <span>{{ auth.error }}</span>
-    </div>
-
-    <form class="space-y-5" novalidate @submit.prevent="handleSubmit">
-      <div class="grid gap-4 sm:grid-cols-2">
-        <AuthTextField
-          id="name"
-          v-model="form.name"
-          label="Full name"
-          autocomplete="name"
-          placeholder="Enter your name"
-          :error="errors.name"
-          @blur="validateField('name')"
-        />
-
-        <AuthTextField
-          id="email"
-          v-model="form.email"
-          label="Email"
-          type="email"
-          autocomplete="email"
-          placeholder="Enter your email"
-          :error="errors.email"
-          @blur="validateField('email')"
+  <div class="split-layout" :style="{ background: 'var(--background)' }">
+    <!-- Left: Branding -->
+    <div class="brand-panel">
+      <div class="brand-overlay" :style="{ background: 'linear-gradient(135deg, #2C2C2C, #1A1A1A)' }">
+        <img
+          src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=900&q=85"
+          alt="Luxury perfume craftsmanship"
+          class="brand-image"
         />
       </div>
-
-      <div class="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
-        <div class="mb-4 flex items-start justify-between gap-4">
-          <div>
-            <h2 class="text-sm font-semibold text-slate-900">Password security</h2>
-            <p class="mt-1 text-xs text-slate-500">Use at least 8 characters.</p>
+      <div class="brand-gradient" :style="{ background: 'linear-gradient(45deg, rgba(44,44,44,0.6), transparent, rgba(184,138,68,0.15))' }" />
+      <div class="brand-content">
+        <div class="brand-card">
+          <div class="brand-icon-wrapper">
+            <i class="ti ti-gift text-white text-xl" aria-hidden="true" />
           </div>
-          <span class="rounded-full bg-white px-3 py-1 text-xs font-medium" :class="strength.textColor">
-            {{ strength.label || 'Empty' }}
-          </span>
-        </div>
-
-        <div class="grid gap-4 sm:grid-cols-2">
-          <AuthPasswordField
-            id="password"
-            v-model="form.password"
-            label="Password"
-            placeholder="Enter your password"
-            :error="errors.password"
-            @blur="validateField('password')"
-          >
-            <div class="mt-2 flex gap-1">
-              <span
-                v-for="n in 4"
-                :key="n"
-                class="h-1 flex-1 rounded-full transition-colors duration-300"
-                :class="n <= strength.score ? strength.color : 'bg-slate-200'"
-              />
-            </div>
-          </AuthPasswordField>
-
-          <AuthPasswordField
-            id="confirm"
-            v-model="form.password_confirmation"
-            label="Confirm password"
-            placeholder="Confirm your password"
-            :error="errors.password_confirmation"
-            @blur="validateField('password_confirmation')"
-          />
+          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">Join the World of Luxury</h3>
+          <p class="brand-description">Create your account and unlock exclusive member benefits, early access, and personalized recommendations.</p>
         </div>
       </div>
-
-      <button
-        type="submit"
-        :disabled="auth.loading"
-        class="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        <i v-if="auth.loading" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
-        <span>{{ auth.loading ? 'Creating account...' : 'Create account' }}</span>
-      </button>
-    </form>
-
-    <div class="my-5 flex items-center gap-3">
-      <div class="h-px flex-1 bg-slate-200" />
-      <span class="text-xs text-slate-400">or</span>
-      <div class="h-px flex-1 bg-slate-200" />
     </div>
 
-    <p class="text-center text-sm text-slate-500">
-      Already have an account?
-      <RouterLink to="/login" class="font-medium text-indigo-600 hover:underline">Sign in</RouterLink>
-    </p>
-  </AuthModal>
+    <!-- Right: Form -->
+    <div class="form-panel">
+      <div class="form-container">
+        <!-- Close / Back -->
+        <RouterLink to="/" class="back-link" :style="{ color: 'var(--primary)' }">
+          <i class="ti ti-arrow-left text-sm" aria-hidden="true" />
+          Back to Home
+        </RouterLink>
+
+        <div class="form-card">
+          <div class="form-header">
+            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">Create Your Account</h1>
+            <div class="gold-accent" :style="{ background: 'var(--primary)' }" />
+            <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">Join Scentique and discover your signature scent</p>
+          </div>
+
+          <!-- API Error -->
+          <Transition name="fade">
+            <div
+              v-if="auth.error"
+              class="api-error"
+              :style="{
+                background: 'rgba(184,138,68,0.08)',
+                color: '#8E6F3E',
+                border: '1px solid rgba(184,138,68,0.2)',
+                borderRadius: 'var(--radius-sm)',
+              }"
+            >
+              <i class="ti ti-alert-circle mt-0.5 flex-shrink-0 text-base" aria-hidden="true" />
+              <span>{{ auth.error }}</span>
+            </div>
+          </Transition>
+
+          <form @submit.prevent="handleSubmit" novalidate class="auth-form">
+            <!-- Full Name -->
+            <div class="field-group">
+              <div
+                class="field-box"
+                :class="{ 'field-box-error': errors.name }"
+                :style="{
+                  borderRadius: 'var(--radius-sm)',
+                  border: errors.name ? '1px solid #E53935' : '1px solid var(--border)',
+                  background: errors.name ? '#FFF5F5' : 'var(--surface)',
+                }"
+              >
+                <input
+                  id="name"
+                  v-model.trim="form.name"
+                  autocomplete="name"
+                  placeholder=" "
+                  class="field-input"
+                  :style="{ color: 'var(--text)' }"
+                  @blur="validateField('name')"
+                />
+                <label for="name" class="field-label" :style="{ color: errors.name ? '#E53935' : 'var(--text-muted)' }">Full name</label>
+              </div>
+              <Transition name="fade">
+                <p v-if="errors.name" class="field-msg-error">{{ errors.name }}</p>
+              </Transition>
+            </div>
+
+            <!-- Email -->
+            <div class="field-group">
+              <div
+                class="field-box"
+                :class="{ 'field-box-error': errors.email }"
+                :style="{
+                  borderRadius: 'var(--radius-sm)',
+                  border: errors.email ? '1px solid #E53935' : '1px solid var(--border)',
+                  background: errors.email ? '#FFF5F5' : 'var(--surface)',
+                }"
+              >
+                <input
+                  id="email"
+                  v-model.trim="form.email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder=" "
+                  class="field-input"
+                  :style="{ color: 'var(--text)' }"
+                  @blur="validateField('email')"
+                />
+                <label for="email" class="field-label" :style="{ color: errors.email ? '#E53935' : 'var(--text-muted)' }">Email address</label>
+              </div>
+              <Transition name="fade">
+                <p v-if="errors.email" class="field-msg-error">{{ errors.email }}</p>
+              </Transition>
+            </div>
+
+            <!-- Password -->
+            <div class="field-group">
+              <div
+                class="field-box"
+                :class="{ 'field-box-error': errors.password }"
+                :style="{
+                  borderRadius: 'var(--radius-sm)',
+                  border: errors.password ? '1px solid #E53935' : '1px solid var(--border)',
+                  background: errors.password ? '#FFF5F5' : 'var(--surface)',
+                }"
+              >
+                <input
+                  id="password"
+                  v-model="form.password"
+                  :type="showPw ? 'text' : 'password'"
+                  autocomplete="new-password"
+                  placeholder=" "
+                  class="field-input"
+                  :style="{ color: 'var(--text)', paddingRight: '44px' }"
+                  @blur="validateField('password')"
+                />
+                <label for="password" class="field-label" :style="{ color: errors.password ? '#E53935' : 'var(--text-muted)' }">Password</label>
+                <button
+                  type="button"
+                  class="pw-toggle"
+                  :style="{ color: 'var(--primary)' }"
+                  @click="showPw = !showPw"
+                >
+                  <i :class="showPw ? 'ti ti-eye-off' : 'ti ti-eye'" class="text-lg" aria-hidden="true" />
+                </button>
+              </div>
+              <Transition name="fade">
+                <p v-if="errors.password" class="field-msg-error">{{ errors.password }}</p>
+              </Transition>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="field-group">
+              <div
+                class="field-box"
+                :class="{ 'field-box-error': errors.password_confirmation }"
+                :style="{
+                  borderRadius: 'var(--radius-sm)',
+                  border: errors.password_confirmation ? '1px solid #E53935' : '1px solid var(--border)',
+                  background: errors.password_confirmation ? '#FFF5F5' : 'var(--surface)',
+                }"
+              >
+                <input
+                  id="confirm"
+                  v-model="form.password_confirmation"
+                  :type="showConfirmPw ? 'text' : 'password'"
+                  autocomplete="new-password"
+                  placeholder=" "
+                  class="field-input"
+                  :style="{ color: 'var(--text)', paddingRight: '44px' }"
+                  @blur="validateField('password_confirmation')"
+                />
+                <label for="confirm" class="field-label" :style="{ color: errors.password_confirmation ? '#E53935' : 'var(--text-muted)' }">Confirm password</label>
+                <button
+                  type="button"
+                  class="pw-toggle"
+                  :style="{ color: 'var(--primary)' }"
+                  @click="showConfirmPw = !showConfirmPw"
+                >
+                  <i :class="showConfirmPw ? 'ti ti-eye-off' : 'ti ti-eye'" class="text-lg" aria-hidden="true" />
+                </button>
+              </div>
+              <Transition name="fade">
+                <p v-if="errors.password_confirmation" class="field-msg-error">{{ errors.password_confirmation }}</p>
+              </Transition>
+            </div>
+
+            <!-- Submit -->
+            <button
+              type="submit"
+              :disabled="auth.loading"
+              class="submit-btn"
+              :style="{
+                background: 'linear-gradient(135deg, var(--primary), var(--primary-hover))',
+                borderRadius: 'var(--radius-sm)',
+                boxShadow: '0 4px 16px rgba(184,138,68,0.3)',
+              }"
+            >
+              <i v-if="auth.loading" class="ti ti-loader-2 animate-spin text-base" aria-hidden="true" />
+              <span>{{ auth.loading ? 'Creating account...' : 'Create account' }}</span>
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider">
+            <div class="divider-line" :style="{ background: 'var(--border)' }" />
+            <span class="divider-text" :style="{ color: 'var(--text-muted)' }">or continue with</span>
+            <div class="divider-line" :style="{ background: 'var(--border)' }" />
+          </div>
+
+          <!-- Google Login -->
+          <GoogleButton :url="googleUrl" />
+
+          <!-- Switch to Login -->
+          <p class="switch-text" :style="{ color: 'var(--text-muted)' }">
+            Already have an account?
+            <RouterLink to="/login" class="switch-link" :style="{ color: 'var(--primary)' }">
+              Sign in
+            </RouterLink>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import AuthModal from '@/components/auth/AuthModal.vue'
-import AuthPasswordField from '@/components/auth/AuthPasswordField.vue'
-import AuthTextField from '@/components/auth/AuthTextField.vue'
 import { useAuthStore } from '@/stores/auth'
+import config from '@/config/app'
+import GoogleButton from '@/components/GoogleButton.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
-
+const googleUrl = `${config.apiUrl}/auth/google/redirect`
+const showPw = ref(false)
+const showConfirmPw = ref(false)
 const form = reactive({
   name: '',
   email: '',
   password: '',
   password_confirmation: '',
 })
-
 const errors = reactive({
   name: '',
   email: '',
@@ -127,52 +246,32 @@ const errors = reactive({
   password_confirmation: '',
 })
 
-const strength = computed(() => {
-  const pw = form.password
-  if (!pw) return { score: 0, label: '', color: 'bg-slate-200', textColor: 'text-slate-400' }
-
-  let score = 0
-  if (pw.length >= 8) score++
-  if (/[A-Z]/.test(pw)) score++
-  if (/[0-9]/.test(pw)) score++
-  if (/[^A-Za-z0-9]/.test(pw)) score++
-
-  const strengthMap: Record<number, { label: string; color: string; textColor: string }> = {
-    1: { label: 'Weak', color: 'bg-red-400', textColor: 'text-red-500' },
-    2: { label: 'Fair', color: 'bg-amber-400', textColor: 'text-amber-600' },
-    3: { label: 'Good', color: 'bg-blue-400', textColor: 'text-blue-600' },
-    4: { label: 'Strong', color: 'bg-green-500', textColor: 'text-green-600' },
-  }
-
-  return { score, ...strengthMap[score] }
-})
-
-type Field = keyof typeof form
-
 function goHome() {
   router.push('/')
 }
 
+type Field = keyof typeof form
+
 function validateField(field: Field) {
   switch (field) {
     case 'name':
-      errors.name = form.name ? '' : 'Full name is required.'
+      errors.name = form.name ? '' : 'Please tell us your name'
       break
     case 'email':
-      if (!form.email) errors.email = 'Email is required.'
+      if (!form.email) errors.email = 'Please enter your email address'
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-        errors.email = 'Enter a valid email address.'
+        errors.email = 'That doesn\u2019t look like a valid email'
       else errors.email = ''
       break
     case 'password':
-      if (!form.password) errors.password = 'Password is required.'
-      else if (form.password.length < 8) errors.password = 'Password must be at least 8 characters.'
+      if (!form.password) errors.password = 'Please choose a password'
+      else if (form.password.length < 8) errors.password = 'Password needs to be at least 8 characters'
       else errors.password = ''
       if (form.password_confirmation) validateField('password_confirmation')
       break
     case 'password_confirmation':
       errors.password_confirmation =
-        form.password_confirmation !== form.password ? 'Passwords do not match.' : ''
+        form.password_confirmation !== form.password ? 'Passwords don\u2019t match. Try again' : ''
       break
   }
 }
@@ -184,11 +283,345 @@ function validateAll(): boolean {
 
 async function handleSubmit() {
   if (!validateAll()) return
-
   try {
     await auth.register({ ...form })
   } catch {
     /* error set in store */
   }
 }
+
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') goHome()
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', onKeydown)
+  document.body.style.overflow = ''
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKeydown)
+})
 </script>
+
+<style scoped>
+.split-layout {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Left Panel */
+.brand-panel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .brand-panel {
+    display: block;
+    width: 50%;
+  }
+}
+
+.brand-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.brand-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.65;
+  mix-blend-mode: overlay;
+}
+
+.brand-gradient {
+  position: absolute;
+  inset: 0;
+}
+
+.brand-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 48px;
+}
+
+.brand-card {
+  padding: 40px 36px;
+  border-radius: var(--radius);
+  max-width: 340px;
+  backdrop-filter: blur(16px);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.brand-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+}
+
+.brand-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.brand-description {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+}
+
+/* Right Panel */
+.form-panel {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+@media (min-width: 1024px) {
+  .form-panel {
+    width: 50%;
+  }
+}
+
+.form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin-bottom: 36px;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.back-link:hover {
+  opacity: 0.7;
+}
+
+.form-card {
+  padding: 40px 36px;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.06);
+}
+
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.gold-accent {
+  width: 36px;
+  height: 3px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+}
+
+/* API Error */
+.api-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+
+/* Form Fields */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-group {
+  width: 100%;
+}
+
+.field-box {
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.field-box:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(184, 138, 68, 0.12);
+  background: var(--surface);
+}
+
+.field-box.field-box-error:focus-within {
+  border-color: #E53935 !important;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+}
+
+.field-input {
+  width: 100%;
+  padding: 22px 14px 6px;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  outline: none;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.field-input::placeholder {
+  color: transparent;
+}
+
+.field-label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+  font-weight: 400;
+}
+
+.field-input:focus ~ .field-label,
+.field-input:not(:placeholder-shown) ~ .field-label {
+  top: 10px;
+  transform: translateY(0);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.field-input:focus ~ .field-label {
+  color: var(--primary) !important;
+}
+
+.field-box-error .field-input:focus ~ .field-label {
+  color: #E53935 !important;
+}
+
+.pw-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.pw-toggle:hover {
+  opacity: 0.7;
+}
+
+.field-msg-error {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding-left: 4px;
+  color: #E53935;
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(184,138,68,0.35) !important;
+}
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+}
+
+.divider-text {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Switch */
+.switch-text {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 32px;
+}
+
+.switch-link {
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.switch-link:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+/* Transitions */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>

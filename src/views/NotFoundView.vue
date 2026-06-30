@@ -1,16 +1,94 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center px-4">
-    <div class="text-center max-w-md">
-      <!-- Big 404 -->
-      <div class="text-[120px] font-black leading-none mb-4 text-gradient">404</div>
-      <h1 class="text-2xl font-black text-gray-900 mb-3">Page Not Found</h1>
-      <p class="text-gray-500 text-sm mb-8">
+  <div class="page">
+    <div class="container">
+      <div class="error-code">404</div>
+      <h1 class="error-title">Page Not Found</h1>
+      <p class="error-desc">
         Looks like this scent has evaporated. The page you're looking for doesn't exist.
       </p>
-      <div class="flex items-center gap-4 justify-center">
-        <RouterLink to="/" class="btn-primary py-3 px-8 text-sm">Go Home</RouterLink>
-        <RouterLink to="/products" class="btn-outline py-3 px-8 text-sm">Browse Shop</RouterLink>
+      <div class="error-actions">
+        <RouterLink to="/" class="btn-primary">Go Home</RouterLink>
+        <RouterLink to="/products" class="btn-secondary">Browse Shop</RouterLink>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  background: #FAF8F5;
+}
+.container {
+  text-align: center;
+  max-width: 28rem;
+}
+.error-code {
+  font-size: 7.5rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 16px;
+  font-family: 'Playfair Display', serif;
+  background: linear-gradient(135deg, #B88A44, #C9A96E);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #222222;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 12px;
+}
+.error-desc {
+  font-size: 0.875rem;
+  color: #6F6F6F;
+  margin-bottom: 32px;
+}
+.error-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 18px;
+  background: #B88A44;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: #A7772F;
+}
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 18px;
+  background: transparent;
+  color: #B88A44;
+  border: 1px solid #B88A44;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  background: #B88A44;
+  color: #FFFFFF;
+}
+</style>
