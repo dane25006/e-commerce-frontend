@@ -10,6 +10,8 @@
         <i class="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
            aria-hidden="true" />
         <input
+          id="filter-search"
+          name="search"
           :value="modelValue.search"
           @input="emit('update:modelValue', {
             ...modelValue,

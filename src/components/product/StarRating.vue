@@ -4,12 +4,12 @@
       v-for="n in 5" :key="n"
       class="ti ti-star"
       :class="[
-        n <= Math.round(rating) ? 'text-amber-400' : 'text-gray-200',
+        n <= Math.round(rating) ? 'text-[#B08D57]' : 'text-[#ECE7DF]',
         sizeClass,
       ]"
       aria-hidden="true"
     />
-    <span v-if="showCount && count !== undefined" class="text-xs text-gray-400 ml-1">
+    <span v-if="showCount && count !== undefined" class="text-xs ml-1" style="color: #777777;">
       ({{ count }})
     </span>
   </div>
