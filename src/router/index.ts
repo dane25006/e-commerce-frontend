@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
     meta: { guest: true },
   },
   {
+    path: '/category/:slug',
+    name: 'category',
+    component: () => import('@/views/category/CategoryView.vue'),
+  },
+  {
     path: '/products',
     name: 'products',
     component: () => import('@/views/products/ProductsView.vue'),
@@ -59,10 +64,52 @@ const routes: RouteRecordRaw[] = [
     meta: { auth: true },
   },
   {
+    path: '/settings/telegram',
+    name: 'settings-telegram',
+    component: () => import('@/views/settings/TelegramView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('@/views/DashboardView.vue'),
+    meta: { auth: true },
+  },
+  {
     path: '/checkout',
     name: 'checkout',
     component: () => import('@/views/checkout/CheckoutView.vue'),
     meta: { auth: true },
+  },
+  {
+    path: '/new-arrivals',
+    name: 'new-arrivals',
+    component: () => import('@/views/new-arrivals/NewArrivalsView.vue'),
+  },
+  {
+    path: '/best-sellers',
+    name: 'best-sellers',
+    component: () => import('@/views/best-sellers/BestSellersView.vue'),
+  },
+  {
+    path: '/collections',
+    name: 'collections',
+    component: () => import('@/views/collections/CollectionsView.vue'),
+  },
+  {
+    path: '/brands',
+    name: 'brands',
+    component: () => import('@/views/brands/BrandsView.vue'),
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('@/views/about/AboutView.vue'),
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: () => import('@/views/contact/ContactView.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
