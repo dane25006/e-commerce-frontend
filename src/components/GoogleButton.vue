@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-defineProps<{ url: string }>()
+const props = defineProps<{ url: string }>()
 
 const loading = ref(false)
 
 function handleClick() {
   loading.value = true
-  window.location.href = url
+  window.location.href = props.url
 }
 </script>
 
