@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import api from '@/plugins/axios'
+import { useAuthStore } from '@/stores/auth'
 import { getGuestToken } from '@/utils/guest'
+import { cartService } from '@/services/cartService'
+import { promotionService } from '@/services/promotionService'
 import type { CartItem, CartResponse } from '@/types/cart'
 import type { Promotion } from '@/types/promotion'
 
@@ -30,16 +32,18 @@ export const useCartStore = defineStore('cart', () => {
     items.value.reduce((sum, i) => sum + i.quantity, 0)
   )
 
+  function guestToken(): string | undefined {
+    const auth = useAuthStore()
+    return auth.isLoggedIn ? undefined : getGuestToken()
+  }
+
   async function fetchCart() {
     loading.value = true
     try {
-      const params: Record<string, string> = {}
-      const token = getGuestToken()
-      if (token) params.guest_token = token
-
-      const { data } = await api.get<CartResponse>('/cart', { params })
+      const { data } = await cartService.get(guestToken())
       items.value = data.cart
-    } catch {
+    } catch (e) {
+      console.error('[CartStore] fetchCart failed:', e)
       items.value = []
     } finally {
       loading.value = false
@@ -47,12 +51,16 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   async function addToCart(product_id: number, quantity = 1) {
-    await api.post('/cart', {
-      product_id,
-      quantity,
-      guest_token: getGuestToken(),
-    })
-    await fetchCart()
+    const { data } = await cartService.add(product_id, quantity, getGuestToken())
+    if (data.item) {
+      const idx = items.value.findIndex(i => i.cart_id === data.item.cart_id)
+      if (idx !== -1) {
+        items.value[idx] = data.item
+      } else {
+        items.value.push(data.item)
+      }
+    }
+    fetchCart()
   }
 
   async function updateQty(cartId: number, quantity: number) {
@@ -66,10 +74,7 @@ export const useCartStore = defineStore('cart', () => {
     item.subtotal = item.product.price * quantity
 
     try {
-      const { data } = await api.put(`/cart/${cartId}`, {
-        quantity,
-        guest_token: getGuestToken(),
-      })
+      const { data } = await cartService.update(cartId, quantity, getGuestToken())
       const idx = items.value.findIndex(i => i.cart_id === cartId)
       if (idx !== -1 && data.item) items.value[idx] = data.item
     } catch {
@@ -87,9 +92,7 @@ export const useCartStore = defineStore('cart', () => {
     const removed = items.value.splice(idx, 1)[0]
 
     try {
-      await api.delete(`/cart/${cartId}`, {
-        data: { guest_token: getGuestToken() },
-      })
+      await cartService.remove(cartId, getGuestToken())
     } catch {
       if (removed !== undefined) items.value.splice(idx, 0, removed)
     }
@@ -99,9 +102,7 @@ export const useCartStore = defineStore('cart', () => {
     const snapshot = items.value.slice()
     items.value = []
     try {
-      await api.delete('/cart', {
-        data: { guest_token: getGuestToken() },
-      })
+      await cartService.clear(getGuestToken())
     } catch {
       items.value = snapshot
     }
@@ -111,7 +112,7 @@ export const useCartStore = defineStore('cart', () => {
     couponMsg.value = ''
     couponErr.value = false
     try {
-      const { data } = await api.post('/promotions/validate', { coupon_code: code })
+      const { data } = await promotionService.validate(code)
       if (data.valid && data.promotion) {
         coupon.value = data.promotion
         couponMsg.value = data.message ?? 'Coupon applied!'

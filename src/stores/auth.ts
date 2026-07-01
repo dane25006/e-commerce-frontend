@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import { ref, computed } from 'vue'
-import api from '@/plugins/axios'
 import config from '@/config/app'
 import router from '@/router'
-import { getGuestToken } from '@/utils/guest'
+import { authService } from '@/services/authService'
+import { getGuestToken, clearGuestToken } from '@/utils/guest'
+import { cartService } from '@/services/cartService'
+import { wishlistService } from '@/services/wishlistService'
 import type {
   User,
   LoginPayload,
@@ -23,7 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const user = ref<User | null>(null)
   const hasSession = ref(localStorage.getItem(AUTH_SESSION_KEY) === 'true')
-  const loading = ref<boolean>(false)
+  const loading = ref(false)
   const error = ref<string | null>(null)
   const initialized = ref(false)
   let bootPromise: Promise<void> | null = null
@@ -34,11 +35,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function getCsrfCookie(): Promise<void> {
     try {
+      const { default: axios } = await import('axios')
       await axios.get(`${config.apiBaseUrl}/sanctum/csrf-cookie`, {
         withCredentials: true,
-        headers: {
-          Accept: 'application/json',
-        },
+        headers: { Accept: 'application/json' },
       })
     } catch {
       // Bearer-token APIs do not need Sanctum's CSRF cookie.
@@ -64,21 +64,32 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem(AUTH_SESSION_KEY)
   }
 
-  // ── POST /api/register ──────────────────────────────────────────────────
+  async function mergeGuestCart(): Promise<void> {
+    const token = getGuestToken()
+    await Promise.allSettled([
+      cartService.merge(token),
+      wishlistService.merge(token),
+    ])
+    clearGuestToken()
+  }
+
+  async function refetchCartAndWishlist(): Promise<void> {
+    const { useCartStore } = await import('@/stores/cart')
+    const { useWishlistStore } = await import('@/stores/wishlist')
+    await Promise.allSettled([
+      useCartStore().fetchCart(),
+      useWishlistStore().fetchWishlist(),
+    ])
+  }
+
   async function register(payload: RegisterPayload): Promise<void> {
     loading.value = true
     error.value = null
     try {
       await getCsrfCookie()
-      const { data } = await api.post<AuthResponse>('/register', payload)
+      const { data } = await authService.register(payload)
       setSession(data)
-
-      const token = getGuestToken()
-      await Promise.allSettled([
-        api.post('/cart/merge', { guest_token: token, _token: '' }),
-        api.post('/wishlist/merge', { guest_token: token, _token: '' }),
-      ])
-
+      await mergeGuestCart()
       await router.push('/')
     } catch (err: unknown) {
       error.value = extractMessage(err, 'Registration failed.')
@@ -88,26 +99,18 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // ── POST /api/login ─────────────────────────────────────────────────────
   async function login(payload: LoginPayload): Promise<void> {
     loading.value = true
     error.value = null
 
     try {
       await getCsrfCookie()
-
-      const { data } = await api.post<AuthResponse>('/login', payload)
-
+      const { data } = await authService.login(payload)
       setSession(data)
-
-      const token = getGuestToken()
-      await Promise.allSettled([
-        api.post('/cart/merge', { guest_token: token, _token: '' }),
-        api.post('/wishlist/merge', { guest_token: token, _token: '' }),
-      ])
+      await mergeGuestCart()
+      await refetchCartAndWishlist()
 
       const redirect = router.currentRoute.value.query.redirect as string
-
       await router.push(redirect || '/')
     } catch (err: unknown) {
       error.value = extractMessage(err, 'Login failed.')
@@ -117,18 +120,43 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // ── POST /api/logout ────────────────────────────────────────────────────
   async function logout(): Promise<void> {
     try {
-      await api.post('/logout')
+      await authService.logout()
     } finally {
       clearSession()
       await router.push('/login')
     }
   }
 
-  // ── boot: restore session on page refresh ───────────────────────────────
-  // Cookie is sent automatically — just call /profile to check if valid
+  async function socialLogin(token: string): Promise<void> {
+    loading.value = true
+    error.value = null
+
+    localStorage.setItem(AUTH_TOKEN_KEY, token)
+    localStorage.setItem(AUTH_SESSION_KEY, 'true')
+
+    try {
+      const { data } = await authService.profile({ skipAuthRedirect: true } as any)
+      user.value = data.user
+      hasSession.value = true
+      initialized.value = true
+
+      await mergeGuestCart()
+      await refetchCartAndWishlist()
+
+      const redirect = sessionStorage.getItem('scentique_redirect')
+      sessionStorage.removeItem('scentique_redirect')
+      await router.push(redirect || '/')
+    } catch (err: unknown) {
+      clearSession()
+      error.value = extractMessage(err, 'Social login failed.')
+      await router.push('/login')
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function boot(): Promise<void> {
     if (initialized.value) return
     if (bootPromise) return bootPromise
@@ -140,9 +168,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     bootPromise = (async () => {
       try {
-        const { data } = await api.get<{ user: User }>('/profile', {
-          skipAuthRedirect: true,
-        })
+        const { data } = await authService.profile({ skipAuthRedirect: true } as any)
         user.value = data.user
       } catch {
         clearSession()
@@ -155,34 +181,22 @@ export const useAuthStore = defineStore('auth', () => {
     return bootPromise
   }
 
-  // ── PUT /api/profile ────────────────────────────────────────────────────
-  async function updateProfile(name: string, email: string): Promise<void> {
-    const { data } = await api.put<{ message: string; user: User }>('/profile', { name, email })
+  async function updateProfile(name: string, email: string, avatar?: string | null): Promise<void> {
+    const { data } = await authService.updateProfile({ name, email, avatar })
     user.value = data.user
   }
 
-  // ── PUT /api/password ───────────────────────────────────────────────────
   async function changePassword(payload: ChangePasswordPayload): Promise<void> {
-    await api.put('/password', payload)
+    await authService.changePassword(payload)
     clearSession()
     await router.push('/login')
   }
 
   return {
-    user,
-    hasSession,
-    loading,
-    error,
-    initialized,
-    isLoggedIn,
-    isAdmin,
-    userName,
-    register,
-    login,
-    logout,
-    boot,
-    updateProfile,
-    changePassword,
+    user, hasSession, loading, error, initialized,
+    isLoggedIn, isAdmin, userName,
+    register, login, logout, socialLogin, boot,
+    updateProfile, changePassword,
   }
 })
 

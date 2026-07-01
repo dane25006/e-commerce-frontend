@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import api from '@/plugins/axios'
+import { useAuthStore } from '@/stores/auth'
 import { getGuestToken } from '@/utils/guest'
+import { wishlistService } from '@/services/wishlistService'
 
 export interface WishlistItem {
   wishlist_id: number
@@ -26,17 +27,18 @@ export const useWishlistStore = defineStore('wishlist', () => {
 
   const itemIds = computed(() => new Set(items.value.map(w => w.product.id)))
 
+  function guestToken(): string | undefined {
+    const auth = useAuthStore()
+    return auth.isLoggedIn ? undefined : getGuestToken()
+  }
+
   function isWishlisted(productId: number): boolean {
     return itemIds.value.has(productId)
   }
 
   async function fetchWishlist() {
     try {
-      const params: Record<string, string> = {}
-      const token = getGuestToken()
-      if (token) params.guest_token = token
-
-      const { data } = await api.get<{ wishlist: WishlistItem[]; count: number }>('/wishlist', { params })
+      const { data } = await wishlistService.get(guestToken())
       items.value = data.wishlist
     } catch {
       items.value = []
@@ -44,10 +46,7 @@ export const useWishlistStore = defineStore('wishlist', () => {
   }
 
   async function toggle(productId: number) {
-    await api.post('/wishlist/toggle', {
-      product_id: productId,
-      guest_token: getGuestToken(),
-    })
+    await wishlistService.toggle(productId, getGuestToken())
     await fetchWishlist()
   }
 
