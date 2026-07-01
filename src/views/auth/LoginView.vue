@@ -222,6 +222,11 @@ onMounted(() => {
   if (errorParam) {
     auth.error = decodeURIComponent(errorParam)
   }
+
+  const redirectParam = new URLSearchParams(window.location.search).get('redirect')
+  if (redirectParam) {
+    sessionStorage.setItem('scentique_redirect', redirectParam)
+  }
 })
 
 onUnmounted(() => {

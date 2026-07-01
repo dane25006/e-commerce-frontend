@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
     meta: { guest: true },
   },
   {
+    path: '/auth/callback',
+    name: 'oauth-callback',
+    component: () => import('@/views/auth/OAuthCallbackView.vue'),
+  },
+  {
     path: '/category/:slug',
     name: 'category',
     component: () => import('@/views/category/CategoryView.vue'),
@@ -130,6 +135,15 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const auth = useAuthStore()
+
+  const urlToken = (to.query.auth_token as string) || (to.query.token as string)
+  if (urlToken && to.name !== 'oauth-callback') {
+    return { name: 'oauth-callback', query: { token: urlToken } }
+  }
+
+  if (to.name === 'oauth-callback') {
+    return
+  }
 
   if (!auth.initialized) {
     await auth.boot()

@@ -25,51 +25,26 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/plugins/axios'
-import { getGuestToken } from '@/utils/guest'
+import { useCartStore } from '@/stores/cart'
 import ToastNotification from '@/components/common/ToastNotification.vue'
 
 const auth = useAuthStore()
+const cartStore = useCartStore()
 const route = useRoute()
 const router = useRouter()
 const ready = ref(false)
 
 onMounted(async () => {
-  const token = route.query.auth_token as string | undefined
   const error = route.query.error as string | undefined
 
   if (error) {
-    router.replace({ path: '/login', query: { error } })
+    await router.replace({ path: '/login', query: { error } })
     ready.value = true
     return
   }
 
-  if (token && token !== 'undefined' && token !== 'null') {
-    localStorage.setItem('scentique_auth_token', token)
-    localStorage.setItem('scentique_has_session', 'true')
-
-    try {
-      const { data } = await api.get<{ user: import('@/types/auth').User }>('/profile', {
-        skipAuthRedirect: true,
-      })
-      auth.user = data.user
-      auth.hasSession = true
-
-      const guestToken = getGuestToken()
-      await Promise.allSettled([
-        api.post('/cart/merge', { guest_token: guestToken }),
-        api.post('/wishlist/merge', { guest_token: guestToken }),
-      ])
-    } catch {
-      localStorage.removeItem('scentique_auth_token')
-      localStorage.removeItem('scentique_has_session')
-    }
-
-    router.replace({ query: {} })
-  } else {
-    await auth.boot()
-  }
-
+  await auth.boot()
+  cartStore.fetchCart()
   ready.value = true
 })
 </script>
