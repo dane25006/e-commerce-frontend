@@ -384,10 +384,8 @@ onMounted(async () => {
     promotions.value = data.promotions
   }).catch(() => {})
 
-  await Promise.all([
-    cartStore.fetchCart(),
-    wishlistStore.fetchWishlist(),
-  ])
+  cartStore.fetchCart()
+  wishlistStore.fetchWishlist()
 })
 </script>
 
