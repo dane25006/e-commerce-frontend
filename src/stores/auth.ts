@@ -161,14 +161,24 @@ export const useAuthStore = defineStore('auth', () => {
     if (initialized.value) return
     if (bootPromise) return bootPromise
 
-    if (!hasSession.value) {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY)
+    if (!hasSession.value || !token || token === 'undefined' || token === 'null') {
       initialized.value = true
+      if (!token || token === 'undefined' || token === 'null') {
+        localStorage.removeItem(AUTH_TOKEN_KEY)
+      }
       return
     }
 
     bootPromise = (async () => {
       try {
-        const { data } = await authService.profile({ skipAuthRedirect: true } as any)
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000)
+        const { data } = await authService.profile({
+          skipAuthRedirect: true,
+          signal: controller.signal,
+        } as any)
+        clearTimeout(timeoutId)
         user.value = data.user
       } catch {
         clearSession()

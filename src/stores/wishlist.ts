@@ -37,6 +37,10 @@ export const useWishlistStore = defineStore('wishlist', () => {
   }
 
   async function fetchWishlist() {
+    if (!navigator.onLine) {
+      items.value = []
+      return
+    }
     try {
       const { data } = await wishlistService.get(guestToken())
       items.value = data.wishlist

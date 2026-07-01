@@ -38,12 +38,15 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   async function fetchCart() {
+    if (!navigator.onLine) {
+      items.value = []
+      return
+    }
     loading.value = true
     try {
       const { data } = await cartService.get(guestToken())
       items.value = data.cart
     } catch (e) {
-      console.error('[CartStore] fetchCart failed:', e)
       items.value = []
     } finally {
       loading.value = false
