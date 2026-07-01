@@ -1,5 +1,6 @@
 <template>
   <div v-if="ready">
+    <NetworkStatusBar />
     <RouterView />
     <ToastNotification />
   </div>
@@ -27,6 +28,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import ToastNotification from '@/components/common/ToastNotification.vue'
+import NetworkStatusBar from '@/components/common/NetworkStatusBar.vue'
 
 const auth = useAuthStore()
 const cartStore = useCartStore()
@@ -121,4 +123,6 @@ onMounted(async () => {
     transform: scale(1);
   }
 }
+
+
 </style>
