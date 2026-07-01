@@ -2,6 +2,9 @@ import axios from 'axios'
 import config from '@/config/app'
 import { useAuthStore } from '@/stores/auth'
 
+const AUTH_TOKEN_KEY = 'scentique_auth_token'
+const AUTH_SESSION_KEY = 'scentique_has_session'
+
 const api = axios.create({
   baseURL: config.apiUrl,
   withCredentials: true,
@@ -13,12 +16,14 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((requestConfig) => {
-  const token = localStorage.getItem('scentique_auth_token')
+  const token = localStorage.getItem(AUTH_TOKEN_KEY)
 
   if (token && token !== 'undefined' && token !== 'null') {
     requestConfig.headers.Authorization = `Bearer ${token}`
+  } else if (token === 'undefined' || token === 'null') {
+    localStorage.removeItem(AUTH_TOKEN_KEY)
+    delete requestConfig.headers.Authorization
   } else {
-    localStorage.removeItem('scentique_auth_token')
     delete requestConfig.headers.Authorization
   }
 
@@ -33,11 +38,12 @@ api.interceptors.response.use(
 
       auth.user = null
       auth.hasSession = false
-      localStorage.removeItem('scentique_auth_token')
-      localStorage.removeItem('scentique_has_session')
+      localStorage.removeItem(AUTH_TOKEN_KEY)
+      localStorage.removeItem(AUTH_SESSION_KEY)
 
       if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
+        const { default: router } = await import('@/router')
+        router.push('/login')
       }
     }
 
