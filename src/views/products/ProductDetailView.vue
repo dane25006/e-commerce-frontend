@@ -355,7 +355,7 @@
                   </div>
 
                   <div v-if="!auth.isLoggedIn" class="mt-5 text-sm text-center" style="color: var(--text-muted);">
-                    <RouterLink to="/login" class="font-semibold" style="color: var(--primary);">Sign in</RouterLink>
+                    <RouterLink to="/login" class="font-semibold" style="color: var(--primary);">Login</RouterLink>
                     to leave a review
                   </div>
                 </div>

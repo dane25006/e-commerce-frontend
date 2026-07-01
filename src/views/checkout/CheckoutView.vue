@@ -167,7 +167,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { imageUrl } from '@/utils/image'
-import api from '@/plugins/axios'
+import { orderService } from '@/services/orderService'
 
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -213,7 +213,7 @@ async function placeOrder() {
   placing.value = true
   checkoutError.value = ''
   try {
-    const { data } = await api.post<{ order: { id: number } }>('/checkout', {
+    const { data } = await orderService.checkout({
       shipping_address: `${form.first_name} ${form.last_name}, ${form.address}, ${form.city} ${form.zip}`,
       payment_method: form.payment_method,
     })

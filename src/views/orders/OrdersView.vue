@@ -121,7 +121,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import api from '@/plugins/axios'
+import { orderService } from '@/services/orderService'
 
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
@@ -192,7 +192,7 @@ async function confirmCancel() {
   if (pendingCancelId.value === null) return
   cancellingId.value = pendingCancelId.value
   try {
-    await api.put(`/orders/${pendingCancelId.value}/cancel`)
+    await orderService.cancel(pendingCancelId.value)
     await loadOrders()
     cancelModal.value?.close()
   } finally {
@@ -204,8 +204,8 @@ async function confirmCancel() {
 async function loadOrders() {
   loading.value = true
   try {
-    const { data } = await api.get<{ orders: Order[] }>('/orders')
-    orders.value = data.orders
+    const { data } = await orderService.list()
+    orders.value = data.data ?? []
   } catch {
     orders.value = []
   } finally {

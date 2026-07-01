@@ -129,7 +129,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import api from '@/plugins/axios'
+import { orderService } from '@/services/orderService'
 import { imageUrl } from '@/utils/image'
 
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
@@ -201,7 +201,7 @@ function formatDate(d: string) {
 async function confirmCancel() {
   cancelling.value = true
   try {
-    await api.put(`/orders/${route.params.id}/cancel`)
+    await orderService.cancel(Number(route.params.id))
     await loadOrder()
     cancelModal.value?.close()
   } catch {
@@ -214,7 +214,7 @@ async function confirmCancel() {
 async function loadOrder() {
   loading.value = true
   try {
-    const { data } = await api.get<{ order: Order }>(`/orders/${route.params.id}`)
+    const { data } = await orderService.getOne(Number(route.params.id))
     order.value = data.order
   } catch {
     order.value = null

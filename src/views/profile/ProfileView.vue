@@ -45,6 +45,15 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <label class="form-label">Avatar URL</label>
+              <div class="input-icon-wrap">
+                <i class="ti ti-photo input-icon" aria-hidden="true" />
+                <input id="profile-avatar" name="avatar" v-model="profileForm.avatar" type="url" placeholder="https://example.com/avatar.jpg" class="input-field has-icon" />
+              </div>
+              <img v-if="profileForm.avatar" :src="profileForm.avatar" class="avatar-preview" alt="Avatar preview" />
+            </div>
+
             <Transition name="fade">
               <div v-if="profileSuccess" class="msg-banner success">
                 <i class="ti ti-circle-check" aria-hidden="true" />
@@ -180,7 +189,7 @@ const passwordError = ref('')
 const showCurrentPw = ref(false)
 const showNewPw = ref(false)
 
-const profileForm = reactive({ name: '', email: '' })
+const profileForm = reactive({ name: '', email: '', avatar: '' })
 const passwordForm = reactive<ChangePasswordPayload>({
   current_password: '',
   password: '',
@@ -208,7 +217,7 @@ async function handleUpdateProfile() {
   profileSuccess.value = false
   profileError.value = ''
   try {
-    await auth.updateProfile(profileForm.name, profileForm.email)
+    await auth.updateProfile(profileForm.name, profileForm.email, profileForm.avatar || null)
     profileSuccess.value = true
     setTimeout(() => { profileSuccess.value = false }, 3000)
   } catch (err: unknown) {
@@ -243,6 +252,7 @@ onMounted(() => {
   if (auth.user) {
     profileForm.name = auth.user.name
     profileForm.email = auth.user.email
+    profileForm.avatar = auth.user.avatar ?? ''
   }
 })
 </script>
@@ -545,6 +555,15 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+.avatar-preview {
+  margin-top: 8px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
 }
 
 .fade-enter-active,
