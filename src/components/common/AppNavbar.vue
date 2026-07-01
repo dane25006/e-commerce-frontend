@@ -48,7 +48,7 @@
               class="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg
                      hover:bg-gray-50 transition"
             >
-              Sign in
+              Login
             </RouterLink>
             <RouterLink
               to="/register"

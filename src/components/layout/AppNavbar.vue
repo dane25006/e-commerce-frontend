@@ -131,7 +131,7 @@
               class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-3 py-2 rounded-lg transition-all duration-300"
               style="color: var(--secondary);"
             >
-              Sign in
+              Login
             </RouterLink>
             <RouterLink
               to="/register"
@@ -286,7 +286,7 @@
 
           <div v-if="!auth.isLoggedIn" class="pt-4 mt-4 space-y-2 px-2" style="border-top: 1px solid var(--border);">
             <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="border: 1px solid var(--primary); color: var(--primary);">
-              Sign in
+              Login
             </RouterLink>
             <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="background: var(--primary); color: white;">
               Register

@@ -216,13 +216,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { imageUrl } from '@/utils/image'
 import type { CartItem } from '@/types/cart'
 
-defineProps<{ modelValue: boolean }>()
+const props = defineProps<{ modelValue: boolean }>()
 defineEmits<{ 'update:modelValue': [val: boolean] }>()
 
 const auth = useAuthStore()
@@ -230,6 +230,10 @@ const cartStore = useCartStore()
 const couponCode = ref('')
 const updatingId = ref<number | null>(null)
 const removingId = ref<number | null>(null)
+
+watch(() => props.modelValue, (open) => {
+  if (open) cartStore.fetchCart()
+})
 
 function handleApplyCoupon() {
   if (!couponCode.value.trim()) return
