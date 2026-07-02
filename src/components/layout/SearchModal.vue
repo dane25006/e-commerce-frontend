@@ -14,7 +14,7 @@
             name="query"
             v-model="query"
             type="text"
-            placeholder="Search fragrances, collections..."
+            :placeholder="$t('search.placeholder')"
             class="search-input"
             @keydown.escape="$emit('update:modelValue', false)"
             @keydown.enter="goToSearch"
@@ -23,11 +23,11 @@
             v-if="query"
             @click="query = ''"
             class="clear-btn"
-            aria-label="Clear"
+            :aria-label="$t('search.clear')"
           >
             <i class="ti ti-x" aria-hidden="true" />
           </button>
-          <kbd class="esc-key">ESC</kbd>
+            <kbd class="esc-key">{{ $t('search.esc') }}</kbd>
         </div>
 
         <div class="search-results">
@@ -42,7 +42,7 @@
           </div>
 
           <div v-else-if="results.length">
-            <div class="results-label">Products</div>
+            <div class="results-label">{{ $t('search.products') }}</div>
             <div
               v-for="product in results"
               :key="product.id"
@@ -72,18 +72,18 @@
                 @click="goToSearch"
                 class="view-all-btn"
               >
-                View all results for "{{ query }}" &rarr;
+                {{ $t('search.viewAllResults', { query: query }) }}
               </button>
             </div>
           </div>
 
           <div v-else-if="query.length >= 2 && !loading" class="no-results">
             <i class="ti ti-search-off" aria-hidden="true" />
-            <p>No products found for "{{ query }}"</p>
+            <p>{{ $t('search.noResults', { query: query }) }}</p>
           </div>
 
           <div v-else-if="!query" class="quick-searches">
-            <p class="quick-label">Popular Searches</p>
+            <p class="quick-label">{{ $t('search.popularSearches') }}</p>
             <div class="quick-tags">
               <button
                 v-for="tag in quickSearches"
@@ -102,12 +102,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { productService } from '@/services/productService'
 import { imageUrl } from '@/utils/image'
 import { formatPrice } from '@/utils/price'
 import type { Product } from '@/types/product'
+
+const { t } = useI18n()
 
 const props = defineProps<{ modelValue: boolean }>()
 defineEmits<{ 'update:modelValue': [val: boolean] }>()
@@ -118,7 +121,7 @@ const results = ref<Product[]>([])
 const loading = ref(false)
 const inputRef = ref<HTMLInputElement | null>(null)
 
-const quickSearches = ['Rose', 'Oud', 'Vanilla', 'Floral', 'Unisex', 'Gift Set']
+const quickSearches = computed(() => [t('search.tagRose'), t('search.tagOud'), t('search.tagVanilla'), t('search.tagFloral'), t('search.tagUnisex'), t('search.tagGiftSet')])
 
 let searchTimer: ReturnType<typeof setTimeout>
 

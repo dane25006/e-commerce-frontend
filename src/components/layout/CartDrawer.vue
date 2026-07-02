@@ -18,14 +18,14 @@
             <i class="ti ti-shopping-bag" aria-hidden="true" />
           </div>
           <div>
-            <h2 class="drawer-title">Your Cart</h2>
-            <p class="drawer-count">{{ cartStore.itemCount }} item{{ cartStore.itemCount !== 1 ? 's' : '' }}</p>
+            <h2 class="drawer-title">{{ $t('cart.yourCart') }}</h2>
+            <p class="drawer-count">{{ $t('cart.itemCount', { count: cartStore.itemCount }) }}</p>
           </div>
         </div>
         <button
           @click="$emit('update:modelValue', false)"
           class="drawer-close"
-          aria-label="Close cart"
+          :aria-label="$t('cart.close')"
         >
           <i class="ti ti-x" aria-hidden="true" />
         </button>
@@ -47,14 +47,14 @@
           <div class="empty-icon">
             <i class="ti ti-shopping-bag" aria-hidden="true" />
           </div>
-          <h3 class="empty-title">Your cart is empty</h3>
-          <p class="empty-desc">Discover our luxury fragrances</p>
+          <h3 class="empty-title">{{ $t('cart.emptyDrawerTitle') }}</h3>
+          <p class="empty-desc">{{ $t('cart.emptyDrawerDesc') }}</p>
           <RouterLink
             to="/products"
             @click="$emit('update:modelValue', false)"
             class="btn-primary"
           >
-            Shop Now
+            {{ $t('cart.shopNow') }}
           </RouterLink>
         </div>
 
@@ -98,7 +98,7 @@
                       @click="updateQty(item, item.quantity - 1)"
                       :disabled="updatingId === item.cart_id"
                       class="qty-btn"
-                      aria-label="Decrease quantity"
+                      :aria-label="$t('cart.decrease')"
                     >
                       <i class="ti ti-minus" aria-hidden="true" />
                     </button>
@@ -107,7 +107,7 @@
                       @click="updateQty(item, item.quantity + 1)"
                       :disabled="updatingId === item.cart_id || item.quantity >= item.product.stock"
                       class="qty-btn"
-                      aria-label="Increase quantity"
+                      :aria-label="$t('cart.increase')"
                     >
                       <i class="ti ti-plus" aria-hidden="true" />
                     </button>
@@ -119,7 +119,7 @@
                       @click="removeItem(item)"
                       :disabled="removingId === item.cart_id"
                       class="remove-btn"
-                      aria-label="Remove item"
+                      :aria-label="$t('cart.removeItem')"
                     >
                       <i class="ti ti-trash" aria-hidden="true" />
                     </button>
@@ -138,7 +138,7 @@
             name="coupon_code"
             v-model="couponCode"
             type="text"
-            placeholder="Coupon code"
+            :placeholder="$t('cart.promoPlaceholder')"
             class="input-field"
             :disabled="!!cartStore.coupon"
           />
@@ -147,14 +147,14 @@
             class="btn-secondary"
             @click="handleApplyCoupon"
           >
-            Apply
+            {{ $t('cart.apply') }}
           </button>
           <button
             v-else
             class="btn-cancel"
             @click="handleRemoveCoupon"
           >
-            Remove
+            {{ $t('cart.remove') }}
           </button>
         </div>
         <p
@@ -167,20 +167,20 @@
 
         <div class="drawer-totals">
           <div class="totals-row">
-            <span>Subtotal</span>
+            <span>{{ $t('cart.subtotal', { count: cartStore.itemCount }) }}</span>
             <span>${{ cartStore.subtotal.toFixed(2) }}</span>
           </div>
           <div v-if="cartStore.discount > 0" class="totals-row discount">
-            <span>Discount</span>
+            <span>{{ $t('cart.discount') }}</span>
             <span class="discount-val">-${{ cartStore.discount.toFixed(2) }}</span>
           </div>
           <div class="totals-row">
-            <span>Shipping</span>
-            <span class="free-badge">{{ cartStore.subtotal >= 100 ? 'Free' : '$9.99' }}</span>
+            <span>{{ $t('cart.shipping') }}</span>
+            <span class="free-badge">{{ cartStore.subtotal >= 100 ? $t('cart.free') : '$9.99' }}</span>
           </div>
           <div class="totals-divider" />
           <div class="totals-row total-final">
-            <span>Total</span>
+            <span>{{ $t('cart.total') }}</span>
             <span class="total-amount">${{ (cartStore.total >= 100 ? cartStore.total : cartStore.total + 9.99).toFixed(2) }}</span>
           </div>
         </div>
@@ -192,7 +192,7 @@
           class="checkout-link"
         >
           <i class="ti ti-lock" aria-hidden="true" />
-          Secure Checkout
+          {{ $t('cart.secureCheckout') }}
         </RouterLink>
         <RouterLink
           v-else
@@ -201,14 +201,14 @@
           class="checkout-link signin-link"
         >
           <i class="ti ti-lock" aria-hidden="true" />
-          Sign in to Checkout
+          {{ $t('cart.signInToCheckout') }}
         </RouterLink>
 
         <button
           @click="$emit('update:modelValue', false)"
           class="continue-link"
         >
-          Continue Shopping &rarr;
+          {{ $t('cart.continueShopping') }} &rarr;
         </button>
       </div>
     </div>
@@ -217,10 +217,13 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { imageUrl } from '@/utils/image'
 import type { CartItem } from '@/types/cart'
+
+const { t } = useI18n()
 
 const props = defineProps<{ modelValue: boolean }>()
 defineEmits<{ 'update:modelValue': [val: boolean] }>()

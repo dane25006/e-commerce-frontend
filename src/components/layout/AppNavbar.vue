@@ -15,7 +15,7 @@
           @click="mobileOpen = true"
           class="lg:hidden p-2 -ml-2 rounded-lg transition"
           style="color: var(--secondary);"
-          aria-label="Open menu"
+          :aria-label="$t('nav.openMenu')"
         >
           <i class="ti ti-menu-2 text-xl" aria-hidden="true" />
         </button>
@@ -26,11 +26,11 @@
             class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
             style="background: var(--primary);"
           >
-            <span class="text-white text-lg font-bold tracking-tight" style="font-family: 'Georgia', serif;">S</span>
+            <span class="text-white text-lg font-bold tracking-tight" style="font-family: var(--font-heading);">S</span>
           </div>
           <div class="leading-none">
-            <div class="text-sm tracking-[0.2em] font-semibold uppercase" style="color: var(--secondary); font-family: 'Georgia', serif;">Scentique</div>
-            <div class="text-[8px] tracking-[0.25em] font-medium uppercase" style="color: var(--primary);">Essences</div>
+            <div class="text-sm tracking-[0.2em] font-semibold" :class="isKhmer ? '' : 'uppercase'" style="color: var(--secondary); font-family: var(--font-heading);">{{ $t('app.name') }}</div>
+            <div class="text-[8px] tracking-[0.25em] font-medium" :class="isKhmer ? 'khmer-brand' : 'uppercase'" style="color: var(--primary);">{{ $t('app.tagline') }}</div>
           </div>
         </RouterLink>
 
@@ -45,9 +45,9 @@
           >
             <RouterLink
               :to="link.to"
-              class="px-3.5 py-2 text-[10px] tracking-[0.15em] font-medium uppercase rounded-lg transition-all duration-300 flex items-center gap-1 nav-link"
-              :class="isActive(link.to) ? 'active' : ''"
-              style="color: var(--secondary);"
+              class="px-3.5 py-2 text-[10px] tracking-[0.15em] font-bold rounded-lg transition-all duration-300 flex items-center gap-1 nav-link"
+              :class="[isActive(link.to) ? 'active' : '', isKhmer ? 'khmer-nav' : 'uppercase']"
+              style="color: var(--secondary); font-family: var(--font-body);"
             >
               {{ link.label }}
               <i v-if="link.children" class="ti ti-chevron-down text-[9px] transition-transform duration-200" :class="{ 'rotate-180': hoveredMenu === link.label }" aria-hidden="true" />
@@ -64,12 +64,12 @@
                   :key="child.to"
                   :to="child.to"
                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs transition-all duration-200 hover-lift"
-                  style="color: var(--secondary);"
+                  style="color: var(--secondary); font-family: var(--font-body);"
                 >
                   <i :class="child.icon" class="text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
                   <div>
-                    <p class="font-medium text-[13px]" style="color: var(--secondary);">{{ child.label }}</p>
-                    <p v-if="child.desc" class="text-[10px] tracking-wide" style="color: #999999;">{{ child.desc }}</p>
+                     <p class="font-bold text-[13px]" style="color: var(--secondary); font-family: var(--font-body);">{{ child.label }}</p>
+                    <p v-if="child.desc" class="text-[10px] tracking-wide" style="color: #999999; font-family: var(--font-body);">{{ child.desc }}</p>
                   </div>
                 </RouterLink>
               </div>
@@ -79,12 +79,14 @@
 
         <!-- Right Section -->
         <div class="flex items-center gap-0">
+          <LanguageSwitcher />
+
           <!-- Search -->
           <button
             @click="$emit('openSearch')"
             class="p-2.5 rounded-lg transition-all duration-300 icon-btn"
             style="color: var(--secondary);"
-            aria-label="Search"
+            :aria-label="$t('nav.search')"
           >
             <i class="ti ti-search text-lg" aria-hidden="true" />
           </button>
@@ -94,7 +96,7 @@
             to="/wishlist"
             class="relative p-2.5 rounded-lg transition-all duration-300 icon-btn"
             style="color: var(--secondary);"
-            aria-label="Wishlist"
+            :aria-label="$t('nav.wishlist')"
           >
             <i class="ti ti-heart text-lg" aria-hidden="true" />
             <span
@@ -112,7 +114,7 @@
             class="relative p-2.5 rounded-lg transition-all duration-300 icon-btn"
             :class="{ 'cart-animate': cartAnimating }"
             style="color: var(--secondary);"
-            aria-label="Cart"
+            :aria-label="$t('nav.cart')"
           >
             <i class="ti ti-shopping-bag text-lg" aria-hidden="true" />
             <span
@@ -131,14 +133,14 @@
               class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-3 py-2 rounded-lg transition-all duration-300"
               style="color: var(--secondary);"
             >
-              Login
+              {{ $t('nav.login') }}
             </RouterLink>
             <RouterLink
               to="/register"
               class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-4 py-2 rounded-lg transition-all duration-300"
               style="background: var(--primary); color: white;"
             >
-              Register
+              {{ $t('nav.register') }}
             </RouterLink>
           </template>
 
@@ -175,7 +177,7 @@
                     style="color: var(--secondary);"
                   >
                     <i class="ti ti-user text-sm" style="color: var(--primary);" aria-hidden="true" />
-                    My Profile
+                    {{ $t('nav.myProfile') }}
                   </RouterLink>
                   <RouterLink
                     to="/orders"
@@ -184,7 +186,7 @@
                     style="color: var(--secondary);"
                   >
                     <i class="ti ti-package text-sm" style="color: var(--primary);" aria-hidden="true" />
-                    My Orders
+                    {{ $t('nav.myOrders') }}
                   </RouterLink>
                   <RouterLink
                     to="/wishlist"
@@ -193,7 +195,7 @@
                     style="color: var(--secondary);"
                   >
                     <i class="ti ti-heart text-sm" style="color: var(--primary);" aria-hidden="true" />
-                    Wishlist
+                    {{ $t('nav.wishlist') }}
                   </RouterLink>
                   <RouterLink
                     to="/settings/telegram"
@@ -202,7 +204,7 @@
                     style="color: var(--secondary);"
                   >
                     <i class="ti ti-brand-telegram text-sm" style="color: var(--primary);" aria-hidden="true" />
-                    Telegram
+                    {{ $t('nav.telegram') }}
                   </RouterLink>
                   <div class="border-t my-1" style="border-color: var(--border);" />
                   <button
@@ -210,7 +212,7 @@
                     class="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-500 hover:text-red-700 hover:bg-red-50 font-semibold transition-all duration-200"
                   >
                     <i class="ti ti-logout text-sm" aria-hidden="true" />
-                    Logout
+                    {{ $t('nav.logout') }}
                   </button>
                 </div>
               </Transition>
@@ -239,18 +241,18 @@
         <div class="flex items-center justify-between px-5 py-4" style="border-bottom: 1px solid var(--border);">
           <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: var(--primary);">
-              <span class="text-white text-sm font-bold" style="font-family: 'Georgia', serif;">S</span>
+              <span class="text-white text-sm font-bold" style="font-family: var(--font-heading);">S</span>
             </div>
             <div class="leading-none">
-              <div class="text-xs tracking-[0.2em] font-semibold uppercase" style="color: var(--secondary); font-family: 'Georgia', serif;">Scentique</div>
-              <div class="text-[7px] tracking-[0.25em] font-medium uppercase" style="color: var(--primary);">Essences</div>
+              <div class="text-xs tracking-[0.2em] font-semibold uppercase" style="color: var(--secondary); font-family: var(--font-heading);">{{ $t('app.name') }}</div>
+              <div class="text-[7px] tracking-[0.25em] font-medium uppercase" style="color: var(--primary);">{{ $t('app.tagline') }}</div>
             </div>
           </div>
           <button
             @click="mobileOpen = false"
             class="p-2 rounded-lg transition-all duration-200"
             style="color: var(--secondary);"
-            aria-label="Close menu"
+            :aria-label="$t('nav.closeMenu')"
           >
             <i class="ti ti-x text-lg" aria-hidden="true" />
           </button>
@@ -261,9 +263,9 @@
             <RouterLink
               :to="link.to"
               @click="mobileOpen = false"
-              class="flex items-center justify-between px-4 py-3 rounded-lg text-xs tracking-[0.1em] uppercase font-medium transition-all duration-200"
-              :class="isActive(link.to) ? 'active-mobile' : ''"
-              style="color: var(--secondary);"
+              class="flex items-center justify-between px-4 py-3 rounded-lg text-xs tracking-[0.1em] font-bold transition-all duration-200"
+              :class="[isActive(link.to) ? 'active-mobile' : '', isKhmer ? '' : 'uppercase']"
+              style="color: var(--secondary); font-family: var(--font-body);"
             >
               {{ link.label }}
               <i v-if="link.children" class="ti ti-chevron-right text-[10px]" style="color: var(--primary);" aria-hidden="true" />
@@ -276,7 +278,7 @@
                 :to="child.to"
                 @click="mobileOpen = false"
                 class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
-                style="color: #999999;"
+                style="color: #999999; font-family: var(--font-body);"
               >
                 <i :class="child.icon" class="text-sm w-4 text-center" style="color: var(--primary);" aria-hidden="true" />
                 <span>{{ child.label }}</span>
@@ -285,11 +287,11 @@
           </div>
 
           <div v-if="!auth.isLoggedIn" class="pt-4 mt-4 space-y-2 px-2" style="border-top: 1px solid var(--border);">
-            <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="border: 1px solid var(--primary); color: var(--primary);">
-              Login
+            <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="border: 1px solid var(--primary); color: var(--primary); font-family: var(--font-body);">
+              {{ $t('nav.login') }}
             </RouterLink>
-            <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="background: var(--primary); color: white;">
-              Register
+            <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="background: var(--primary); color: white; font-family: var(--font-body);">
+              {{ $t('nav.register') }}
             </RouterLink>
           </div>
 
@@ -309,37 +311,37 @@
               to="/profile"
               @click="mobileOpen = false"
               class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
-              style="color: var(--secondary);"
+              style="color: var(--secondary); font-family: var(--font-body);"
             >
               <i class="ti ti-user text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
-              My Profile
+              {{ $t('nav.myProfile') }}
             </RouterLink>
             <RouterLink
               to="/orders"
               @click="mobileOpen = false"
               class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
-              style="color: var(--secondary);"
+              style="color: var(--secondary); font-family: var(--font-body);"
             >
               <i class="ti ti-package text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
-              My Orders
+              {{ $t('nav.myOrders') }}
             </RouterLink>
             <RouterLink
               to="/wishlist"
               @click="mobileOpen = false"
               class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
-              style="color: var(--secondary);"
+              style="color: var(--secondary); font-family: var(--font-body);"
             >
               <i class="ti ti-heart text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
-              Wishlist
+              {{ $t('nav.wishlist') }}
             </RouterLink>
             <RouterLink
               to="/settings/telegram"
               @click="mobileOpen = false"
               class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
-              style="color: var(--secondary);"
+              style="color: var(--secondary); font-family: var(--font-body);"
             >
               <i class="ti ti-brand-telegram text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
-              Telegram
+              {{ $t('nav.telegram') }}
             </RouterLink>
             <div class="border-t my-2 mx-2" style="border-color: var(--border);" />
             <button
@@ -347,7 +349,7 @@
               class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs text-red-500 hover:text-red-700 hover:bg-red-50 font-semibold transition-all duration-200 w-full mx-2"
             >
               <i class="ti ti-logout text-sm w-5 text-center" aria-hidden="true" />
-              Logout
+              {{ $t('nav.logout') }}
             </button>
           </template>
         </div>
@@ -357,10 +359,10 @@
 
   <ConfirmModal
     ref="logoutModal"
-    title="Logout?"
-    message="Are you sure you want to logout of your account?"
-    confirm-text="Yes, Logout"
-    cancel-text="Cancel"
+    :title="$t('logout.title')"
+    :message="$t('logout.message')"
+    :confirm-text="$t('logout.confirm')"
+    :cancel-text="$t('logout.cancel')"
     @confirm="confirmLogout"
   />
 </template>
@@ -368,10 +370,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
+import LanguageSwitcher from '@/components/common/LanguageSwitcher.vue'
 
 defineEmits<{ openSearch: []; openCart: [] }>()
 
@@ -380,6 +384,9 @@ const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
 const route = useRoute()
 const router = useRouter()
+
+const { t, locale } = useI18n()
+const isKhmer = computed(() => locale.value === 'km')
 
 const dropdownOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
@@ -397,24 +404,24 @@ const initials = computed(() =>
   auth.userName.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
 )
 
-const navLinks = [
-  { to: '/', label: 'Home' },
+const navLinks = computed(() => [
+  { to: '/', label: t('nav.home') },
   {
     to: '/products',
-    label: 'Shop',
+    label: t('nav.shop'),
     children: [
-      { to: '/products', label: 'All Products', icon: 'ti ti-bottle', desc: 'Browse our full collection' },
-      { to: '/new-arrivals', label: 'New Arrivals', icon: 'ti ti-sparkles', desc: 'Fresh drops just landed' },
-      { to: '/best-sellers', label: 'Best Sellers', icon: 'ti ti-star', desc: 'Most loved by customers' },
-      { to: '/products?sort=price_desc', label: 'Luxury Collection', icon: 'ti ti-crown', desc: 'Premium & exclusive scents' },
+      { to: '/products', label: t('nav.allProducts'), icon: 'ti ti-bottle', desc: t('nav.allProductsDesc') },
+      { to: '/new-arrivals', label: t('nav.newArrivals'), icon: 'ti ti-sparkles', desc: t('nav.newArrivalsDesc') },
+      { to: '/best-sellers', label: t('nav.bestSellers'), icon: 'ti ti-star', desc: t('nav.bestSellersDesc') },
+      { to: '/products?sort=price_desc', label: t('nav.luxuryCollection'), icon: 'ti ti-crown', desc: t('nav.luxuryCollectionDesc') },
     ],
   },
-  { to: '/collections', label: 'Collections' },
-  { to: '/brands', label: 'Brands' },
-  { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
-  { to: '/orders', label: 'My Orders' },
-]
+  { to: '/collections', label: t('nav.collections') },
+  { to: '/brands', label: t('nav.brands') },
+  { to: '/about', label: t('nav.about') },
+  { to: '/contact', label: t('nav.contact') },
+  { to: '/orders', label: t('nav.myOrders') },
+])
 
 function isActive(to: string) {
   if (to === '/') return route.path === '/'
@@ -563,5 +570,21 @@ onUnmounted(() => {
 @keyframes scaleIn {
   from { transform: scale(0); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* Khmer creative styling */
+.khmer-nav {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.khmer-brand {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--primary);
 }
 </style>
