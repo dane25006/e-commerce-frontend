@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Our Story</span>
-        <h1 class="hero-title">About Scentique</h1>
-        <p class="hero-count">Discover the passion and craftsmanship behind every bottle.</p>
+        <span class="hero-label">{{ $t('about.ourStory') }}</span>
+        <h1 class="hero-title">{{ $t('about.aboutScentique') }}</h1>
+        <p class="hero-count">{{ $t('about.heroDesc') }}</p>
       </div>
     </section>
 
@@ -16,23 +16,23 @@
       <div class="story-section">
         <div class="story-img-col">
           <div class="story-img-wrap">
-            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80" alt="Perfume craftsmanship" class="story-img" loading="lazy" />
+            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80" :alt="$t('about.alt')" class="story-img" loading="lazy" />
           </div>
         </div>
         <div class="story-text-col">
-          <span class="section-label">Since 2018</span>
-          <h2 class="story-title">Our Passion for Perfumery</h2>
+          <span class="section-label">{{ $t('about.since') }}</span>
+          <h2 class="story-title">{{ $t('about.passionTitle') }}</h2>
           <div class="story-paragraphs">
-            <p>Scentique was born from a deep love for the art of perfumery. Our founders, master perfumers with decades of experience across Paris, Grasse, and Milan, set out to create a brand that celebrates the beauty of fine fragrance without compromise.</p>
-            <p>We source the finest raw ingredients from around the world — Bulgarian roses, Indian sandalwood, French lavender, and rare Oud from Southeast Asia. Each ingredient is carefully selected for its purity and olfactory richness.</p>
-            <p>Our fragrances are crafted in small batches to ensure the highest quality. Every bottle is a testament to our commitment to excellence, from the carefully composed juice to the elegant, sustainable packaging.</p>
+            <p>{{ $t('about.passionP1') }}</p>
+            <p>{{ $t('about.passionP2') }}</p>
+            <p>{{ $t('about.passionP3') }}</p>
           </div>
         </div>
       </div>
 
       <div class="values-section">
-        <span class="section-label">What We Stand For</span>
-        <h2 class="values-title">Our Values</h2>
+        <span class="section-label">{{ $t('about.valuesLabel') }}</span>
+        <h2 class="values-title">{{ $t('about.valuesTitle') }}</h2>
         <div class="values-grid">
           <div v-for="value in values" :key="value.title" class="card">
             <div class="value-icon-wrap">
@@ -53,7 +53,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -61,23 +62,24 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
 
-const values = [
+const { t } = useI18n()
+const values = computed(() => [
   {
     icon: 'ti-diamond',
-    title: 'Craftsmanship',
-    description: 'Every fragrance is meticulously composed by master perfumers using time-honored techniques passed down through generations.',
+    title: t('about.craftsmanship'),
+    description: t('about.craftsmanshipDesc'),
   },
   {
     icon: 'ti-leaf',
-    title: 'Sustainability',
-    description: 'We are committed to ethical sourcing, sustainable practices, and eco-friendly packaging to protect our planet for future generations.',
+    title: t('about.sustainability'),
+    description: t('about.sustainabilityDesc'),
   },
   {
     icon: 'ti-heart',
-    title: 'Authenticity',
-    description: '100% genuine products sourced directly from the finest ingredient suppliers. No shortcuts, no compromises — only true luxury.',
+    title: t('about.authenticity'),
+    description: t('about.authenticityDesc'),
   },
-]
+])
 
 const searchOpen = ref(false)
 const cartOpen = ref(false)
@@ -118,7 +120,7 @@ const cartOpen = ref(false)
   margin-bottom: 16px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
@@ -182,7 +184,7 @@ const cartOpen = ref(false)
   font-size: 1.875rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 20px;
 }
 @media (min-width: 768px) {
@@ -203,7 +205,7 @@ const cartOpen = ref(false)
   font-size: 1.875rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 40px;
 }
 @media (min-width: 768px) {
@@ -245,7 +247,7 @@ const cartOpen = ref(false)
   font-size: 1.125rem;
   font-weight: 700;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 8px;
 }
 .value-card-desc {

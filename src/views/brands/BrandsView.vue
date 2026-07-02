@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Luxury Houses</span>
-        <h1 class="hero-title">Featured Brands</h1>
-        <p class="hero-count">Explore the world's most prestigious fragrance houses, all in one place.</p>
+        <span class="hero-label">{{ $t('brands.luxuryHouses') }}</span>
+        <h1 class="hero-title">{{ $t('brands.featuredBrands') }}</h1>
+        <p class="hero-count">{{ $t('brands.heroDesc') }}</p>
       </div>
     </section>
 
@@ -30,7 +30,7 @@
             <span v-for="note in brand.signatures" :key="note" class="badge-gold">{{ note }}</span>
           </div>
           <RouterLink to="/products" class="shop-link">
-            Shop {{ brand.name }}
+            {{ $t('brands.shopBrand', { brand: brand.name }) }}
             <i class="ti ti-arrow-right" aria-hidden="true" />
           </RouterLink>
         </div>
@@ -138,7 +138,7 @@ const cartOpen = ref(false)
   margin-bottom: 16px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
@@ -195,7 +195,7 @@ const cartOpen = ref(false)
   font-size: 3rem;
   font-weight: 900;
   color: rgba(255,255,255,0.15);
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
 }
 @media (min-width: 768px) {
   .brand-initial { font-size: 3.75rem; }
@@ -208,7 +208,7 @@ const cartOpen = ref(false)
   font-size: 1.25rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 8px;
 }
 .brand-desc {

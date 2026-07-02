@@ -10,11 +10,11 @@
     <section id="featured-products" class="section-padding">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <span class="section-label block mb-3">Our Favorite Picks</span>
-          <h2 class="text-3xl md:text-4xl lg:text-5xl font-black" style="color: var(--text);">
-            Explore Our Most Loved Scents
+          <span class="section-label block mb-3">{{ $t('home.ourFavoritePicks') }}</span>
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-black" style="color: var(--text); font-family: var(--font-body); letter-spacing: -0.02em;">
+            {{ $t('home.exploreMostLoved') }}
           </h2>
-          <p class="text-sm mt-4 max-w-lg mx-auto" style="color: var(--text-muted);">Discover the fragrances that have captured the hearts of our customers worldwide.</p>
+          <p class="text-sm mt-4 max-w-lg mx-auto" style="color: var(--text-muted);">{{ $t('home.exploreMostLovedDesc') }}</p>
         </div>
 
         <!-- Skeleton -->
@@ -43,7 +43,7 @@
         <!-- Error -->
         <div v-else-if="productStore.error" class="text-center py-16" style="color: var(--text-muted);">
           <i class="ti ti-alert-circle text-4xl block mb-3" style="color: rgba(184,138,68,0.3);" aria-hidden="true" />
-          <p class="text-sm">Something went wrong while loading your featured products. Please try again.</p>
+          <p class="text-sm">{{ $t('home.errorLoadingProducts') }}</p>
         </div>
 
         <!-- Products Grid -->
@@ -61,12 +61,12 @@
 
         <div v-else class="text-center py-16" style="color: var(--text-muted);">
           <i class="ti ti-mood-empty text-4xl block mb-3" style="color: rgba(184,138,68,0.2);" aria-hidden="true" />
-          <p class="text-sm">We couldn&rsquo;t find any products to feature right now. Check back soon for new arrivals.</p>
+          <p class="text-sm">{{ $t('home.emptyProducts') }}</p>
         </div>
 
         <div class="text-center mt-10">
           <RouterLink to="/products" class="btn-secondary text-sm px-8">
-            View All Products
+            {{ $t('home.viewAllProducts') }}
           </RouterLink>
         </div>
       </div>
@@ -76,8 +76,8 @@
     <section class="section-padding" style="background: var(--surface);">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <span class="section-label block mb-3">Luxury Brands</span>
-          <h2 class="text-3xl md:text-4xl font-black" style="color: var(--text);">Featured Houses</h2>
+          <span class="section-label block mb-3">{{ $t('home.luxuryBrands') }}</span>
+          <h2 class="text-3xl md:text-4xl font-black" style="color: var(--text); font-family: var(--font-body); letter-spacing: -0.02em;">{{ $t('home.featuredHouses') }}</h2>
         </div>
         <div class="grid grid-cols-3 md:grid-cols-6 gap-6 md:gap-8">
           <div
@@ -85,7 +85,7 @@
             :key="brand.name"
             class="flex items-center justify-center h-20 rounded-[var(--radius)] transition-all duration-300 cursor-default card"
           >
-            <span class="text-sm font-bold tracking-wider" style="color: var(--text-muted); font-family: 'Playfair Display', serif;">{{ brand.name }}</span>
+            <span class="text-sm font-bold tracking-wider" style="color: var(--text-muted); font-family: var(--font-heading);">{{ $t(brand.key) }}</span>
           </div>
         </div>
       </div>
@@ -96,20 +96,20 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-8">
           <div>
-            <span class="section-label block mb-1">Fresh drops just landed</span>
-            <h2 class="text-3xl md:text-4xl font-black" style="color: #2E2E2E;">New Arrivals</h2>
+            <span class="section-label block mb-1">{{ $t('home.newArrivalsLabel') }}</span>
+            <h2 class="text-3xl md:text-4xl font-black" style="color: #2E2E2E; font-family: var(--font-body); letter-spacing: -0.02em;">{{ $t('home.newArrivalsTitle') }}</h2>
           </div>
           <RouterLink to="/products?sort=newest" class="btn-outline text-sm py-2 px-4 hidden sm:flex items-center gap-1.5">
-            View All
+            {{ $t('home.viewAll') }}
             <i class="ti ti-arrow-right text-sm" aria-hidden="true" />
           </RouterLink>
         </div>
 
         <div class="relative group">
-          <button @click="scrollLeft('newArrivalsScroll')" class="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" aria-label="Scroll left">
+          <button @click="scrollLeft('newArrivalsScroll')" class="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" :aria-label="$t('home.scrollLeft')">
             <i class="ti ti-chevron-left" aria-hidden="true" />
           </button>
-          <button @click="scrollRight('newArrivalsScroll')" class="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" aria-label="Scroll right">
+          <button @click="scrollRight('newArrivalsScroll')" class="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" :aria-label="$t('home.scrollRight')">
             <i class="ti ti-chevron-right" aria-hidden="true" />
           </button>
 
@@ -158,20 +158,20 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-8">
           <div>
-            <span class="section-label block mb-1">Most loved by customers</span>
-            <h2 class="text-3xl md:text-4xl font-black" style="color: #2E2E2E;">Best Sellers</h2>
+            <span class="section-label block mb-1">{{ $t('home.bestSellersLabel') }}</span>
+            <h2 class="text-3xl md:text-4xl font-black" style="color: #2E2E2E; font-family: var(--font-body); letter-spacing: -0.02em;">{{ $t('home.bestSellersTitle') }}</h2>
           </div>
           <RouterLink to="/products?sort=rating" class="btn-outline text-sm py-2 px-4 hidden sm:flex items-center gap-1.5">
-            View All
+            {{ $t('home.viewAll') }}
             <i class="ti ti-arrow-right text-sm" aria-hidden="true" />
           </RouterLink>
         </div>
 
         <div class="relative group">
-          <button @click="scrollLeft('bestSellersScroll')" class="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" aria-label="Scroll left">
+          <button @click="scrollLeft('bestSellersScroll')" class="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" :aria-label="$t('home.scrollLeft')">
             <i class="ti ti-chevron-left" aria-hidden="true" />
           </button>
-          <button @click="scrollRight('bestSellersScroll')" class="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" aria-label="Scroll right">
+          <button @click="scrollRight('bestSellersScroll')" class="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition opacity-0 group-hover:opacity-100 hover:scale-110" style="background: #FFFFFF; color: #4A403A;" :aria-label="$t('home.scrollRight')">
             <i class="ti ti-chevron-right" aria-hidden="true" />
           </button>
 
@@ -224,24 +224,24 @@
     <!-- Newsletter -->
     <section class="section-padding" style="background: var(--secondary);">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span class="section-label block mb-3" style="color: var(--primary);">Stay Connected</span>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4">
-          Join Our World of Fragrance
+        <span class="section-label block mb-3" style="color: var(--primary);">{{ $t('home.stayConnected') }}</span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4" style="font-family: var(--font-body); letter-spacing: -0.02em;">
+          {{ $t('home.joinWorld') }}
         </h2>
         <p class="text-sm mb-8 max-w-md mx-auto" style="color: rgba(255,255,255,0.5);">
-          Subscribe to receive exclusive offers, new arrivals, and insider tips straight to your inbox.
+          {{ $t('home.subscribeDesc') }}
         </p>
         <div class="flex items-center gap-3 justify-center max-w-md mx-auto">
           <input
             id="home-email"
             name="email"
             type="email"
-            placeholder="Your email address"
+            :placeholder="$t('home.emailPlaceholder')"
             class="flex-1 px-5 py-3 rounded-full text-sm outline-none"
             style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #FFFFFF;"
           />
           <button class="btn-primary whitespace-nowrap">
-            Subscribe
+            {{ $t('home.subscribe') }}
           </button>
         </div>
       </div>
@@ -256,12 +256,12 @@
             <div class="absolute -bottom-8 -right-8 w-56 h-56 rounded-full" style="background: rgba(255,255,255,0.05);" />
           </div>
           <div class="relative">
-            <span class="section-label block mb-4" style="color: rgba(255,255,255,0.7);">Join Scentique</span>
-            <h2 class="text-3xl md:text-4xl font-black text-white mb-4">
-              Ready to Find Your<br />Signature Scent?
+            <span class="section-label block mb-4" style="color: rgba(255,255,255,0.7);">{{ $t('home.joinScentique') }}</span>
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-4" style="font-family: var(--font-body); letter-spacing: -0.02em;">
+              {{ $t('home.readyToFind') }}
             </h2>
             <p class="text-base mb-8 max-w-md mx-auto" style="color: rgba(255,255,255,0.7);">
-              Create a free account to save favourites, track orders, and get exclusive member offers.
+              {{ $t('home.createAccountDesc') }}
             </p>
             <div class="flex items-center gap-4 justify-center">
               <RouterLink
@@ -269,14 +269,14 @@
                 class="inline-flex items-center justify-center font-bold px-8 py-3 rounded-full transition text-sm shadow-lg"
                 style="background: #FFFFFF; color: var(--primary);"
               >
-                Create Account
+                {{ $t('home.createAccount') }}
               </RouterLink>
               <RouterLink
                 to="/login"
                 class="inline-flex items-center justify-center text-white border-2 px-8 py-3 rounded-full transition text-sm font-semibold"
                 style="border-color: rgba(255,255,255,0.4);"
               >
-                Sign In
+                {{ $t('home.signIn') }}
               </RouterLink>
             </div>
           </div>
@@ -294,6 +294,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useProductStore } from '@/stores/product'
 import { useCartStore } from '@/stores/cart'
@@ -321,14 +322,15 @@ import ProductCard from '@/components/product/ProductCard.vue'
 import ProductQuickView from '@/components/product/ProductQuickView.vue'
 
 const brands = [
-  { name: 'Dior' },
-  { name: 'Chanel' },
-  { name: 'Versace' },
-  { name: 'Gucci' },
-  { name: 'YSL' },
-  { name: 'Tom Ford' },
+  { name: 'Dior', key: 'home.brandDior' },
+  { name: 'Chanel', key: 'home.brandChanel' },
+  { name: 'Versace', key: 'home.brandVersace' },
+  { name: 'Gucci', key: 'home.brandGucci' },
+  { name: 'YSL', key: 'home.brandYSL' },
+  { name: 'Tom Ford', key: 'home.brandTomFord' },
 ]
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const productStore = useProductStore()
 const cartStore = useCartStore()

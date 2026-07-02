@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Get in Touch</span>
-        <h1 class="hero-title">Contact Us</h1>
-        <p class="hero-count">We'd love to hear from you. Reach out with any questions or inquiries.</p>
+        <span class="hero-label">{{ $t('contact.getInTouch') }}</span>
+        <h1 class="hero-title">{{ $t('contact.contactUs') }}</h1>
+        <p class="hero-count">{{ $t('contact.heroDesc') }}</p>
       </div>
     </section>
 
@@ -15,7 +15,7 @@
       <div class="contact-grid">
 
         <div class="info-col">
-          <h2 class="info-heading">Get in Touch</h2>
+          <h2 class="info-heading">{{ $t('contact.infoHeading') }}</h2>
           <div class="info-list">
             <div v-for="info in contactInfo" :key="info.label" class="info-item">
               <div class="info-icon-wrap">
@@ -30,35 +30,35 @@
         </div>
 
         <div class="form-col">
-          <h2 class="form-heading">Send a Message</h2>
+          <h2 class="form-heading">{{ $t('contact.sendMessage') }}</h2>
           <form @submit.prevent="handleSubmit" class="form">
             <div class="form-row">
               <div>
-                <label class="form-label">First Name</label>
+                <label class="form-label">{{ $t('contact.firstName') }}</label>
                 <input id="contact-first-name" name="firstName" v-model="form.firstName" type="text" required class="input-field" />
               </div>
               <div>
-                <label class="form-label">Last Name</label>
+                <label class="form-label">{{ $t('contact.lastName') }}</label>
                 <input id="contact-last-name" name="lastName" v-model="form.lastName" type="text" required class="input-field" />
               </div>
             </div>
             <div>
-              <label class="form-label">Email</label>
+              <label class="form-label">{{ $t('contact.email') }}</label>
               <input id="contact-email" name="email" v-model="form.email" type="email" required class="input-field" />
             </div>
             <div>
-              <label class="form-label">Subject</label>
+              <label class="form-label">{{ $t('contact.subject') }}</label>
               <input id="contact-subject" name="subject" v-model="form.subject" type="text" required class="input-field" />
             </div>
             <div>
-              <label class="form-label">Message</label>
+              <label class="form-label">{{ $t('contact.message') }}</label>
               <textarea id="contact-message" name="message" v-model="form.message" rows="5" required class="input-field input-textarea"></textarea>
             </div>
 
             <Transition name="fade">
               <div v-if="submitted" class="success-msg">
                 <i class="ti ti-circle-check" aria-hidden="true" />
-                Thank you for reaching out! Your message has been received, and our team will be in touch soon.
+                {{ $t('contact.successMessage') }}
               </div>
             </Transition>
 
@@ -68,7 +68,7 @@
               class="btn-primary"
             >
               <i v-if="submitting" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
-              {{ submitting ? 'Sending...' : 'Send Message' }}
+              {{ submitting ? $t('contact.sending') : $t('contact.send') }}
             </button>
           </form>
         </div>
@@ -83,7 +83,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -91,12 +92,13 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
 
-const contactInfo = [
-  { icon: 'ti-map-pin', label: 'Address', value: '123 Luxury Lane, 8th Arrondissement, Paris, France 75008' },
-  { icon: 'ti-phone', label: 'Phone', value: '+1 (800) 555-0199' },
-  { icon: 'ti-mail', label: 'Email', value: 'hello@scentique.com' },
-  { icon: 'ti-clock', label: 'Hours', value: 'Monday – Friday, 9:00 AM – 6:00 PM EST' },
-]
+const { t } = useI18n()
+const contactInfo = computed(() => [
+  { icon: 'ti-map-pin', label: t('contact.address'), value: t('contact.addressValue') },
+  { icon: 'ti-phone', label: t('contact.phone'), value: t('contact.phoneValue') },
+  { icon: 'ti-mail', label: t('contact.email'), value: t('contact.emailValue', { at: '@' }) },
+  { icon: 'ti-clock', label: t('contact.hours'), value: t('contact.hoursValue') },
+])
 
 const form = reactive({
   firstName: '',
@@ -161,7 +163,7 @@ const cartOpen = ref(false)
   margin-bottom: 16px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
@@ -193,7 +195,7 @@ const cartOpen = ref(false)
   font-size: 1.5rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 24px;
 }
 .info-list {
@@ -232,7 +234,7 @@ const cartOpen = ref(false)
   font-size: 1.5rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 24px;
 }
 .form {

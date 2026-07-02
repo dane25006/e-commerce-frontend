@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Top Rated</span>
-        <h1 class="hero-title">Best Sellers</h1>
-        <p v-if="meta" class="hero-count">{{ meta.total }} best seller{{ meta.total !== 1 ? 's' : '' }}</p>
+        <span class="hero-label">{{ $t('bestSellers.topRated') }}</span>
+        <h1 class="hero-title">{{ $t('bestSellers.bestSellers') }}</h1>
+        <p v-if="meta" class="hero-count">{{ $t('products.count', { count: meta.total }) }}</p>
       </div>
     </section>
 
@@ -21,7 +21,7 @@
               name="search"
               v-model="filters.search"
               type="text"
-              placeholder="Search best sellers..."
+              :placeholder="$t('search.placeholderBestSellers')"
               class="search-input"
             />
           </div>
@@ -35,16 +35,16 @@
             @change="onFilterChange"
             class="sort-select"
           >
-            <option value="rating">Sort: top rated</option>
-            <option value="newest">Newest first</option>
-            <option value="price_asc">Price: low to high</option>
-            <option value="price_desc">Price: high to low</option>
-            <option value="name_asc">Name A–Z</option>
+            <option value="rating">{{ $t('products.sortTopRatedLabel') }}</option>
+            <option value="newest">{{ $t('products.sortNewest') }}</option>
+            <option value="price_asc">{{ $t('products.sortPriceLow') }}</option>
+            <option value="price_desc">{{ $t('products.sortPriceHigh') }}</option>
+            <option value="name_asc">{{ $t('products.sortNameAZ') }}</option>
           </select>
           <button
             @click="showMobileFilters = !showMobileFilters"
             class="mobile-filter-btn"
-            aria-label="Filters"
+            :aria-label="$t('products.filters')"
           >
             <i class="ti ti-filter text-lg" aria-hidden="true" />
           </button>
@@ -61,19 +61,19 @@
           {{ chip.label }}
           <i class="ti ti-x chip-x" aria-hidden="true" />
         </span>
-        <button @click="handleReset" class="chip-clear">Clear all</button>
+        <button @click="handleReset" class="chip-clear">{{ $t('products.clearAll') }}</button>
       </div>
 
       <Transition name="collapse">
         <div v-if="showMobileFilters" class="mobile-filters-drawer">
           <div class="mobile-filters-header">
-            <span class="mobile-filters-title">Filters</span>
+            <span class="mobile-filters-title">{{ $t('products.filters') }}</span>
             <button @click="showMobileFilters = false" class="mobile-filters-close"><i class="ti ti-x" /></button>
           </div>
           <div class="mobile-filters-body">
             <div class="mobile-filter-group">
               <button @click="filterOpen.gender = !filterOpen.gender" class="mobile-filter-toggle">
-                Gender
+                {{ $t('products.gender') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.gender }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
@@ -87,7 +87,7 @@
             </div>
             <div class="mobile-filter-group">
               <button @click="filterOpen.categories = !filterOpen.categories" class="mobile-filter-toggle">
-                Categories
+                {{ $t('products.categories') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.categories }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
@@ -98,7 +98,7 @@
             </div>
             <div class="mobile-filter-group">
               <button @click="filterOpen.brand = !filterOpen.brand" class="mobile-filter-toggle">
-                Brand
+                {{ $t('products.brand') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.brand }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
@@ -112,7 +112,7 @@
             </div>
             <div class="mobile-filter-group">
               <button @click="filterOpen.type = !filterOpen.type" class="mobile-filter-toggle">
-                Type
+                {{ $t('products.type') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.type }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
@@ -126,7 +126,7 @@
             </div>
             <div class="mobile-filter-group">
               <button @click="filterOpen.department = !filterOpen.department" class="mobile-filter-toggle">
-                Department
+                {{ $t('products.department') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.department }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
@@ -140,7 +140,7 @@
             </div>
             <div class="mobile-filter-group">
               <button @click="filterOpen.price = !filterOpen.price" class="mobile-filter-toggle">
-                Price range
+                {{ $t('products.priceRange') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.price }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
@@ -155,13 +155,13 @@
             </div>
             <div class="mobile-filter-group">
               <button @click="filterOpen.availability = !filterOpen.availability" class="mobile-filter-toggle">
-                Availability
+                {{ $t('products.availability') }}
                 <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.availability }" aria-hidden="true" />
               </button>
               <Transition name="filter-collapse">
                 <div v-if="filterOpen.availability" class="mobile-filter-options">
                   <div class="availability-row">
-                    <span>In stock only</span>
+                    <span>{{ $t('products.inStockOnly') }}</span>
                     <button type="button" role="switch" :aria-checked="filters.in_stock !== false" @click="filters.in_stock = filters.in_stock === false ? undefined : false; onFilterChange()"
                       class="toggle" :class="filters.in_stock !== false ? 'toggle-active' : 'toggle-inactive'">
                       <span class="toggle-knob" :class="filters.in_stock !== false ? 'toggle-knob-active' : ''" />
@@ -172,8 +172,8 @@
             </div>
           </div>
           <div class="mobile-filters-actions">
-            <button @click="showMobileFilters = false; loadProducts()" class="btn-primary flex-1">Apply</button>
-            <button @click="handleReset" class="btn-secondary flex-1">Reset</button>
+            <button @click="showMobileFilters = false; loadProducts()" class="btn-primary flex-1">{{ $t('products.apply') }}</button>
+            <button @click="handleReset" class="btn-secondary flex-1">{{ $t('products.reset') }}</button>
           </div>
         </div>
       </Transition>
@@ -182,7 +182,7 @@
         <aside class="sidebar">
           <div class="card filter-card">
             <button @click="filterOpen.gender = !filterOpen.gender" class="filter-header">
-              Gender
+              {{ $t('products.gender') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.gender }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
@@ -198,7 +198,7 @@
 
           <div class="card filter-card">
             <button @click="filterOpen.categories = !filterOpen.categories" class="filter-header">
-              Categories
+              {{ $t('products.categories') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.categories }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
@@ -210,7 +210,7 @@
 
           <div class="card filter-card">
             <button @click="filterOpen.brand = !filterOpen.brand" class="filter-header">
-              Brand
+              {{ $t('products.brand') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.brand }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
@@ -226,7 +226,7 @@
 
           <div class="card filter-card">
             <button @click="filterOpen.type = !filterOpen.type" class="filter-header">
-              Type
+              {{ $t('products.type') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.type }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
@@ -242,7 +242,7 @@
 
           <div class="card filter-card">
             <button @click="filterOpen.department = !filterOpen.department" class="filter-header">
-              Department
+              {{ $t('products.department') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.department }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
@@ -258,7 +258,7 @@
 
           <div class="card filter-card">
             <button @click="filterOpen.price = !filterOpen.price" class="filter-header">
-              Price range
+              {{ $t('products.priceRange') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.price }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
@@ -274,13 +274,13 @@
 
           <div class="card filter-card">
             <button @click="filterOpen.availability = !filterOpen.availability" class="filter-header">
-              Availability
+              {{ $t('products.availability') }}
               <i class="ti ti-chevron-down chevron" :class="{ 'is-open': filterOpen.availability }" aria-hidden="true" />
             </button>
             <Transition name="filter-collapse">
               <div v-if="filterOpen.availability" class="filter-body">
                 <div class="availability-row">
-                  <span>In stock only</span>
+                  <span>{{ $t('products.inStockOnly') }}</span>
                   <button type="button" role="switch" :aria-checked="filters.in_stock !== false" @click="filters.in_stock = filters.in_stock === false ? undefined : false; onFilterChange()"
                     class="toggle" :class="filters.in_stock !== false ? 'toggle-active' : 'toggle-inactive'">
                     <span class="toggle-knob" :class="filters.in_stock !== false ? 'toggle-knob-active' : ''" />
@@ -307,14 +307,14 @@
 
           <div v-else-if="error" class="state-card">
             <i class="ti ti-alert-circle state-icon" aria-hidden="true" />
-            <p class="state-text">Something went wrong while loading best sellers. Please try again.</p>
-            <button @click="loadProducts" class="btn-primary">Try again</button>
+            <p class="state-text">{{ $t('bestSellers.errorLoading') }}</p>
+            <button @click="loadProducts" class="btn-primary">{{ $t('products.tryAgain') }}</button>
           </div>
 
           <div v-else-if="!products.length" class="state-card">
             <i class="ti ti-mood-empty state-icon" aria-hidden="true" />
-            <p class="state-text">No best sellers match your current filters. Try adjusting them to discover our most-loved scents.</p>
-            <button @click="handleReset" class="btn-secondary">Clear filters</button>
+            <p class="state-text">{{ $t('bestSellers.emptyFilters') }}</p>
+            <button @click="handleReset" class="btn-secondary">{{ $t('products.clearFilters') }}</button>
           </div>
 
           <div v-else class="product-grid">
@@ -365,6 +365,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
@@ -389,7 +390,7 @@ const {
   min-height: 100vh;
   background: var(--background);
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-body);
 }
 
 .hero-section {
@@ -425,7 +426,7 @@ const {
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);

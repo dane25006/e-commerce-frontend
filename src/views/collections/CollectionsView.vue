@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Curated</span>
-        <h1 class="hero-title">Our Collections</h1>
-        <p class="hero-count">Discover our thoughtfully curated fragrance collections, each telling its own unique story.</p>
+        <span class="hero-label">{{ $t('collections.curated') }}</span>
+        <h1 class="hero-title">{{ $t('collections.ourCollections') }}</h1>
+        <p class="hero-count">{{ $t('collections.heroDesc') }}</p>
       </div>
     </section>
 
@@ -28,7 +28,7 @@
               <span v-for="note in collection.notes" :key="note" class="badge-gold">{{ note }}</span>
             </div>
             <RouterLink to="/products" class="btn-primary">
-              Explore Collection
+              {{ $t('collections.explore') }}
               <i class="ti ti-arrow-right" aria-hidden="true" />
             </RouterLink>
           </div>
@@ -44,7 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -60,36 +61,37 @@ interface Collection {
   image: string
 }
 
-const collections: Collection[] = [
+const { t } = useI18n()
+const collections = computed<Collection[]>(() => [
   {
-    tag: 'Floral Elegance',
-    title: 'The Bloom Collection',
-    description: 'An enchanting selection of floral fragrances that capture the essence of a blooming garden. From delicate rose to intoxicating jasmine, each scent is a love letter to nature\'s most beautiful creations.',
+    tag: t('collections.floralElegance'),
+    title: t('collections.bloomCollection'),
+    description: t('collections.bloomDesc'),
     notes: ['Rose', 'Jasmine', 'Lavender', 'Peony'],
     image: 'https://images.unsplash.com/photo-1598504776914-5ce1f0d1e73c?w=600&q=80',
   },
   {
-    tag: 'Woody & Sensual',
-    title: 'The Noir Collection',
-    description: 'Bold, mysterious, and deeply sensual — our Noir collection features warm woody and oriental notes for those who dare to make a statement. Perfect for evening wear and cooler months.',
+    tag: t('collections.woodySensual'),
+    title: t('collections.noirCollection'),
+    description: t('collections.noirDesc'),
     notes: ['Sandalwood', 'Oud', 'Amber', 'Musk'],
     image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&q=80',
   },
   {
-    tag: 'Fresh & Citrus',
-    title: 'The Aqua Collection',
-    description: 'Light, refreshing, and invigorating — the Aqua collection is designed for everyday elegance. Crisp citrus and aquatic notes create an effortless sophistication that lingers softly.',
+    tag: t('collections.freshCitrus'),
+    title: t('collections.aquaCollection'),
+    description: t('collections.aquaDesc'),
     notes: ['Bergamot', 'Lemon', 'Sea Salt', 'Green Tea'],
     image: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=600&q=80',
   },
   {
-    tag: 'Limited Edition',
-    title: 'The Reserve Collection',
-    description: 'Our most exclusive fragrances, crafted in limited quantities using rare and precious ingredients. Each bottle in the Reserve collection is a work of art, numbered and signed.',
+    tag: t('collections.limitedEdition'),
+    title: t('collections.reserveCollection'),
+    description: t('collections.reserveDesc'),
     notes: ['Saffron', 'Leather', 'Tobacco', 'Vanilla'],
     image: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=600&q=80',
   },
-]
+])
 
 const searchOpen = ref(false)
 const cartOpen = ref(false)
@@ -130,7 +132,7 @@ const cartOpen = ref(false)
   margin-bottom: 16px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
@@ -203,7 +205,7 @@ const cartOpen = ref(false)
   font-size: 1.875rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 16px;
 }
 @media (min-width: 768px) {
