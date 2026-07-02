@@ -26,19 +26,19 @@
         <div class="announcement-links">
           <RouterLink to="/orders" class="announcement-link">
             <i class="ti ti-map-pin" aria-hidden="true" />
-            Track Order
+            {{ $t('announcement.trackOrder') }}
           </RouterLink>
           <span class="announcement-divider">|</span>
           <a href="#" class="announcement-link">
             <i class="ti ti-headset" aria-hidden="true" />
-            Help Center
+            {{ $t('announcement.helpCenter') }}
           </a>
         </div>
 
         <button
           @click="dismiss"
           class="announcement-close"
-          aria-label="Close announcement"
+          :aria-label="$t('announcement.close')"
         >
           <i class="ti ti-x" aria-hidden="true" />
         </button>
@@ -49,6 +49,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const STORAGE_KEY = 'scentique_announcement_dismissed'
 
@@ -57,19 +60,19 @@ interface Message {
   text: string
 }
 
-const messages: Message[] = [
-  { icon: 'ti ti-truck', text: 'Free Shipping on Orders Over $100' },
-  { icon: 'ti ti-tag', text: 'Enjoy 10% Off on Your First Order — Use Code: WELCOME10' },
-  { icon: 'ti ti-gift', text: 'New Arrivals: Fresh Scents Just Landed!' },
-  { icon: 'ti ti-star', text: 'Join Our Loyalty Program & Earn Points on Every Purchase' },
-]
+const messages = computed((): Message[] => [
+  { icon: 'ti ti-truck', text: t('announcement.freeShipping') },
+  { icon: 'ti ti-tag', text: t('announcement.firstOrderDiscount') },
+  { icon: 'ti ti-gift', text: t('announcement.newArrivals') },
+  { icon: 'ti ti-star', text: t('announcement.loyaltyProgram') },
+])
 
 const dismissed = ref(localStorage.getItem(STORAGE_KEY) === 'true')
 const currentIndex = ref(0)
 let messageTimer: ReturnType<typeof setInterval> | null = null
 
 const visible = computed(() => !dismissed.value)
-const currentMessage = computed(() => messages[currentIndex.value] ?? messages[0])
+const currentMessage = computed(() => messages.value[currentIndex.value] ?? messages.value[0])
 
 function dismiss() {
   dismissed.value = true
@@ -77,7 +80,7 @@ function dismiss() {
 }
 
 function advanceMessage() {
-  currentIndex.value = (currentIndex.value + 1) % messages.length
+  currentIndex.value = (currentIndex.value + 1) % messages.value.length
 }
 
 onMounted(() => {
