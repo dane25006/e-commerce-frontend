@@ -5,8 +5,8 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Account</span>
-        <h1 class="hero-title">My Profile</h1>
+        <span class="hero-label">{{ $t('profile.account') }}</span>
+        <h1 class="hero-title">{{ $t('profile.myProfile') }}</h1>
       </div>
     </section>
 
@@ -27,18 +27,18 @@
         <div class="profile-section">
           <h3 class="section-label-title">
             <i class="ti ti-user" aria-hidden="true" />
-            Profile Information
+            {{ $t('profile.profileInfo') }}
           </h3>
           <form @submit.prevent="handleUpdateProfile" class="profile-form">
             <div class="form-group">
-              <label class="form-label">Full Name</label>
+              <label class="form-label">{{ $t('profile.fullName') }}</label>
               <div class="input-icon-wrap">
                 <i class="ti ti-user input-icon" aria-hidden="true" />
                 <input id="profile-name" name="name" v-model="profileForm.name" type="text" required class="input-field has-icon" />
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Email Address</label>
+              <label class="form-label">{{ $t('profile.emailAddress') }}</label>
               <div class="input-icon-wrap">
                 <i class="ti ti-mail input-icon" aria-hidden="true" />
                 <input id="profile-email" name="email" v-model="profileForm.email" type="email" required class="input-field has-icon" />
@@ -46,18 +46,18 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Avatar URL</label>
+              <label class="form-label">{{ $t('profile.avatarUrl') }}</label>
               <div class="input-icon-wrap">
                 <i class="ti ti-photo input-icon" aria-hidden="true" />
-                <input id="profile-avatar" name="avatar" v-model="profileForm.avatar" type="url" placeholder="https://example.com/avatar.jpg" class="input-field has-icon" />
+                <input id="profile-avatar" name="avatar" v-model="profileForm.avatar" type="url" :placeholder="$t('profile.avatarPlaceholder')" class="input-field has-icon" />
               </div>
-              <img v-if="profileForm.avatar" :src="profileForm.avatar" class="avatar-preview" alt="Avatar preview" />
+              <img v-if="profileForm.avatar" :src="profileForm.avatar" class="avatar-preview" :alt="$t('profile.avatarPreview')" />
             </div>
 
             <Transition name="fade">
               <div v-if="profileSuccess" class="msg-banner success">
                 <i class="ti ti-circle-check" aria-hidden="true" />
-                Your profile has been updated.
+                {{ $t('profile.updatedSuccess') }}
               </div>
               <div v-else-if="profileError" class="msg-banner error">
                 <i class="ti ti-alert-circle" aria-hidden="true" />
@@ -67,7 +67,7 @@
 
             <button type="submit" :disabled="savingProfile" class="btn-primary save-btn">
               <i v-if="savingProfile" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
-              {{ savingProfile ? 'Saving...' : 'Save Changes' }}
+              {{ savingProfile ? $t('profile.saving') : $t('profile.saveChanges') }}
             </button>
           </form>
         </div>
@@ -76,42 +76,42 @@
       <div class="profile-card">
         <h3 class="section-label-title">
           <i class="ti ti-lock" aria-hidden="true" />
-          Change Password
+          {{ $t('profile.changePassword') }}
         </h3>
         <form @submit.prevent="handleChangePassword" class="profile-form">
           <div class="form-group">
-            <label class="form-label">Current Password</label>
+            <label class="form-label">{{ $t('profile.currentPassword') }}</label>
             <div class="input-icon-wrap">
               <i class="ti ti-lock input-icon" aria-hidden="true" />
               <input id="profile-current-password" name="current_password" v-model="passwordForm.current_password" :type="showCurrentPw ? 'text' : 'password'" required class="input-field has-icon" />
-              <button type="button" @click="showCurrentPw = !showCurrentPw" class="toggle-pw" :aria-label="showCurrentPw ? 'Hide' : 'Show'">
+              <button type="button" @click="showCurrentPw = !showCurrentPw" class="toggle-pw" :aria-label="showCurrentPw ? $t('profile.hide') : $t('profile.show')">
                 <i :class="showCurrentPw ? 'ti ti-eye-off' : 'ti ti-eye'" aria-hidden="true" />
               </button>
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">New Password</label>
+            <label class="form-label">{{ $t('profile.newPassword') }}</label>
             <div class="input-icon-wrap">
               <i class="ti ti-lock-check input-icon" aria-hidden="true" />
               <input id="profile-new-password" name="password" v-model="passwordForm.password" :type="showNewPw ? 'text' : 'password'" required class="input-field has-icon" />
-              <button type="button" @click="showNewPw = !showNewPw" class="toggle-pw" :aria-label="showNewPw ? 'Hide' : 'Show'">
+              <button type="button" @click="showNewPw = !showNewPw" class="toggle-pw" :aria-label="showNewPw ? $t('profile.hide') : $t('profile.show')">
                 <i :class="showNewPw ? 'ti ti-eye-off' : 'ti ti-eye'" aria-hidden="true" />
               </button>
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Confirm New Password</label>
+            <label class="form-label">{{ $t('profile.confirmNewPassword') }}</label>
             <div class="input-icon-wrap">
               <i class="ti ti-lock input-icon" aria-hidden="true" />
               <input id="profile-confirm-password" name="password_confirmation" v-model="passwordForm.password_confirmation" :type="showNewPw ? 'text' : 'password'" required class="input-field has-icon" />
             </div>
-            <p v-if="pwMismatch" class="pw-hint">Passwords don't match</p>
+            <p v-if="pwMismatch" class="pw-hint">{{ $t('profile.passwordMismatch') }}</p>
           </div>
 
           <Transition name="fade">
             <div v-if="passwordSuccess" class="msg-banner success">
               <i class="ti ti-circle-check" aria-hidden="true" />
-              Your password has been changed.
+              {{ $t('profile.passwordChanged') }}
             </div>
             <div v-else-if="passwordError" class="msg-banner error">
               <i class="ti ti-alert-circle" aria-hidden="true" />
@@ -121,7 +121,7 @@
 
           <button type="submit" :disabled="savingPassword || pwMismatch" class="btn-primary save-btn">
             <i v-if="savingPassword" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
-            {{ savingPassword ? 'Updating...' : 'Update Password' }}
+            {{ savingPassword ? $t('profile.updating') : $t('profile.updatePassword') }}
           </button>
         </form>
       </div>
@@ -138,22 +138,22 @@
       <div class="signout-card">
         <h3 class="section-label-title">
           <i class="ti ti-logout" aria-hidden="true" />
-          Account Actions
+          {{ $t('profile.accountActions') }}
         </h3>
-        <p class="signout-desc">Ready to leave? Signing out will require you to log in again to access your account.</p>
+        <p class="signout-desc">{{ $t('profile.signOutDesc') }}</p>
         <button @click="confirmModal?.open()" class="btn-cancel signout-btn">
           <i class="ti ti-logout" aria-hidden="true" />
-          Sign Out
+          {{ $t('profile.signOut') }}
         </button>
       </div>
     </div>
 
     <ConfirmModal
       ref="confirmModal"
-      title="Sign Out"
-      message="Are you sure you want to sign out? You&rsquo;ll need to log in again to access your account."
-      confirm-text="Sign Out"
-      cancel-text="Cancel"
+      :title="$t('profile.signOutTitle')"
+      :message="$t('profile.signOutConfirm')"
+      :confirm-text="$t('profile.signOut')"
+      :cancel-text="$t('profile.cancel')"
       @confirm="auth.logout()"
     />
 
@@ -165,6 +165,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import type { ChangePasswordPayload } from '@/types/auth'
 
@@ -205,11 +206,12 @@ const pwMismatch = computed(() =>
   passwordForm.password !== passwordForm.password_confirmation
 )
 
+const { t } = useI18n()
 const quickLinks = [
-  { to: '/orders', icon: 'ti-package', label: 'My Orders' },
-  { to: '/wishlist', icon: 'ti-heart', label: 'Wishlist' },
-  { to: '/cart', icon: 'ti-shopping-bag', label: 'Cart' },
-  { to: '/products', icon: 'ti-sparkles', label: 'Shop' },
+  { to: '/orders', icon: 'ti-package', label: t('profile.myOrders') },
+  { to: '/wishlist', icon: 'ti-heart', label: t('profile.wishlist') },
+  { to: '/cart', icon: 'ti-shopping-bag', label: t('profile.cart') },
+  { to: '/products', icon: 'ti-sparkles', label: t('profile.shop') },
 ]
 
 async function handleUpdateProfile() {
@@ -222,7 +224,7 @@ async function handleUpdateProfile() {
     setTimeout(() => { profileSuccess.value = false }, 3000)
   } catch (err: unknown) {
     const e = err as { response?: { data?: { message?: string } } }
-    profileError.value = e.response?.data?.message ?? 'Something went wrong while updating your profile. Please try again.'
+    profileError.value = e.response?.data?.message ?? t('profile.errorUpdate')
   } finally {
     savingProfile.value = false
   }
@@ -242,7 +244,7 @@ async function handleChangePassword() {
     setTimeout(() => { passwordSuccess.value = false }, 3000)
   } catch (err: unknown) {
     const e = err as { response?: { data?: { message?: string } } }
-    passwordError.value = e.response?.data?.message ?? 'Something went wrong while changing your password. Please try again.'
+    passwordError.value = e.response?.data?.message ?? t('profile.errorPassword')
   } finally {
     savingPassword.value = false
   }
@@ -296,7 +298,7 @@ onMounted(() => {
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
@@ -355,7 +357,7 @@ onMounted(() => {
   font-size: 1.375rem;
   font-weight: 800;
   color: var(--text);
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 2px;
 }
 

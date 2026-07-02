@@ -6,7 +6,7 @@
     <div class="page-body">
       <RouterLink to="/orders" class="back-link">
         <i class="ti ti-arrow-left" aria-hidden="true" />
-        Back to Orders
+        {{ $t('orders.backToOrders') }}
       </RouterLink>
 
       <div v-if="loading" class="loading-state">
@@ -18,8 +18,8 @@
 
       <div v-else-if="!order" class="not-found">
         <i class="ti ti-package-off" aria-hidden="true" />
-        <p class="not-found-title">Order not found</p>
-        <RouterLink to="/orders" class="back-link">&larr; Back to Orders</RouterLink>
+        <p class="not-found-title">{{ $t('orders.notFound') }}</p>
+        <RouterLink to="/orders" class="back-link">&larr; {{ $t('orders.backToOrders') }}</RouterLink>
       </div>
 
       <template v-else>
@@ -41,7 +41,7 @@
                   class="cancel-btn"
                 >
                   <i :class="cancelling ? 'ti ti-loader-2 animate-spin' : 'ti ti-x'" aria-hidden="true" />
-                  Cancel
+                  {{ $t('orders.cancel') }}
                 </button>
               </div>
             </div>
@@ -72,7 +72,7 @@
           </div>
 
           <div class="detail-card">
-            <h2 class="section-title">Order Items</h2>
+            <h2 class="section-title">{{ $t('orders.orderItems') }}</h2>
             <div class="items-list">
               <div v-for="item in order.items" :key="item.id" class="item-row">
                 <div class="item-img-box">
@@ -82,7 +82,7 @@
                   </div>
                 </div>
                 <div class="item-info">
-                  <p class="item-name">{{ item.product?.name ?? 'Product' }}</p>
+                  <p class="item-name">{{ item.product?.name ?? $t('orders.orderItemFallback') }}</p>
                   <p class="item-meta">Qty: {{ item.quantity }} &times; ${{ Number(item.price).toFixed(2) }}</p>
                 </div>
                 <p class="item-price">${{ item.subtotal.toFixed(2) }}</p>
@@ -91,19 +91,19 @@
           </div>
 
           <div class="detail-card">
-            <h2 class="section-title">Order Summary</h2>
+            <h2 class="section-title">{{ $t('orders.orderSummary') }}</h2>
             <div class="summary-rows">
               <div class="summary-row">
-                <span>Subtotal</span>
+                <span>{{ $t('orders.subtotal') }}</span>
                 <span>${{ order.total.toFixed(2) }}</span>
               </div>
               <div class="summary-row">
-                <span>Shipping</span>
-                <span class="free-badge">Free</span>
+                <span>{{ $t('orders.shipping') }}</span>
+                <span class="free-badge">{{ $t('orders.free') }}</span>
               </div>
               <div class="summary-divider" />
               <div class="summary-row summary-final">
-                <span>Total</span>
+                <span>{{ $t('orders.total') }}</span>
                 <span class="total-amount">${{ order.total.toFixed(2) }}</span>
               </div>
             </div>
@@ -114,10 +114,10 @@
 
     <ConfirmModal
       ref="cancelModal"
-      title="Cancel this order?"
-      message="This action cannot be undone. The items will be returned to stock."
-      confirm-text="Yes, Cancel Order"
-      cancel-text="Keep Order"
+      :title="$t('orders.cancelDetailTitle')"
+      :message="$t('orders.cancelDetailMessage')"
+      :confirm-text="$t('orders.confirmCancel')"
+      :cancel-text="$t('orders.keepOrder')"
       @confirm="confirmCancel"
     />
     <AppFooter />
@@ -127,8 +127,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { orderService } from '@/services/orderService'
 import { imageUrl } from '@/utils/image'
 
@@ -164,12 +165,13 @@ interface Order {
 
 const order = ref<Order | null>(null)
 
-const orderSteps = [
-  { status: 'pending', icon: 'ti-clock', label: 'Placed' },
-  { status: 'processing', icon: 'ti-settings', label: 'Processing' },
-  { status: 'shipped', icon: 'ti-truck', label: 'Shipped' },
-  { status: 'delivered', icon: 'ti-circle-check', label: 'Delivered' },
-]
+const { t } = useI18n()
+const orderSteps = computed(() => [
+  { status: 'pending', icon: 'ti-clock', label: t('orders.placed') },
+  { status: 'processing', icon: 'ti-settings', label: t('orders.processing') },
+  { status: 'shipped', icon: 'ti-truck', label: t('orders.shipped') },
+  { status: 'delivered', icon: 'ti-circle-check', label: t('orders.delivered') },
+])
 
 const statusOrder = ['pending', 'processing', 'shipped', 'delivered']
 
@@ -179,7 +181,7 @@ function isStepDone(orderStatus: string, stepStatus: string) {
 }
 
 function nextStepStatus(index: number) {
-  return orderSteps[index + 1]?.status ?? ''
+  return orderSteps.value[index + 1]?.status ?? ''
 }
 
 function statusStyle(status: string) {
@@ -343,7 +345,7 @@ onMounted(loadOrder)
   font-size: 24px;
   font-weight: 900;
   color: var(--text);
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
 }
 
 .detail-date {

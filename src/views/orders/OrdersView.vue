@@ -5,8 +5,8 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Your</span>
-        <h1 class="hero-title">Orders</h1>
+        <span class="hero-label">{{ $t('orders.your') }}</span>
+        <h1 class="hero-title">{{ $t('orders.orders') }}</h1>
       </div>
     </section>
 
@@ -28,9 +28,9 @@
         <div class="empty-icon">
           <i class="ti ti-package" aria-hidden="true" />
         </div>
-        <h2 class="empty-title">No orders yet</h2>
-        <p class="empty-desc">You haven&rsquo;t placed any orders yet. When you do, they&rsquo;ll all be here waiting for you.</p>
-        <RouterLink to="/products" class="btn-primary">Start Shopping</RouterLink>
+        <h2 class="empty-title">{{ $t('orders.emptyTitle') }}</h2>
+        <p class="empty-desc">{{ $t('orders.emptyDesc') }}</p>
+        <RouterLink to="/products" class="btn-primary">{{ $t('orders.startShopping') }}</RouterLink>
       </div>
 
       <div v-else class="orders-list">
@@ -51,7 +51,7 @@
             </div>
             <div class="order-total-wrap">
               <p class="order-total-amount">${{ order.total.toFixed(2) }}</p>
-              <p class="order-count">{{ order.items_count ?? '—' }} item{{ (order.items_count ?? 0) !== 1 ? 's' : '' }}</p>
+              <p class="order-count">{{ $t('orders.itemCount', { count: order.items_count ?? 0 }) }}</p>
             </div>
           </div>
 
@@ -88,7 +88,7 @@
               :to="`/orders/${order.id}`"
               class="view-details-link"
             >
-              View Details <i class="ti ti-arrow-right" aria-hidden="true" />
+              {{ $t('orders.viewDetails') }} <i class="ti ti-arrow-right" aria-hidden="true" />
             </RouterLink>
 
             <button
@@ -98,7 +98,7 @@
               class="cancel-order-btn"
             >
               <i :class="cancellingId === order.id ? 'ti ti-loader-2 animate-spin' : 'ti ti-x'" aria-hidden="true" />
-              Cancel Order
+              {{ $t('orders.cancelOrder') }}
             </button>
           </div>
         </div>
@@ -107,10 +107,10 @@
 
     <ConfirmModal
       ref="cancelModal"
-      title="Cancel this order?"
-      message="Are you sure you&rsquo;d like to cancel? This action cannot be undone, and the items will be returned to stock."
-      confirm-text="Yes, Cancel Order"
-      cancel-text="Keep Order"
+      :title="$t('orders.cancelTitle')"
+      :message="$t('orders.cancelMessage')"
+      :confirm-text="$t('orders.confirmCancel')"
+      :cancel-text="$t('orders.keepOrder')"
       @confirm="confirmCancel"
     />
     <AppFooter />
@@ -120,7 +120,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { orderService } from '@/services/orderService'
 
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
@@ -146,12 +147,13 @@ const cancelModal = ref<InstanceType<typeof ConfirmModal> | null>(null)
 const cancellingId = ref<number | null>(null)
 const pendingCancelId = ref<number | null>(null)
 
-const orderSteps = [
-  { status: 'pending', icon: 'ti-clock', label: 'Placed' },
-  { status: 'processing', icon: 'ti-settings', label: 'Processing' },
-  { status: 'shipped', icon: 'ti-truck', label: 'Shipped' },
-  { status: 'delivered', icon: 'ti-circle-check', label: 'Delivered' },
-]
+const { t } = useI18n()
+const orderSteps = computed(() => [
+  { status: 'pending', icon: 'ti-clock', label: t('orders.placed') },
+  { status: 'processing', icon: 'ti-settings', label: t('orders.processing') },
+  { status: 'shipped', icon: 'ti-truck', label: t('orders.shipped') },
+  { status: 'delivered', icon: 'ti-circle-check', label: t('orders.delivered') },
+])
 
 const statusOrder = ['pending', 'processing', 'shipped', 'delivered']
 
@@ -161,7 +163,7 @@ function isStepDone(orderStatus: string, stepStatus: string) {
 }
 
 function nextStepStatus(index: number) {
-  return orderSteps[index + 1]?.status ?? ''
+  return orderSteps.value[index + 1]?.status ?? ''
 }
 
 function statusStyle(status: string) {
@@ -255,7 +257,7 @@ onMounted(loadOrders)
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);

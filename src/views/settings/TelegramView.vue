@@ -5,31 +5,31 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Notifications</span>
-        <h1 class="hero-title">Telegram</h1>
+        <span class="hero-label">{{ $t('telegram.notifications') }}</span>
+        <h1 class="hero-title">{{ $t('telegram.telegram') }}</h1>
       </div>
     </section>
 
     <div class="page-body">
       <div class="settings-card">
-        <h2>Order updates on Telegram</h2>
+        <h2>{{ $t('telegram.sectionTitle') }}</h2>
         <p class="subtitle">
-          Connect your Telegram account to get instant order status updates — no need to check email.
+          {{ $t('telegram.description') }}
         </p>
 
         <div v-if="linked" class="status-connected">
           <span class="dot" />
-          Connected as <strong>@{{ telegramUsername }}</strong>
-          <button type="button" class="btn btn-ghost" @click="disconnect">Disconnect</button>
+          {{ $t('telegram.connectedAs') }} <strong>@{{ telegramUsername }}</strong>
+          <button type="button" class="btn btn-ghost" @click="disconnect">{{ $t('telegram.disconnect') }}</button>
         </div>
 
         <div v-else class="status-disconnected">
           <button type="button" class="btn btn-primary" :disabled="loading" @click="connect">
-            {{ loading ? 'Generating link…' : 'Connect Telegram' }}
+            {{ loading ? $t('telegram.generatingLink') : $t('telegram.connectTelegram') }}
           </button>
           <p v-if="deepLink" class="hint">
-            If Telegram didn't open automatically,
-            <a :href="deepLink" target="_blank" rel="noopener">tap here</a>.
+            {{ $t('telegram.hint') }}
+            <a :href="deepLink" target="_blank" rel="noopener">{{ $t('telegram.tapHere') }}</a>.
           </p>
         </div>
       </div>
@@ -122,7 +122,7 @@ async function disconnect() {
   font-size: 28px;
   font-weight: 800;
   color: #2B2B2B;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-heading);
   margin: 0;
 }
 
@@ -145,7 +145,7 @@ async function disconnect() {
 h2 {
   margin: 0 0 8px;
   font-size: 1.1rem;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-heading);
   color: #2B2B2B;
 }
 
