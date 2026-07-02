@@ -1,5 +1,5 @@
 <template>
-  <div v-if="ready">
+  <div v-if="ready" :class="{ 'locale-fade': fading }" style="transition: opacity 0.15s ease;">
     <NetworkStatusBar />
     <RouterView />
     <ToastNotification />
@@ -10,8 +10,8 @@
         <span class="logo-letter">S</span>
       </div>
       <div class="loading-text">
-        <p class="brand-name">Scentique</p>
-        <p class="loading-label">Loading...</p>
+        <p class="brand-name">{{ $t('app.name') }}</p>
+        <p class="loading-label">{{ $t('app.loading') }}</p>
       </div>
       <div class="loading-dots">
         <div class="dot" style="animation-delay: 0ms" />
@@ -23,20 +23,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import ToastNotification from '@/components/common/ToastNotification.vue'
 import NetworkStatusBar from '@/components/common/NetworkStatusBar.vue'
 
+const { locale } = useI18n()
 const auth = useAuthStore()
 const cartStore = useCartStore()
 const route = useRoute()
 const router = useRouter()
 const ready = ref(false)
+const fading = ref(false)
+let fadeTimer: ReturnType<typeof setTimeout>
+
+function applyLocale(lang: string) {
+  document.documentElement.lang = lang
+  const body = document.body
+  body.classList.remove('font-en', 'font-km')
+  body.classList.add(`font-${lang}`)
+  localStorage.setItem('locale', lang)
+}
+
+watch(locale, (lang) => {
+  applyLocale(lang)
+  clearTimeout(fadeTimer)
+  fading.value = true
+  fadeTimer = setTimeout(() => { fading.value = false }, 200)
+})
 
 onMounted(async () => {
+  document.documentElement.lang = locale.value
+
   const error = route.query.error as string | undefined
 
   if (error) {
@@ -52,6 +73,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.locale-fade {
+  opacity: 0.6;
+}
 .loading {
   min-height: 100vh;
   display: flex;
@@ -79,7 +103,7 @@ onMounted(async () => {
   color: #FFFFFF;
   font-size: 1.5rem;
   font-weight: 900;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
 }
 .loading-text {
   text-align: center;
@@ -89,7 +113,7 @@ onMounted(async () => {
   font-weight: 700;
   letter-spacing: 0.025em;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin: 0;
 }
 .loading-label {
