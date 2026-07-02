@@ -6,14 +6,14 @@
         <!-- Close / Back -->
         <RouterLink to="/" class="back-link" :style="{ color: 'var(--primary)' }">
           <i class="ti ti-arrow-left text-sm" aria-hidden="true" />
-          Back to Home
+          {{ $t('auth.backToHome') }}
         </RouterLink>
 
         <div class="form-card">
           <div class="form-header">
-            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">Welcome Back</h1>
+            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">{{ $t('auth.welcomeBack') }}</h1>
             <div class="gold-accent" :style="{ background: 'var(--primary)' }" />
-            <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">Sign in to your Scentique account</p>
+            <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.signInSubtitle') }}</p>
           </div>
 
           <!-- API Error -->
@@ -36,6 +36,7 @@
           <form @submit.prevent="handleSubmit" novalidate class="auth-form">
             <!-- Email -->
             <div class="field-group">
+                <label for="email" class="field-inline-label" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.emailLabel') }}</label>
               <div
                 class="field-box"
                 :class="{ 'field-box-error': errors.email }"
@@ -55,7 +56,7 @@
                   :style="{ color: 'var(--text)' }"
                   @blur="validateField('email')"
                 />
-                <label for="email" class="field-label" :style="{ color: errors.email ? '#E53935' : 'var(--text-muted)' }">Email address</label>
+                <label for="email" class="field-label" :style="{ color: errors.email ? '#E53935' : 'var(--text-muted)' }">{{ $t('auth.emailLabel') }}</label>
               </div>
               <Transition name="fade">
                 <p v-if="errors.email" class="field-msg-error">{{ errors.email }}</p>
@@ -65,8 +66,8 @@
             <!-- Password -->
             <div class="field-group">
               <div class="flex items-center justify-between mb-1.5 px-1">
-                <label for="password" class="field-inline-label" :style="{ color: 'var(--text-muted)' }">Password</label>
-                <a href="#" class="forgot-link" :style="{ color: 'var(--primary)' }">Forgot?</a>
+                <label for="password" class="field-inline-label" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.passwordLabel') }}</label>
+                <a href="#" class="forgot-link" :style="{ color: 'var(--primary)' }">{{ $t('auth.forgot') }}</a>
               </div>
               <div
                 class="field-box"
@@ -87,7 +88,7 @@
                   :style="{ color: 'var(--text)', paddingRight: '44px' }"
                   @blur="validateField('password')"
                 />
-                <label for="password" class="field-label" :style="{ color: errors.password ? '#E53935' : 'var(--text-muted)' }">Enter your password</label>
+                <label for="password" class="field-label" :style="{ color: errors.password ? '#E53935' : 'var(--text-muted)' }">{{ $t('auth.enterPassword') }}</label>
                 <button
                   type="button"
                   class="pw-toggle"
@@ -114,14 +115,14 @@
               }"
             >
               <i v-if="auth.loading" class="ti ti-loader-2 animate-spin text-base" aria-hidden="true" />
-              <span>{{ auth.loading ? 'Signing in...' : 'Sign in' }}</span>
+              <span>{{ auth.loading ? $t('auth.signingIn') : $t('auth.signIn') }}</span>
             </button>
           </form>
 
           <!-- Divider -->
           <div class="divider">
             <div class="divider-line" :style="{ background: 'var(--border)' }" />
-            <span class="divider-text" :style="{ color: 'var(--text-muted)' }">or continue with</span>
+            <span class="divider-text" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.orContinueWith') }}</span>
             <div class="divider-line" :style="{ background: 'var(--border)' }" />
           </div>
 
@@ -130,9 +131,9 @@
 
           <!-- Switch to Register -->
           <p class="switch-text" :style="{ color: 'var(--text-muted)' }">
-            Don't have an account?
+            {{ $t('auth.dontHaveAccount') }}
             <RouterLink to="/register" class="switch-link" :style="{ color: 'var(--primary)' }">
-              Create one
+              {{ $t('auth.createOne') }}
             </RouterLink>
           </p>
         </div>
@@ -144,7 +145,7 @@
       <div class="brand-overlay" :style="{ background: 'linear-gradient(135deg, #2C2C2C, #1A1A1A)' }">
         <img
           src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&q=85"
-          alt="Luxury perfume"
+          :alt="$t('auth.altPerfume')"
           class="brand-image"
         />
       </div>
@@ -154,8 +155,8 @@
           <div class="brand-icon-wrapper">
             <i class="ti ti-sparkles text-white text-xl" aria-hidden="true" />
           </div>
-          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">Discover Your Signature Scent</h3>
-          <p class="brand-description">Explore our curated collection of luxury fragrances from the world's finest houses.</p>
+          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">{{ $t('auth.discoverSignature') }}</h3>
+          <p class="brand-description">{{ $t('auth.discoverDesc') }}</p>
         </div>
       </div>
     </div>
@@ -165,10 +166,12 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import config from '@/config/app'
 import GoogleButton from '@/components/GoogleButton.vue'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
 const showPw = ref(false)
@@ -179,14 +182,14 @@ const googleUrl = `${config.apiUrl}/auth/google/redirect`
 
 function validateField(field: 'email' | 'password') {
   if (field === 'email') {
-    if (!form.email) errors.email = 'Please enter your email address'
+    if (!form.email) errors.email = t('auth.validationEmailRequired')
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      errors.email = 'That doesn\u2019t look like a valid email'
+      errors.email = t('auth.validationEmailInvalid')
     else errors.email = ''
   }
   if (field === 'password') {
-    if (!form.password) errors.password = 'Please enter your password'
-    else if (form.password.length < 8) errors.password = 'Password needs to be at least 8 characters'
+    if (!form.password) errors.password = t('auth.validationPasswordRequired')
+    else if (form.password.length < 8) errors.password = t('auth.validationPasswordMin')
     else errors.password = ''
   }
 }

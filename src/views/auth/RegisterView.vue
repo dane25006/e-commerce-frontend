@@ -5,7 +5,7 @@
       <div class="brand-overlay" :style="{ background: 'linear-gradient(135deg, #2C2C2C, #1A1A1A)' }">
         <img
           src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=900&q=85"
-          alt="Luxury perfume craftsmanship"
+          :alt="$t('auth.altCraftsmanship')"
           class="brand-image"
         />
       </div>
@@ -15,8 +15,8 @@
           <div class="brand-icon-wrapper">
             <i class="ti ti-gift text-white text-xl" aria-hidden="true" />
           </div>
-          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">Join the World of Luxury</h3>
-          <p class="brand-description">Create your account and unlock exclusive member benefits, early access, and personalized recommendations.</p>
+          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">{{ $t('auth.joinWorld') }}</h3>
+          <p class="brand-description">{{ $t('auth.joinDesc') }}</p>
         </div>
       </div>
     </div>
@@ -27,14 +27,14 @@
         <!-- Close / Back -->
         <RouterLink to="/" class="back-link" :style="{ color: 'var(--primary)' }">
           <i class="ti ti-arrow-left text-sm" aria-hidden="true" />
-          Back to Home
+          {{ $t('auth.backToHome') }}
         </RouterLink>
 
         <div class="form-card">
           <div class="form-header">
-            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">Create Your Account</h1>
+            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">{{ $t('auth.createYourAccount') }}</h1>
             <div class="gold-accent" :style="{ background: 'var(--primary)' }" />
-            <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">Join Scentique and discover your signature scent</p>
+            <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.registerSubtitle') }}</p>
           </div>
 
           <!-- API Error -->
@@ -75,7 +75,7 @@
                   :style="{ color: 'var(--text)' }"
                   @blur="validateField('name')"
                 />
-                <label for="name" class="field-label" :style="{ color: errors.name ? '#E53935' : 'var(--text-muted)' }">Full name</label>
+                <label for="name" class="field-label" :style="{ color: errors.name ? '#E53935' : 'var(--text-muted)' }">{{ $t('auth.fullName') }}</label>
               </div>
               <Transition name="fade">
                 <p v-if="errors.name" class="field-msg-error">{{ errors.name }}</p>
@@ -103,7 +103,7 @@
                   :style="{ color: 'var(--text)' }"
                   @blur="validateField('email')"
                 />
-                <label for="email" class="field-label" :style="{ color: errors.email ? '#E53935' : 'var(--text-muted)' }">Email address</label>
+                <label for="email" class="field-label" :style="{ color: errors.email ? '#E53935' : 'var(--text-muted)' }">{{ $t('auth.emailLabel') }}</label>
               </div>
               <Transition name="fade">
                 <p v-if="errors.email" class="field-msg-error">{{ errors.email }}</p>
@@ -131,7 +131,7 @@
                   :style="{ color: 'var(--text)', paddingRight: '44px' }"
                   @blur="validateField('password')"
                 />
-                <label for="password" class="field-label" :style="{ color: errors.password ? '#E53935' : 'var(--text-muted)' }">Password</label>
+                <label for="password" class="field-label" :style="{ color: errors.password ? '#E53935' : 'var(--text-muted)' }">{{ $t('auth.passwordLabel') }}</label>
                 <button
                   type="button"
                   class="pw-toggle"
@@ -167,7 +167,7 @@
                   :style="{ color: 'var(--text)', paddingRight: '44px' }"
                   @blur="validateField('password_confirmation')"
                 />
-                <label for="confirm" class="field-label" :style="{ color: errors.password_confirmation ? '#E53935' : 'var(--text-muted)' }">Confirm password</label>
+                <label for="confirm" class="field-label" :style="{ color: errors.password_confirmation ? '#E53935' : 'var(--text-muted)' }">{{ $t('auth.confirmPassword') }}</label>
                 <button
                   type="button"
                   class="pw-toggle"
@@ -194,14 +194,14 @@
               }"
             >
               <i v-if="auth.loading" class="ti ti-loader-2 animate-spin text-base" aria-hidden="true" />
-              <span>{{ auth.loading ? 'Creating account...' : 'Create account' }}</span>
+              <span>{{ auth.loading ? $t('auth.creatingAccount') : $t('auth.createAccount') }}</span>
             </button>
           </form>
 
           <!-- Divider -->
           <div class="divider">
             <div class="divider-line" :style="{ background: 'var(--border)' }" />
-            <span class="divider-text" :style="{ color: 'var(--text-muted)' }">or continue with</span>
+            <span class="divider-text" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.orContinueWith') }}</span>
             <div class="divider-line" :style="{ background: 'var(--border)' }" />
           </div>
 
@@ -210,9 +210,9 @@
 
           <!-- Switch to Login -->
           <p class="switch-text" :style="{ color: 'var(--text-muted)' }">
-            Already have an account?
+            {{ $t('auth.alreadyHaveAccount') }}
             <RouterLink to="/login" class="switch-link" :style="{ color: 'var(--primary)' }">
-              Sign in
+              {{ $t('auth.signIn') }}
             </RouterLink>
           </p>
         </div>
@@ -224,10 +224,12 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import config from '@/config/app'
 import GoogleButton from '@/components/GoogleButton.vue'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
 const googleUrl = `${config.apiUrl}/auth/google/redirect`
@@ -255,23 +257,23 @@ type Field = keyof typeof form
 function validateField(field: Field) {
   switch (field) {
     case 'name':
-      errors.name = form.name ? '' : 'Please tell us your name'
+      errors.name = form.name ? '' : t('auth.validationNameRequired')
       break
     case 'email':
-      if (!form.email) errors.email = 'Please enter your email address'
+      if (!form.email) errors.email = t('auth.validationEmailRequired')
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-        errors.email = 'That doesn\u2019t look like a valid email'
+        errors.email = t('auth.validationEmailInvalid')
       else errors.email = ''
       break
     case 'password':
-      if (!form.password) errors.password = 'Please choose a password'
-      else if (form.password.length < 8) errors.password = 'Password needs to be at least 8 characters'
+      if (!form.password) errors.password = t('auth.validationPasswordRequired')
+      else if (form.password.length < 8) errors.password = t('auth.validationPasswordMin')
       else errors.password = ''
       if (form.password_confirmation) validateField('password_confirmation')
       break
     case 'password_confirmation':
       errors.password_confirmation =
-        form.password_confirmation !== form.password ? 'Passwords don\u2019t match. Try again' : ''
+        form.password_confirmation !== form.password ? t('auth.validationPasswordMismatch') : ''
       break
   }
 }

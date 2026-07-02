@@ -18,12 +18,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const route = useRoute()
 const router = useRouter()
-const statusText = ref('Signing you in...')
+const statusText = ref(t('auth.signingYouIn'))
 
 function dotClass(i: number): string {
   return ['bg-[#B88A44]', 'bg-[#C9A96E]', 'bg-[#A7772F]'][i - 1] ?? 'bg-[#B88A44]'
@@ -34,13 +36,13 @@ onMounted(async () => {
   const error = route.query.error as string | undefined
 
   if (error) {
-    statusText.value = 'Login failed'
+    statusText.value = t('auth.loginFailed')
     await router.replace({ path: '/login', query: { error } })
     return
   }
 
   if (!token || token === 'undefined' || token === 'null') {
-    statusText.value = 'Invalid token'
+    statusText.value = t('auth.invalidToken')
     await router.replace('/login')
     return
   }
