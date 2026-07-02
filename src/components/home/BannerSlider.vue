@@ -52,7 +52,7 @@
                     <div class="visual-glow" :class="slide.glowClass" />
                     <div class="visual-bottle-wrap" :class="slide.visualBgClass">
                       <div class="visual-bottle" :class="slide.bottleClass">
-                        <span class="visual-brand">SCENTIQUE</span>
+                        <span class="visual-brand">{{ $t('banner.brandText') }}</span>
                       </div>
                     </div>
 
@@ -80,7 +80,7 @@
           @click="goTo(idx)"
           class="dot"
           :class="{ 'dot-active': idx === currentIndex }"
-          :aria-label="`Go to slide ${idx + 1}`"
+          :aria-label="$t('banner.goToSlide', { n: idx + 1 })"
         />
       </div>
     </div>
@@ -88,7 +88,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface SlidePart {
   text: string
@@ -115,18 +118,18 @@ interface Slide {
   badgeSub?: string
 }
 
-const slides: Slide[] = [
+const slides = computed<Slide[]>(() => [
   {
-    tag: 'Limited Time Offer',
+    tag: t('banner.limitedOffer'),
     tagIcon: 'ti ti-tag',
     tagClass: 'tag-gold',
     titleParts: [
-      { text: 'Get ', highlight: false },
-      { text: '15% Off', highlight: true },
-      { text: ' On Your First Order', highlight: false },
+      { text: t('banner.get'), highlight: false },
+      { text: t('banner.percentOff'), highlight: true },
+      { text: t('banner.onFirstOrder'), highlight: false },
     ],
-    description: 'Discover luxury scents crafted with passion. Use the code below and treat yourself to something unforgettable.',
-    cta: 'Claim Offer',
+    description: t('banner.slide1Desc'),
+    cta: t('banner.claimOffer'),
     ctaTo: '/products',
     ctaClass: 'btn-primary',
     bgClass: 'slide-bg-warm',
@@ -139,19 +142,19 @@ const slides: Slide[] = [
     bottleClass: 'bottle-gold',
     badgeIconBgClass: 'badge-bg-gold',
     badgeIcon: 'ti ti-star-filled text-gold',
-    badgeTitle: '4.9/5',
-    badgeSub: '2k+ reviews',
+    badgeTitle: t('banner.badgeTitle1'),
+    badgeSub: t('banner.badgeSub1'),
   },
   {
-    tag: 'New Arrivals',
+    tag: t('banner.newArrivals'),
     tagIcon: 'ti ti-sparkles',
     tagClass: 'tag-gold',
     titleParts: [
-      { text: 'Fresh Scents,', highlight: false },
-      { text: ' Just Landed', highlight: true },
+      { text: t('banner.freshScents'), highlight: false },
+      { text: t('banner.justLanded'), highlight: true },
     ],
-    description: 'Be the first to experience our newest fragrance collection. Exclusive launches you won\'t find anywhere else.',
-    cta: 'Shop New Arrivals',
+    description: t('banner.slide2Desc'),
+    cta: t('banner.shopNewArrivals'),
     ctaTo: '/products?sort=newest',
     ctaClass: 'btn-primary',
     bgClass: 'slide-bg-warm',
@@ -164,19 +167,19 @@ const slides: Slide[] = [
     bottleClass: 'bottle-gold',
     badgeIconBgClass: 'badge-bg-gold',
     badgeIcon: 'ti ti-sparkles text-gold',
-    badgeTitle: 'Just In',
-    badgeSub: '12 new scents',
+    badgeTitle: t('banner.badgeTitle2'),
+    badgeSub: t('banner.badgeSub2'),
   },
   {
-    tag: 'Free Shipping',
+    tag: t('banner.freeShipping'),
     tagIcon: 'ti ti-truck',
     tagClass: 'tag-gold',
     titleParts: [
-      { text: 'Free Shipping', highlight: true },
-      { text: ' On Orders Over $100', highlight: false },
+      { text: t('banner.freeShippingTitle'), highlight: true },
+      { text: t('banner.onOrdersOver'), highlight: false },
     ],
-    description: 'Stock up on your favourites and enjoy complimentary shipping. No code needed — it\'s on us.',
-    cta: 'Start Shopping',
+    description: t('banner.slide3Desc'),
+    cta: t('banner.startShopping'),
     ctaTo: '/products',
     ctaClass: 'btn-primary',
     bgClass: 'slide-bg-warm',
@@ -185,7 +188,7 @@ const slides: Slide[] = [
       'deco-bottom-center',
     ],
   },
-]
+])
 
 const currentIndex = ref(0)
 let autoTimer: ReturnType<typeof setInterval> | null = null
@@ -196,18 +199,18 @@ function goTo(idx: number) {
 }
 
 function next() {
-  currentIndex.value = (currentIndex.value + 1) % slides.length
+  currentIndex.value = (currentIndex.value + 1) % slides.value.length
   resetAutoPlay()
 }
 
 function prev() {
-  currentIndex.value = (currentIndex.value - 1 + slides.length) % slides.length
+  currentIndex.value = (currentIndex.value - 1 + slides.value.length) % slides.value.length
   resetAutoPlay()
 }
 
 function startAutoPlay() {
   autoTimer = setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % slides.length
+    currentIndex.value = (currentIndex.value + 1) % slides.value.length
   }, 6000)
 }
 
@@ -400,7 +403,7 @@ onUnmounted(() => {
 }
 
 .slide-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 32px;
   font-weight: 900;
   line-height: 1.2;

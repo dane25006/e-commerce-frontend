@@ -3,10 +3,10 @@
     <div class="section-container">
       <div class="section-header">
         <div>
-          <span class="section-label">From Our Blog</span>
-          <h2 class="section-title">Perfume Journal</h2>
+          <span class="section-label">{{ $t('blog.fromOurBlog') }}</span>
+          <h2 class="section-title">{{ $t('blog.perfumeJournal') }}</h2>
         </div>
-        <button class="btn-secondary desktop-btn">View All Posts</button>
+        <button class="btn-secondary desktop-btn">{{ $t('blog.viewAllPosts') }}</button>
       </div>
 
       <div class="blog-grid">
@@ -25,49 +25,54 @@
             <h3 class="blog-title">{{ post.title }}</h3>
             <p class="blog-excerpt">{{ post.excerpt }}</p>
             <div class="blog-read-more">
-              Read More <i class="ti ti-arrow-right" aria-hidden="true" />
+              {{ $t('blog.readMore') }} <i class="ti ti-arrow-right" aria-hidden="true" />
             </div>
           </div>
         </article>
       </div>
 
       <div class="mobile-btn-wrap">
-        <button class="btn-secondary">View All Posts</button>
+        <button class="btn-secondary">{{ $t('blog.viewAllPosts') }}</button>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-const posts = [
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const posts = computed(() => [
   {
     slug: 'top-fragrances-2024',
-    date: 'Jun 10, 2025',
-    category: 'Trends',
-    title: 'The Top 5 Fragrances Taking Over 2025',
-    excerpt: 'Discover the scents that have been flying off shelves this season and why experts are raving about them.',
+    date: t('blog.date1'),
+    category: t('blog.trends'),
+    title: t('blog.blog1Title'),
+    excerpt: t('blog.blog1Excerpt'),
     icon: 'ti-sparkles',
     gradient: 'linear-gradient(135deg, #C9A96E50, #B08D5740)',
   },
   {
     slug: 'how-to-choose-perfume',
-    date: 'May 28, 2025',
-    category: 'Guide',
-    title: 'How to Choose the Perfect Perfume for Any Occasion',
-    excerpt: 'A fragrance expert\'s guide to matching your scent to your mood, event, and season.',
+    date: t('blog.date2'),
+    category: t('blog.guide'),
+    title: t('blog.blog2Title'),
+    excerpt: t('blog.blog2Excerpt'),
     icon: 'ti-heart',
     gradient: 'linear-gradient(135deg, #B08D5740, #4A403A30)',
   },
   {
     slug: 'fragrance-layering',
-    date: 'May 15, 2025',
-    category: 'Tips',
-    title: 'The Art of Fragrance Layering: Make Your Scent Last Longer',
-    excerpt: 'Learn the secrets professional perfumers use to create a unique, long-lasting signature scent.',
+    date: t('blog.date3'),
+    category: t('blog.tips'),
+    title: t('blog.blog3Title'),
+    excerpt: t('blog.blog3Excerpt'),
     icon: 'ti-layers',
     gradient: 'linear-gradient(135deg, #B08D5730, #C9A96E40)',
   },
-]
+])
 </script>
 
 <style scoped>
@@ -89,7 +94,7 @@ const posts = [
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 36px;
   font-weight: 900;
   color: var(--text);
@@ -169,7 +174,7 @@ const posts = [
 }
 
 .blog-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 700;
   color: var(--text);

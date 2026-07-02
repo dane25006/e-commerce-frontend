@@ -11,7 +11,7 @@
               <div class="promo-visual-glow" />
               <div class="promo-visual-bottle-wrap">
                 <div class="promo-visual-bottle">
-                  <span class="promo-visual-brand">SCENTIQUE</span>
+                  <span class="promo-visual-brand">{{ $t('promoBanner.brandText') }}</span>
                 </div>
               </div>
               <div class="promo-visual-floral promo-visual-floral--right" aria-hidden="true">&#127800;</div>
@@ -21,15 +21,15 @@
           </div>
 
           <div class="promo-banner-content">
-            <span class="section-label">Limited Time Offer</span>
+            <span class="section-label">{{ $t('promoBanner.limitedOffer') }}</span>
 
             <h2 class="promo-banner-title">
-              Get <span class="promo-banner-highlight">15% Off</span><br />
-              On Your First Order
+              {{ $t('promoBanner.get') }}<span class="promo-banner-highlight">{{ $t('promoBanner.percentOff') }}</span><br />
+              {{ $t('promoBanner.onFirstOrder') }}
             </h2>
 
             <p class="promo-banner-code-text">
-              Use code <span class="promo-code">WELCOME15</span> at checkout
+              {{ $t('promoBanner.useCode') }} <span class="promo-code">{{ $t('promoBanner.code') }}</span> {{ $t('promoBanner.atCheckout') }}
             </p>
 
             <div class="promo-countdown">
@@ -41,7 +41,7 @@
             </div>
 
             <button class="btn-primary promo-banner-cta">
-              Claim Offer
+              {{ $t('promoBanner.claimOffer') }}
               <i class="ti ti-arrow-right" aria-hidden="true" />
             </button>
           </div>
@@ -53,6 +53,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const getTimeLeft = () => {
   const now = new Date()
@@ -69,9 +72,9 @@ const getTimeLeft = () => {
 const pad = (n: number) => String(n).padStart(2, '0')
 
 const countdown = ref([
-  { label: 'Hours', value: '00' },
-  { label: 'Mins', value: '00' },
-  { label: 'Secs', value: '00' },
+  { label: t('promoBanner.hours'), value: '00' },
+  { label: t('promoBanner.mins'), value: '00' },
+  { label: t('promoBanner.secs'), value: '00' },
 ])
 
 let timer: ReturnType<typeof setInterval>
@@ -79,9 +82,9 @@ let timer: ReturnType<typeof setInterval>
 function tick() {
   const { h, m, s } = getTimeLeft()
   countdown.value = [
-    { label: 'Hours', value: pad(h) },
-    { label: 'Mins', value: pad(m) },
-    { label: 'Secs', value: pad(s) },
+    { label: t('promoBanner.hours'), value: pad(h) },
+    { label: t('promoBanner.mins'), value: pad(m) },
+    { label: t('promoBanner.secs'), value: pad(s) },
   ]
 }
 
@@ -256,7 +259,7 @@ onUnmounted(() => clearInterval(timer))
 }
 
 .promo-banner-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 32px;
   font-weight: 900;
   color: var(--text);

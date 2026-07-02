@@ -2,8 +2,8 @@
   <section class="testimonials-section">
     <div class="section-container">
       <div class="section-header">
-        <span class="section-label">Testimonials</span>
-        <h2 class="section-title">What Our Customers Say</h2>
+        <span class="section-label">{{ $t('testimonials.label') }}</span>
+        <h2 class="section-title">{{ $t('testimonials.title') }}</h2>
       </div>
 
       <div class="testimonials-grid">
@@ -32,10 +32,14 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const testimonials = [
-  { name: 'Olivia M.', title: 'Verified Buyer', text: 'The best perfumes I\'ve ever used! Long-lasting and absolutely worth it. The quality is unmatched.' },
-  { name: 'James T.', title: 'Verified Buyer', text: 'Elegant packaging and amazing fragrance. Highly recommended for anyone who appreciates luxury.' },
-  { name: 'Sophia L.', title: 'Verified Buyer', text: 'Scentique has become my go-to brand for every occasion. The scents are simply divine.' },
+  { name: t('testimonials.author1'), title: t('testimonials.verifiedBuyer'), text: t('testimonials.quote1') },
+  { name: t('testimonials.author2'), title: t('testimonials.verifiedBuyer'), text: t('testimonials.quote2') },
+  { name: t('testimonials.author3'), title: t('testimonials.verifiedBuyer'), text: t('testimonials.quote3') },
 ]
 </script>
 
@@ -56,7 +60,7 @@ const testimonials = [
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 36px;
   font-weight: 900;
   color: var(--text);

@@ -2,8 +2,8 @@
   <section class="why-section">
     <div class="section-container">
       <div class="section-header">
-        <span class="section-label">Why Scentique?</span>
-        <h2 class="section-title">The Luxury Difference</h2>
+        <span class="section-label">{{ $t('whyChooseUs.label') }}</span>
+        <h2 class="section-title">{{ $t('whyChooseUs.title') }}</h2>
       </div>
 
       <div class="features-grid">
@@ -24,11 +24,15 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const features = [
-  { icon: 'ti-diamond', title: '100% Authentic', desc: 'Guaranteed genuine luxury perfumes' },
-  { icon: 'ti-truck', title: 'Fast Delivery', desc: 'Free shipping on orders over $100' },
-  { icon: 'ti-shield-lock', title: 'Secure Payment', desc: '100% safe & secure checkout' },
-  { icon: 'ti-refresh', title: 'Easy Returns', desc: 'Hassle-free return within 30 days' },
+  { icon: 'ti-diamond', title: t('whyChooseUs.authentic'), desc: t('whyChooseUs.authenticDesc') },
+  { icon: 'ti-truck', title: t('whyChooseUs.fastDelivery'), desc: t('whyChooseUs.fastDeliveryDesc') },
+  { icon: 'ti-shield-lock', title: t('whyChooseUs.securePayment'), desc: t('whyChooseUs.securePaymentDesc') },
+  { icon: 'ti-refresh', title: t('whyChooseUs.easyReturns'), desc: t('whyChooseUs.easyReturnsDesc') },
 ]
 </script>
 
@@ -49,7 +53,7 @@ const features = [
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 36px;
   font-weight: 900;
   color: var(--text);
@@ -101,7 +105,7 @@ const features = [
 }
 
 .feature-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 15px;
   font-weight: 700;
   color: var(--text);

@@ -2,9 +2,9 @@
   <section class="category-section">
     <div class="category-container">
       <div class="category-header">
-        <span class="section-label block mb-3">Shop by Category</span>
-        <h2 class="category-title">Explore Our Collections</h2>
-        <p class="section-subtitle">Curated fragrances for every moment</p>
+        <span class="section-label block mb-3">{{ $t('categorySection.shopByCategory') }}</span>
+        <h2 class="category-title">{{ $t('categorySection.exploreCollections') }}</h2>
+        <p class="section-subtitle">{{ $t('categorySection.subtitle') }}</p>
       </div>
       <div class="category-grid">
         <RouterLink
@@ -16,7 +16,7 @@
           <div class="card-icon">
             <i :class="iconMap[cat.label]" class="category-icon" aria-hidden="true" />
           </div>
-          <h3 class="card-title">{{ cat.label }}</h3>
+          <h3 class="card-title">{{ titleMap[cat.label] || cat.label }}</h3>
           <p class="card-desc">{{ descMap[cat.label] }}</p>
         </RouterLink>
       </div>
@@ -25,7 +25,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { staticCategories } from '@/features/categories'
+
+const { t } = useI18n()
 
 const iconMap: Record<string, string> = {
   'For Her': 'ti ti-gender-female',
@@ -37,15 +41,25 @@ const iconMap: Record<string, string> = {
   'Travel Size': 'ti ti-plane',
 }
 
-const descMap: Record<string, string> = {
-  'For Her': 'Elegant feminine fragrances',
-  'For Him': 'Bold masculine scents',
-  'Unisex': 'Balanced for everyone',
-  'Best Sellers': 'Most loved perfumes',
-  'New Arrivals': 'Fresh from the atelier',
-  'Gift Sets': 'Beautifully packaged',
-  'Travel Size': 'Perfect on the go',
-}
+const descMap = computed<Record<string, string>>(() => ({
+  'For Her': t('categorySection.forHerDesc'),
+  'For Him': t('categorySection.forHimDesc'),
+  'Unisex': t('categorySection.unisexDesc'),
+  'Best Sellers': t('categorySection.bestSellersDesc'),
+  'New Arrivals': t('categorySection.newArrivalsDesc'),
+  'Gift Sets': t('categorySection.giftSetsDesc'),
+  'Travel Size': t('categorySection.travelSizeDesc'),
+}))
+
+const titleMap = computed<Record<string, string>>(() => ({
+  'For Her': t('categorySection.forHer'),
+  'For Him': t('categorySection.forHim'),
+  'Unisex': t('categorySection.unisex'),
+  'Best Sellers': t('categorySection.bestSellers'),
+  'New Arrivals': t('categorySection.newArrivals'),
+  'Gift Sets': t('categorySection.giftSets'),
+  'Travel Size': t('categorySection.travelSize'),
+}))
 </script>
 
 <style scoped>
@@ -87,7 +101,8 @@ const descMap: Record<string, string> = {
 }
 
 .category-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-body);
+  letter-spacing: -0.02em;
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text);
@@ -191,7 +206,7 @@ const descMap: Record<string, string> = {
 }
 
 .card-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 700;
   color: var(--text);

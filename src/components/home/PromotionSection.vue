@@ -3,8 +3,8 @@
     <div class="section-container">
       <div class="section-header">
         <div>
-          <span class="section-label">Hot Deals</span>
-          <h2 class="section-title">Special Promotions</h2>
+          <span class="section-label">{{ $t('promotions.hotDeals') }}</span>
+          <h2 class="section-title">{{ $t('promotions.specialPromotions') }}</h2>
         </div>
       </div>
 
@@ -26,10 +26,10 @@
               <i class="ti ti-discount promo-placeholder-icon" aria-hidden="true" />
             </div>
             <div class="promo-discount-badge">
-              {{ promo.discount_type === 'percentage' ? `${promo.discount_value}% OFF` : `$${promo.discount_value} OFF` }}
+              {{ promo.discount_type === 'percentage' ? `${promo.discount_value}${$t('promotions.percentOff')}` : `$${promo.discount_value}${$t('promotions.dollarOff')}` }}
             </div>
             <div v-if="promo.coupon_code" class="promo-coupon">
-              Code: {{ promo.coupon_code }}
+              {{ $t('promotions.code') }} {{ promo.coupon_code }}
             </div>
           </div>
 
@@ -44,7 +44,7 @@
 
             <div v-if="promo.ends_at" class="promo-timer">
               <i class="ti ti-clock promo-timer-icon" aria-hidden="true" />
-              <span class="promo-timer-label">Ends in</span>
+              <span class="promo-timer-label">{{ $t('promotions.endsIn') }}</span>
               <span class="promo-timer-value">{{ timeLeft(promo.ends_at) }}</span>
             </div>
           </div>
@@ -55,13 +55,16 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import type { Promotion } from '@/types/promotion'
+
+const { t } = useI18n()
 
 defineProps<{ promotions: Promotion[] }>()
 
 function timeLeft(dateStr: string): string {
   const diff = new Date(dateStr).getTime() - Date.now()
-  if (diff <= 0) return 'Ended'
+  if (diff <= 0) return t('promotions.ended')
   const days = Math.floor(diff / 86400000)
   const hours = Math.floor((diff % 86400000) / 3600000)
   if (days > 0) return `${days}d ${hours}h left`
@@ -86,7 +89,7 @@ function timeLeft(dateStr: string): string {
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 36px;
   font-weight: 900;
   color: var(--text);
@@ -188,7 +191,7 @@ function timeLeft(dateStr: string): string {
 }
 
 .promo-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 700;
   color: var(--text);
