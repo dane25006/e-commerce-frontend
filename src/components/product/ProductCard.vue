@@ -21,9 +21,9 @@
 
       <!-- Badges -->
       <div class="absolute top-3 left-3 flex flex-col gap-1.5">
-        <span v-if="bestSeller" class="badge-gold">🔥 Best Seller</span>
-        <span v-if="newArrival" class="badge-gold">✨ New Arrival</span>
-        <span v-if="product.is_new && !newArrival" class="badge-gold">✨ New</span>
+        <span v-if="bestSeller" class="badge-gold">🔥 {{ $t('productDetail.bestSeller') }}</span>
+        <span v-if="newArrival" class="badge-gold">✨ {{ $t('productDetail.newArrival') }}</span>
+        <span v-if="product.is_new && !newArrival" class="badge-gold">✨ {{ $t('productDetail.new') }}</span>
         <span v-if="product.sale_price" class="badge-dark">
           -{{ Math.round((1 - product.sale_price / product.price) * 100) }}%
         </span>
@@ -48,7 +48,7 @@
             @click.prevent="$emit('quickView', product)"
             class="w-full py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 quick-view-btn"
           >
-            <i class="ti ti-eye mr-1.5" aria-hidden="true" />Quick View
+            <i class="ti ti-eye mr-1.5" aria-hidden="true" />{{ $t('productDetail.quickView') }}
           </button>
         </div>
       </Transition>
@@ -59,7 +59,7 @@
         class="absolute inset-0 flex items-center justify-center" style="background: rgba(255,255,255,0.55); backdrop-filter: blur(2px);"
       >
         <span class="text-xs font-bold px-4 py-1.5 rounded-full" style="background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
-          Out of Stock
+          {{ $t('productDetail.outOfStock') }}
         </span>
       </div>
     </RouterLink>
@@ -72,7 +72,7 @@
         <span v-if="product.gender" class="text-[10px] font-medium" style="color: var(--text-muted);">{{ product.gender }}</span>
       </div>
       <RouterLink :to="`/products/${product.id}`">
-        <h3 class="text-sm font-bold line-clamp-2 leading-snug mb-1 transition" style="color: var(--text); font-family: 'Playfair Display', serif;">
+        <h3 class="text-sm font-bold line-clamp-2 leading-snug mb-1 transition" style="color: var(--text); font-family: var(--font-heading);">
           {{ product.name }}
         </h3>
       </RouterLink>
@@ -112,11 +112,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { imageUrl } from '@/utils/image'
 import { formatPrice } from '@/utils/price'
 import type { Product } from '@/types/product'
 import WishlistButton from './WishlistButton.vue'
 import AddToCartButton from './AddToCartButton.vue'
+
+const { t } = useI18n()
 
 defineProps<{ product: Product; bestSeller?: boolean; newArrival?: boolean }>()
 defineEmits<{ quickView: [product: Product] }>()

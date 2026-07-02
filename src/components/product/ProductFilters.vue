@@ -4,7 +4,7 @@
     <!-- search -->
     <div>
       <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-        Search
+        {{ $t('products.search') }}
       </label>
       <div class="relative">
         <i class="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
@@ -19,7 +19,7 @@
             page: 1
           })"
           type="text"
-          placeholder="Search products..."
+          :placeholder="$t('products.searchPlaceholder')"
           class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg outline-none
                  focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
         />
@@ -29,7 +29,7 @@
     <!-- categories -->
     <div>
       <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-        Category
+        {{ $t('products.categories') }}
       </label>
       <div class="space-y-1">
         <button
@@ -39,7 +39,7 @@
             ? 'bg-indigo-50 text-indigo-700 font-medium'
             : 'text-gray-600 hover:bg-gray-50'"
         >
-          <span>All categories</span>
+          <span>{{ $t('products.allCategories') }}</span>
           <span class="text-xs text-gray-400">{{ totalProducts }}</span>
         </button>
         <button
@@ -60,7 +60,7 @@
     <!-- price range -->
     <div class="border-t border-gray-100 pt-5">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-sm font-bold text-gray-900">Price</h3>
+        <h3 class="text-sm font-bold text-gray-900">{{ $t('products.priceRange') }}</h3>
         <i class="ti ti-chevron-up text-gray-400 text-sm" aria-hidden="true" />
       </div>
       <div class="flex flex-wrap gap-2">
@@ -85,7 +85,7 @@
              hover:border-red-200 rounded-lg py-2 transition flex items-center justify-center gap-1.5"
     >
       <i class="ti ti-refresh text-sm" aria-hidden="true" />
-      Reset filters
+      {{ $t('products.resetFilters') }}
     </button>
 
   </aside>
@@ -93,8 +93,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { ProductParams } from '@/services/productService'
 import type { Category } from '@/types/product'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   modelValue:    ProductParams
@@ -108,10 +111,10 @@ const emit = defineEmits<{
 }>()
 
 const priceRanges = [
-  { label: 'Under $10',  min: 0,   max: 10 },
-  { label: '$10 – $25',  min: 10,  max: 25 },
-  { label: '$25 – $50',  min: 25,  max: 50 },
-  { label: '$50+',       min: 50,  max: undefined },
+  { label: t('products.under10'),  min: 0,   max: 10 },
+  { label: t('products.between10and25'),  min: 10,  max: 25 },
+  { label: t('products.between25and50'),  min: 25,  max: 50 },
+  { label: t('products.over50'),       min: 50,  max: undefined },
 ]
 
 function isActive(r: typeof priceRanges[number]): boolean {

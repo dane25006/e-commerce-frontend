@@ -2,7 +2,7 @@
   <div class="add-to-cart-wrapper">
     <span v-if="product.stock === 0" class="out-of-stock">
       <i class="ti ti-circle-x" aria-hidden="true" />
-      Out of stock
+      {{ $t('addToCart.outOfStock') }}
     </span>
 
     <button
@@ -15,7 +15,7 @@
         iconOnly ? 'btn-icon' : '',
         added ? 'btn-added' : ''
       ]"
-      :aria-label="adding ? 'Adding...' : label"
+      :aria-label="adding ? $t('addToCart.adding') : label"
     >
       <i
         v-if="adding"
@@ -30,8 +30,8 @@
       <template v-else>
         <i class="ti ti-plus" aria-hidden="true" />
       </template>
-      <span v-if="!iconOnly && !added" class="btn-label">{{ adding ? 'Adding...' : label }}</span>
-      <span v-if="!iconOnly && added" class="btn-label added-label">Added</span>
+      <span v-if="!iconOnly && !added" class="btn-label">{{ adding ? $t('addToCart.adding') : label }}</span>
+      <span v-if="!iconOnly && added" class="btn-label added-label">{{ $t('addToCart.addedLabel') }}</span>
 
       <span v-if="added" class="success-ring" />
       <span v-if="added" class="success-ring ring-delay" />
@@ -41,9 +41,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCartStore } from '@/stores/cart'
 import { useToast } from '@/composables/useToast'
 import type { Product, RelatedProduct } from '@/types/product'
+
+const { t } = useI18n()
 
 const props = withDefaults(defineProps<{
   product: Product | RelatedProduct
@@ -64,10 +67,10 @@ async function handleAdd() {
   try {
     await cartStore.addToCart(props.product.id)
     added.value = true
-    showToast('Added to your cart')
+    showToast(t('addToCart.addedToast'))
     setTimeout(() => { added.value = false }, 2500)
   } catch {
-    showToast('Could not add to cart. Please try again.', 'error')
+    showToast(t('addToCart.errorToast'), 'error')
   } finally {
     adding.value = false
   }

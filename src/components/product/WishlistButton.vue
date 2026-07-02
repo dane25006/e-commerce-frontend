@@ -8,7 +8,7 @@
       isWishlisted ? 'wishlisted' : '',
       animating ? 'heart-beat' : '',
     ]"
-    :aria-label="isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'"
+    :aria-label="isWishlisted ? $t('wishlist.removeFrom') : $t('wishlist.addTo')"
   >
     <i
       :class="[
@@ -27,8 +27,11 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useWishlistStore } from '@/stores/wishlist'
 import { useToast } from '@/composables/useToast'
+
+const { t } = useI18n()
 
 const props = withDefaults(defineProps<{
   productId: number
@@ -62,9 +65,9 @@ async function handleToggle() {
   try {
     const wasWishlisted = isWishlisted.value
     await wishlistStore.toggle(props.productId)
-    showToast(wasWishlisted ? 'Removed from your wishlist' : 'Saved to your wishlist')
+    showToast(wasWishlisted ? t('wishlist.removedToast') : t('wishlist.savedToast'))
   } catch {
-    showToast('Could not update your wishlist. Please try again.', 'error')
+    showToast(t('wishlist.errorToast'), 'error')
   } finally {
     toggling.value = false
   }

@@ -20,14 +20,14 @@
             </div>
 
             <div class="modal-badges">
-              <span v-if="product.is_new" class="badge badge-new">New</span>
-              <span v-if="product.sale_price" class="badge badge-sale">Sale</span>
+              <span v-if="product.is_new" class="badge badge-new">{{ $t('quickView.new') }}</span>
+              <span v-if="product.sale_price" class="badge badge-sale">{{ $t('quickView.sale') }}</span>
             </div>
 
             <button
               @click="$emit('close')"
               class="modal-close"
-              aria-label="Close"
+              :aria-label="$t('quickView.close')"
             >
               <i class="ti ti-x" aria-hidden="true" />
             </button>
@@ -72,7 +72,7 @@
 
               <span class="modal-stock" :class="product.stock > 0 ? 'stock-available' : 'stock-out'">
                 <i :class="product.stock > 0 ? 'ti ti-circle-check-filled' : 'ti ti-circle-x-filled'" aria-hidden="true" />
-                {{ product.stock > 0 ? `${product.stock} in stock` : 'Out of stock' }}
+                {{ product.stock > 0 ? `${product.stock} ${$t('quickView.inStock')}` : $t('quickView.outOfStock') }}
               </span>
 
               <p class="modal-description">{{ product.description }}</p>
@@ -86,7 +86,7 @@
                 >
                   <i v-if="adding" class="ti ti-loader-2" aria-hidden="true" />
                   <i v-else class="ti ti-shopping-bag" aria-hidden="true" />
-                  {{ adding ? 'Adding...' : 'Add to Cart' }}
+                  {{ adding ? $t('quickView.adding') : $t('quickView.addToCart') }}
                 </button>
 
                 <WishlistButton :product-id="product.id" size="lg" />
@@ -96,7 +96,7 @@
                   @click="$emit('close')"
                   class="btn-details"
                 >
-                  Details <i class="ti ti-arrow-right" aria-hidden="true" />
+                  {{ $t('quickView.details') }} <i class="ti ti-arrow-right" aria-hidden="true" />
                 </RouterLink>
               </div>
             </div>
@@ -109,12 +109,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCartStore } from '@/stores/cart'
 import { useToast } from '@/composables/useToast'
 import { imageUrl } from '@/utils/image'
 import { formatPrice } from '@/utils/price'
 import type { Product } from '@/types/product'
 import WishlistButton from './WishlistButton.vue'
+
+const { t } = useI18n()
 
 const props = defineProps<{ product: Product | null }>()
 defineEmits<{ close: [] }>()
@@ -128,9 +131,9 @@ async function handleAddToCart() {
   adding.value = true
   try {
     await cartStore.addToCart(props.product.id)
-    showToast('Added to your cart')
+    showToast(t('quickView.addedToast'))
   } catch {
-    showToast('Could not add to cart. Please try again.', 'error')
+    showToast(t('quickView.errorToast'), 'error')
   } finally {
     adding.value = false
   }
@@ -312,7 +315,7 @@ async function handleAddToCart() {
 }
 
 .modal-title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 26px;
   font-weight: 700;
   line-height: 1.2;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Categories</div>
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">{{ $t('products.categories') }}</div>
     <div class="space-y-1">
       <button
         v-for="cat in staticCategories"
