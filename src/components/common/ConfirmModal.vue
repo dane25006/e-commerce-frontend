@@ -5,7 +5,7 @@
         type="button"
         class="fixed inset-0"
         :style="{ background: 'rgba(34,34,34,0.45)', backdropFilter: 'blur(6px)' }"
-        aria-label="Close"
+        :aria-label="$t('confirmModal.close')"
         @click="handleCancel"
       />
       <div

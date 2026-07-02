@@ -2,11 +2,11 @@
   <Transition name="slide-down">
     <div v-if="!isOnline" class="offline-bar">
       <i class="ti ti-wifi-off" aria-hidden="true" />
-      <span>You are offline. Some features may be unavailable.</span>
+      <span>{{ $t('networkStatus.offline') }}</span>
     </div>
     <div v-else-if="justConnected" class="online-bar">
       <i class="ti ti-wifi" aria-hidden="true" />
-      <span>Back online</span>
+      <span>{{ $t('networkStatus.backOnline') }}</span>
     </div>
   </Transition>
 </template>

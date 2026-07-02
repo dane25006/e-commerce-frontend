@@ -8,7 +8,7 @@
           <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
             <i class="ti ti-shopping-bag text-white text-base" aria-hidden="true" />
           </div>
-          <span class="text-base font-semibold text-gray-900">ShopVue</span>
+          <span class="text-base font-semibold text-gray-900">{{ $t('app.name') }}</span>
         </RouterLink>
 
         <!-- desktop nav -->
@@ -18,14 +18,14 @@
             class="text-sm text-gray-500 hover:text-gray-900 transition"
             :class="{ 'text-gray-900 font-medium': $route.name === 'home' }"
           >
-            Home
+            {{ $t('nav.home') }}
           </RouterLink>
           <RouterLink
             to="/products"
             class="text-sm text-gray-500 hover:text-gray-900 transition"
             :class="{ 'text-gray-900 font-medium': $route.name === 'products' }"
           >
-            Products
+            {{ $t('nav.shop') }}
           </RouterLink>
         </div>
 
@@ -36,7 +36,7 @@
           <RouterLink
             to="/products"
             class="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition"
-            aria-label="Search"
+            :aria-label="$t('nav.search')"
           >
             <i class="ti ti-search text-lg" aria-hidden="true" />
           </RouterLink>
@@ -48,14 +48,14 @@
               class="text-sm text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg
                      hover:bg-gray-50 transition"
             >
-              Login
+              {{ $t('nav.login') }}
             </RouterLink>
             <RouterLink
               to="/register"
               class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5
                      rounded-lg transition font-medium"
             >
-              Register
+              {{ $t('nav.register') }}
             </RouterLink>
           </template>
 
@@ -66,7 +66,7 @@
             <RouterLink
               to="/wishlist"
               class="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition"
-              aria-label="Wishlist"
+              :aria-label="$t('nav.wishlist')"
             >
               <i class="ti ti-heart text-lg" aria-hidden="true" />
             </RouterLink>
@@ -75,7 +75,7 @@
             <RouterLink
               to="/cart"
               class="relative p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition"
-              aria-label="Cart"
+              :aria-label="$t('nav.cart')"
             >
               <i class="ti ti-shopping-cart text-lg" aria-hidden="true" />
               <span
@@ -116,7 +116,7 @@
                          hover:bg-gray-50 transition"
                 >
                   <i class="ti ti-user text-gray-400" aria-hidden="true" />
-                  Profile
+                  {{ $t('nav.myProfile') }}
                 </RouterLink>
                 <RouterLink
                   to="/orders"
@@ -125,7 +125,7 @@
                          hover:bg-gray-50 transition"
                 >
                   <i class="ti ti-package text-gray-400" aria-hidden="true" />
-                  My orders
+                  {{ $t('nav.myOrders') }}
                 </RouterLink>
                 <div class="border-t border-gray-100 my-1" />
                 <button
@@ -134,7 +134,7 @@
                          hover:bg-red-50 transition"
                 >
                   <i class="ti ti-logout text-red-400" aria-hidden="true" />
-                  Sign out
+                  {{ $t('nav.logout') }}
                 </button>
               </div>
             </div>
@@ -148,8 +148,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+
+const { t } = useI18n()
 
 const auth        = useAuthStore()
 const cartStore   = useCartStore()
