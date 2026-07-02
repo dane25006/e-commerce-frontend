@@ -6,7 +6,7 @@
       type="button"
       class="fixed inset-0 z-40"
       :style="{ background: 'rgba(34,34,34,0.5)', backdropFilter: 'blur(8px)' }"
-      aria-label="Close auth dialog"
+      :aria-label="$t('authModal.close')"
       @click="emit('close')"
     />
 
@@ -27,7 +27,7 @@
             type="button"
             class="absolute right-5 top-5 z-10 flex h-8 w-8 items-center justify-center rounded-full transition"
             :style="{ color: 'var(--text-muted)' }"
-            aria-label="Close"
+            :aria-label="$t('authModal.closeLabel')"
             @click="emit('close')"
           >
             <i class="ti ti-x text-lg" aria-hidden="true" />
@@ -53,7 +53,7 @@
               <p class="text-xs font-semibold uppercase tracking-[0.2em]" :style="{ color: 'rgba(255,255,255,0.5)' }">
                 {{ eyebrow }}
               </p>
-              <h2 :id="titleId" class="mt-4 text-3xl font-bold leading-tight" style="font-family: 'Playfair Display', serif;">
+              <h2 :id="titleId" class="mt-4 text-3xl font-bold leading-tight" style="font-family: var(--font-heading);">
                 {{ title }}
               </h2>
               <p class="mt-4 text-sm leading-relaxed" :style="{ color: 'rgba(255,255,255,0.6)' }">
@@ -67,11 +67,11 @@
             <div class="grid gap-4 text-sm" :style="{ color: 'rgba(255,255,255,0.55)' }">
               <div class="flex items-center gap-3">
                 <i class="ti ti-shield-check" :style="{ color: 'var(--primary)' }" aria-hidden="true" />
-                <span>Secure customer profile</span>
+                <span>{{ $t('authModal.feature1') }}</span>
               </div>
               <div class="flex items-center gap-3">
                 <i class="ti ti-truck-delivery" :style="{ color: 'var(--primary)' }" aria-hidden="true" />
-                <span>Order history in one place</span>
+                <span>{{ $t('authModal.feature2') }}</span>
               </div>
             </div>
           </aside>

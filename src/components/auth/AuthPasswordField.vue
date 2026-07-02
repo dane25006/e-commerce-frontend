@@ -25,7 +25,7 @@
       <button
         type="button"
         class="field-toggle"
-        :aria-label="visible ? 'Hide password' : 'Show password'"
+        :aria-label="visible ? $t('authPassword.hidePassword') : $t('authPassword.showPassword')"
         @click="visible = !visible"
       >
         <i :class="visible ? 'ti ti-eye-off' : 'ti ti-eye'" class="text-lg" aria-hidden="true" />
