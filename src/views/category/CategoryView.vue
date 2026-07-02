@@ -5,9 +5,9 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Explore</span>
-        <h1 class="hero-title">{{ categoryLabel ?? 'Category' }}</h1>
-        <p v-if="store.meta" class="hero-count">{{ store.meta.total }} products</p>
+        <span class="hero-label">{{ $t('category.explore') }}</span>
+        <h1 class="hero-title">{{ categoryLabel ?? $t('category.allProducts') }}</h1>
+        <p v-if="store.meta" class="hero-count">{{ $t('products.count', { count: store.meta.total }) }}</p>
       </div>
     </section>
 
@@ -15,7 +15,7 @@
       <div class="breadcrumb">
         <RouterLink to="/products" class="breadcrumb-link">
           <i class="ti ti-arrow-left" aria-hidden="true" />
-          All Products
+          {{ $t('category.allProducts') }}
         </RouterLink>
       </div>
 
@@ -32,13 +32,13 @@
 
       <div v-else-if="store.error" class="state-card">
         <i class="ti ti-alert-circle state-icon" aria-hidden="true" />
-        <p class="state-text">Something went wrong while loading this category. Please try again.</p>
+        <p class="state-text">{{ $t('category.errorLoading') }}</p>
       </div>
 
       <div v-else-if="!store.products.length" class="state-card">
         <i class="ti ti-mood-empty state-icon" aria-hidden="true" />
-        <p class="state-text">We couldn&rsquo;t find any products in this category. Explore our full collection instead.</p>
-        <RouterLink to="/products" class="btn-secondary">Browse All</RouterLink>
+        <p class="state-text">{{ $t('category.empty') }}</p>
+        <RouterLink to="/products" class="btn-secondary">{{ $t('category.browseAll') }}</RouterLink>
       </div>
 
       <div v-else class="product-grid">
@@ -84,6 +84,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useProductStore } from '@/stores/product'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
@@ -104,6 +105,7 @@ const store = useProductStore()
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
 
+const { t } = useI18n()
 const searchOpen = ref(false)
 const cartOpen = ref(false)
 const quickViewProduct = ref<Product | null>(null)
@@ -112,13 +114,13 @@ const backendCategory = ref<Category | null>(null)
 const categoryLabel = computed(() => {
   const slug = route.params.slug as string
   const map: Record<string, string> = {
-    'for-her': 'For Her',
-    'for-him': 'For Him',
-    'unisex': 'Unisex',
-    'best-sellers': 'Best Sellers',
-    'new-arrivals': 'New Arrivals',
-    'gift-sets': 'Gift Sets',
-    'travel-size': 'Travel Size',
+    'for-her': t('category.forHer'),
+    'for-him': t('category.forHim'),
+    'unisex': t('category.unisex'),
+    'best-sellers': t('category.bestSellers'),
+    'new-arrivals': t('category.newArrivals'),
+    'gift-sets': t('category.giftSets'),
+    'travel-size': t('category.travelSize'),
   }
   return map[slug] ?? null
 })
@@ -195,7 +197,7 @@ onMounted(async () => {
   min-height: 100vh;
   background: var(--background);
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-body);
 }
 
 .hero-section {
@@ -231,7 +233,7 @@ onMounted(async () => {
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);

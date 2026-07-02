@@ -5,10 +5,10 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Secure</span>
+        <span class="hero-label">{{ $t('checkout.secure') }}</span>
         <h1 class="hero-title">
           <i class="ti ti-lock" aria-hidden="true" />
-          Checkout
+          {{ $t('checkout.checkout') }}
         </h1>
       </div>
     </section>
@@ -16,9 +16,9 @@
     <div class="page-body">
       <div v-if="!cartStore.items.length && !orderSuccess" class="empty-state">
         <i class="ti ti-shopping-bag empty-icon" aria-hidden="true" />
-        <h2 class="empty-title">Your cart is feeling a little light</h2>
-        <p class="empty-desc" style="margin-bottom:16px;font-size:14px;color:var(--text-muted);">Add some luxury fragrances before checking out.</p>
-        <RouterLink to="/products" class="btn-primary">Browse Fragrances</RouterLink>
+        <h2 class="empty-title">{{ $t('checkout.emptyTitle') }}</h2>
+        <p class="empty-desc" style="margin-bottom:16px;font-size:14px;color:var(--text-muted);">{{ $t('checkout.emptyDesc') }}</p>
+        <RouterLink to="/products" class="btn-primary">{{ $t('checkout.browseFragrances') }}</RouterLink>
       </div>
 
       <Transition name="fade">
@@ -26,12 +26,12 @@
           <div class="success-icon">
             <i class="ti ti-circle-check" aria-hidden="true" />
           </div>
-          <h2 class="success-title">Thank you for your order!</h2>
-          <p class="success-desc">Your order has been placed successfully. We&rsquo;ll send you a confirmation once it ships.</p>
+          <h2 class="success-title">{{ $t('checkout.thankYou') }}</h2>
+          <p class="success-desc">{{ $t('checkout.successDesc') }}</p>
           <p v-if="placedOrderId" class="success-order-id">Order #{{ placedOrderId }}</p>
           <div class="success-actions">
-            <RouterLink to="/orders" class="btn-primary">View Orders</RouterLink>
-            <RouterLink to="/products" class="btn-secondary">Continue Shopping</RouterLink>
+            <RouterLink to="/orders" class="btn-primary">{{ $t('checkout.viewOrders') }}</RouterLink>
+            <RouterLink to="/products" class="btn-secondary">{{ $t('checkout.continueShopping') }}</RouterLink>
           </div>
         </div>
       </Transition>
@@ -41,37 +41,37 @@
           <div class="form-section">
             <h2 class="form-section-title">
               <i class="ti ti-truck" aria-hidden="true" />
-              Shipping Information
+              {{ $t('checkout.shippingInfo') }}
             </h2>
             <div class="form-grid">
               <div class="form-group half">
-                <label class="form-label">First Name</label>
+                <label class="form-label">{{ $t('checkout.firstName') }}</label>
                 <input id="checkout-first-name" name="first_name" v-model="form.first_name" type="text" required class="input-field" />
               </div>
               <div class="form-group half">
-                <label class="form-label">Last Name</label>
+                <label class="form-label">{{ $t('checkout.lastName') }}</label>
                 <input id="checkout-last-name" name="last_name" v-model="form.last_name" type="text" required class="input-field" />
               </div>
               <div class="form-group full">
-                <label class="form-label">Email</label>
+                <label class="form-label">{{ $t('checkout.email') }}</label>
                 <div class="input-icon-wrap">
                   <i class="ti ti-mail input-icon" aria-hidden="true" />
                   <input id="checkout-email" name="email" v-model="form.email" type="email" required class="input-field has-icon" />
                 </div>
               </div>
               <div class="form-group full">
-                <label class="form-label">Street Address</label>
+                <label class="form-label">{{ $t('checkout.streetAddress') }}</label>
                 <div class="input-icon-wrap">
                   <i class="ti ti-map-pin input-icon" aria-hidden="true" />
-                  <input id="checkout-address" name="address" v-model="form.address" type="text" required placeholder="123 Main Street" class="input-field has-icon" />
+                  <input id="checkout-address" name="address" v-model="form.address" type="text" required :placeholder="$t('checkout.streetPlaceholder')" class="input-field has-icon" />
                 </div>
               </div>
               <div class="form-group half">
-                <label class="form-label">City</label>
+                <label class="form-label">{{ $t('checkout.city') }}</label>
                 <input id="checkout-city" name="city" v-model="form.city" type="text" required class="input-field" />
               </div>
               <div class="form-group half">
-                <label class="form-label">ZIP Code</label>
+                <label class="form-label">{{ $t('checkout.zipCode') }}</label>
                 <input id="checkout-zip" name="zip" v-model="form.zip" type="text" required class="input-field" />
               </div>
             </div>
@@ -80,7 +80,7 @@
           <div class="form-section">
             <h2 class="form-section-title">
               <i class="ti ti-credit-card" aria-hidden="true" />
-              Payment Method
+              {{ $t('checkout.paymentMethod') }}
             </h2>
             <div class="payment-methods">
               <label
@@ -91,7 +91,7 @@
               >
                 <input :id="'pm-' + method.value" name="payment_method" v-model="form.payment_method" type="radio" :value="method.value" class="payment-radio" />
                 <i :class="`ti ${method.icon}`" :style="{ color: method.color }" aria-hidden="true" />
-                <span class="payment-label">{{ method.label }}</span>
+                <span class="payment-label">{{ $t(method.labelKey) }}</span>
               </label>
             </div>
           </div>
@@ -104,7 +104,7 @@
 
         <div class="checkout-summary-col">
           <div class="summary-card">
-            <h3 class="summary-title">Order Summary</h3>
+            <h3 class="summary-title">{{ $t('checkout.orderSummary') }}</h3>
 
             <div class="summary-items">
               <div v-for="item in cartStore.items" :key="item.cart_id" class="summary-item">
@@ -124,16 +124,16 @@
 
             <div class="summary-totals">
               <div class="totals-row">
-                <span>Subtotal</span>
+                <span>{{ $t('checkout.subtotal') }}</span>
                 <span>${{ cartStore.total.toFixed(2) }}</span>
               </div>
               <div class="totals-row">
-                <span>Shipping</span>
-                <span class="free-badge">{{ cartStore.total >= 100 ? 'Free' : '$9.99' }}</span>
+                <span>{{ $t('checkout.shipping') }}</span>
+                <span class="free-badge">{{ cartStore.total >= 100 ? $t('checkout.free') : '$9.99' }}</span>
               </div>
               <div class="totals-divider" />
               <div class="totals-row total-row-final">
-                <span>Total</span>
+                <span>{{ $t('checkout.total') }}</span>
                 <span class="total-amount">${{ (cartStore.total + (cartStore.total >= 100 ? 0 : 9.99)).toFixed(2) }}</span>
               </div>
             </div>
@@ -145,12 +145,12 @@
             >
               <i v-if="placing" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
               <i v-else class="ti ti-lock" aria-hidden="true" />
-              {{ placing ? 'Placing Order...' : 'Place Order' }}
+              {{ placing ? $t('checkout.placingOrder') : $t('checkout.placeOrder') }}
             </button>
 
             <div class="ssl-badge">
               <i class="ti ti-shield-lock" aria-hidden="true" />
-              Secured by SSL encryption
+              {{ $t('checkout.sslBadge') }}
             </div>
           </div>
         </div>
@@ -164,6 +164,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { imageUrl } from '@/utils/image'
@@ -174,6 +175,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 
+const { t } = useI18n()
 const cartStore = useCartStore()
 const auth = useAuthStore()
 const searchOpen = ref(false)
@@ -193,20 +195,20 @@ const form = reactive({
 })
 
 const paymentMethods = [
-  { value: 'cash_on_delivery', label: 'Cash on Delivery', icon: 'ti-cash', color: '#B88A44' },
-  { value: 'credit_card', label: 'Credit / Debit Card', icon: 'ti-credit-card', color: '#B88A44' },
-  { value: 'paypal', label: 'PayPal', icon: 'ti-brand-paypal', color: '#B88A44' },
+  { value: 'cash_on_delivery', labelKey: 'checkout.cod', icon: 'ti-cash', color: '#B88A44' },
+  { value: 'credit_card', labelKey: 'checkout.creditCard', icon: 'ti-credit-card', color: '#B88A44' },
+  { value: 'paypal', labelKey: 'checkout.paypal', icon: 'ti-brand-paypal', color: '#B88A44' },
 ]
 
 async function placeOrder() {
   if (!form.address || !form.city || !form.zip) {
-    checkoutError.value = 'Please fill in all required shipping fields to continue.'
+    checkoutError.value = t('checkout.validationShipping')
     return
   }
 
   await cartStore.fetchCart()
   if (!cartStore.items.length) {
-    checkoutError.value = 'Your cart is empty. Please add some items before checking out.'
+    checkoutError.value = t('checkout.validationEmptyCart')
     return
   }
 
@@ -234,7 +236,7 @@ async function placeOrder() {
         }
       }
     } else {
-      checkoutError.value = 'Something went wrong while placing your order. Please try again.'
+      checkoutError.value = t('checkout.errorPlacingOrder')
     }
   } finally {
     placing.value = false
@@ -291,7 +293,7 @@ onMounted(async () => {
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);

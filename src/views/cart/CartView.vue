@@ -5,13 +5,13 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Your</span>
+        <span class="hero-label">{{ $t('cart.your') }}</span>
         <h1 class="hero-title">
           <i class="ti ti-shopping-bag" aria-hidden="true" />
-          Shopping Cart
+          {{ $t('cart.shoppingCart') }}
         </h1>
         <p class="hero-count">
-          {{ cartStore.itemCount }} item{{ cartStore.itemCount !== 1 ? 's' : '' }}
+          {{ $t('cart.itemCount', { count: cartStore.itemCount }) }}
         </p>
       </div>
     </section>
@@ -35,11 +35,11 @@
         <div class="empty-icon">
           <i class="ti ti-shopping-bag" aria-hidden="true" />
         </div>
-        <h2 class="empty-title">Your cart is feeling a little light</h2>
-        <p class="empty-desc">Fill it with something extraordinary &mdash; explore our collection of luxury fragrances.</p>
+        <h2 class="empty-title">{{ $t('cart.emptyTitle') }}</h2>
+        <p class="empty-desc">{{ $t('cart.emptyDesc') }}</p>
         <RouterLink to="/products" class="btn-primary">
           <i class="ti ti-shopping-bag" aria-hidden="true" />
-          Browse Fragrances
+          {{ $t('cart.browseFragrances') }}
         </RouterLink>
       </div>
 
@@ -83,7 +83,7 @@
                         @click="updateQty(item, item.quantity - 1)"
                         :disabled="updatingId === item.cart_id"
                         class="qty-btn"
-                        aria-label="Decrease"
+                        :aria-label="$t('cart.decrease')"
                       >
                         <i class="ti ti-minus" aria-hidden="true" />
                       </button>
@@ -92,7 +92,7 @@
                         @click="updateQty(item, item.quantity + 1)"
                         :disabled="updatingId === item.cart_id || item.quantity >= item.product.stock"
                         class="qty-btn"
-                        aria-label="Increase"
+                        :aria-label="$t('cart.increase')"
                       >
                         <i class="ti ti-plus" aria-hidden="true" />
                       </button>
@@ -104,7 +104,7 @@
                         @click="removeItem(item)"
                         :disabled="removingId === item.cart_id"
                         class="item-remove"
-                        aria-label="Remove item"
+                        :aria-label="$t('cart.removeItem')"
                       >
                         <i class="ti ti-trash" aria-hidden="true" />
                       </button>
@@ -118,11 +118,11 @@
           <div class="cart-footer-links">
             <RouterLink to="/products" class="continue-link">
               <i class="ti ti-arrow-left" aria-hidden="true" />
-              Continue Shopping
+              {{ $t('cart.continueShopping') }}
             </RouterLink>
             <button @click="clearCart" class="clear-link">
               <i class="ti ti-trash" aria-hidden="true" />
-              Clear Cart
+              {{ $t('cart.clearCart') }}
             </button>
           </div>
         </div>
@@ -131,7 +131,7 @@
           <div class="coupon-card">
             <h3 class="sidebar-label">
               <i class="ti ti-discount" aria-hidden="true" />
-              Promo Code
+              {{ $t('cart.promoCode') }}
             </h3>
             <div class="coupon-row">
               <input
@@ -139,7 +139,7 @@
                 name="coupon_code"
                 v-model="couponCode"
                 type="text"
-                placeholder="e.g. WELCOME15"
+                :placeholder="$t('cart.promoPlaceholder')"
                 class="input-field"
                 :disabled="!!cartStore.coupon"
               />
@@ -148,14 +148,14 @@
                 class="btn-primary"
                 @click="handleApplyCoupon"
               >
-                Apply
+                {{ $t('cart.apply') }}
               </button>
               <button
                 v-else
                 class="btn-cancel"
                 @click="handleRemoveCoupon"
               >
-                Remove
+                {{ $t('cart.remove') }}
               </button>
             </div>
             <p
@@ -168,47 +168,47 @@
           </div>
 
           <div class="summary-card">
-            <h3 class="sidebar-label">Order Summary</h3>
+            <h3 class="sidebar-label">{{ $t('cart.orderSummary') }}</h3>
 
             <div class="summary-rows">
               <div class="summary-row">
-                <span>Subtotal ({{ cartStore.itemCount }} items)</span>
+                <span>{{ $t('cart.subtotal', { count: cartStore.itemCount }) }}</span>
                 <span class="summary-val">${{ cartStore.subtotal.toFixed(2) }}</span>
               </div>
               <div v-if="cartStore.discount > 0" class="summary-row discount-row">
-                <span>Discount</span>
+                <span>{{ $t('cart.discount') }}</span>
                 <span class="summary-val">-${{ cartStore.discount.toFixed(2) }}</span>
               </div>
               <div class="summary-row">
-                <span>Shipping</span>
+                <span>{{ $t('cart.shipping') }}</span>
                 <span class="summary-val" :class="cartStore.subtotal >= 100 ? 'free-badge' : ''">
-                  {{ cartStore.subtotal >= 100 ? 'Free' : '$9.99' }}
+                  {{ cartStore.subtotal >= 100 ? $t('cart.free') : '$9.99' }}
                 </span>
               </div>
               <div v-if="cartStore.subtotal < 100" class="shipping-hint">
                 <i class="ti ti-truck" aria-hidden="true" />
-                Add ${{ (100 - cartStore.subtotal).toFixed(2) }} more for free shipping
+                {{ $t('cart.shippingHint', { amount: (100 - cartStore.subtotal).toFixed(2) }) }}
               </div>
               <div class="summary-row">
-                <span>Tax (est.)</span>
+                <span>{{ $t('cart.tax') }}</span>
                 <span class="summary-val">${{ (cartStore.subtotal * 0.08).toFixed(2) }}</span>
               </div>
               <div class="summary-divider" />
               <div class="summary-row summary-total-row">
-                <span>Total</span>
+                <span>{{ $t('cart.total') }}</span>
                 <span class="total-amount">${{ orderTotal.toFixed(2) }}</span>
               </div>
             </div>
 
             <RouterLink to="/checkout" class="checkout-btn">
               <i class="ti ti-lock" aria-hidden="true" />
-              Proceed to Checkout
+              {{ $t('cart.proceedToCheckout') }}
             </RouterLink>
 
             <div class="trust-badges">
-              <div v-for="b in trustBadges" :key="b.text" class="trust-item">
+              <div v-for="b in trustBadges" :key="b.key" class="trust-item">
                 <i :class="`ti ${b.icon}`" aria-hidden="true" />
-                <span>{{ b.text }}</span>
+                <span>{{ $t(b.key) }}</span>
               </div>
             </div>
           </div>
@@ -223,6 +223,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCartStore } from '@/stores/cart'
 import { imageUrl } from '@/utils/image'
 import type { CartItem } from '@/types/cart'
@@ -232,6 +233,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 
+const { t } = useI18n()
 const cartStore = useCartStore()
 const searchOpen = ref(false)
 const couponCode = ref('')
@@ -253,9 +255,9 @@ function handleRemoveCoupon() {
 }
 
 const trustBadges = [
-  { icon: 'ti-shield-lock', text: 'Secure' },
-  { icon: 'ti-refresh', text: 'Easy Returns' },
-  { icon: 'ti-truck', text: 'Fast Ship' },
+  { icon: 'ti-shield-lock', key: 'cart.secure' },
+  { icon: 'ti-refresh', key: 'cart.easyReturns' },
+  { icon: 'ti-truck', key: 'cart.fastShip' },
 ]
 
 async function updateQty(item: CartItem, qty: number) {
@@ -273,7 +275,7 @@ async function removeItem(item: CartItem) {
 }
 
 async function clearCart() {
-  if (!confirm('Are you sure you want to remove all items from your cart?')) return
+  if (!confirm(t('cart.confirmClearTitle'))) return
   await cartStore.clearCart()
 }
 
@@ -319,7 +321,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);

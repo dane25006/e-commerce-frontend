@@ -20,18 +20,18 @@
 
     <div v-else-if="!store.detail" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center" style="color: var(--text-muted);">
       <i class="ti ti-package-off text-5xl block mb-4" style="color: rgba(184,138,68,0.3);" aria-hidden="true" />
-      <p class="font-bold mb-1" style="color: var(--secondary);">We couldn&rsquo;t find this product</p>
+      <p class="font-bold mb-1" style="color: var(--secondary);">{{ $t('productDetail.notFound') }}</p>
       <RouterLink to="/products" class="text-sm inline-block mt-3" style="color: var(--primary);">
-        &larr; Back to Shop
+        &larr; {{ $t('productDetail.backToShop') }}
       </RouterLink>
     </div>
 
     <template v-else>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <nav class="flex items-center gap-2 text-sm" style="color: var(--text-muted);">
-          <RouterLink to="/" class="transition" style="color: var(--text-muted);">Home</RouterLink>
+          <RouterLink to="/" class="transition" style="color: var(--text-muted);">{{ $t('productDetail.home') }}</RouterLink>
           <i class="ti ti-chevron-right text-xs" aria-hidden="true" />
-          <RouterLink to="/products" class="transition" style="color: var(--text-muted);">Shop</RouterLink>
+          <RouterLink to="/products" class="transition" style="color: var(--text-muted);">{{ $t('productDetail.shop') }}</RouterLink>
           <i class="ti ti-chevron-right text-xs" aria-hidden="true" />
           <span class="font-semibold line-clamp-1" style="color: var(--secondary);">{{ store.detail.name }}</span>
         </nav>
@@ -60,7 +60,7 @@
                   @click="prevImage"
                   class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100"
                   style="background: rgba(255,255,255,0.9); color: var(--secondary); box-shadow: 0 2px 8px rgba(0,0,0,0.08);"
-                  aria-label="Previous image"
+                  :aria-label="$t('productDetail.prevImage')"
                 >
                   <i class="ti ti-chevron-left" aria-hidden="true" />
                 </button>
@@ -68,7 +68,7 @@
                   @click="nextImage"
                   class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100"
                   style="background: rgba(255,255,255,0.9); color: var(--secondary); box-shadow: 0 2px 8px rgba(0,0,0,0.08);"
-                  aria-label="Next image"
+                  :aria-label="$t('productDetail.nextImage')"
                 >
                   <i class="ti ti-chevron-right" aria-hidden="true" />
                 </button>
@@ -76,7 +76,7 @@
                   v-if="store.detail.is_new"
                   class="absolute top-4 left-4 text-[10px] font-bold text-white px-3 py-1 rounded-full"
                   style="background: var(--primary); letter-spacing: 0.08em;"
-                >NEW</div>
+                >{{ $t('productDetail.new') }}</div>
               </div>
 
               <div
@@ -88,7 +88,7 @@
                   :src="imageUrl(currentImage)"
                   class="absolute max-w-none"
                   :style="zoomStyle"
-                  alt="Zoom"
+                  :alt="$t('productDetail.zoom')"
                   draggable="false"
                 />
               </div>
@@ -103,7 +103,7 @@
                 :class="selectedImageIndex === i ? 'border-[var(--primary)]' : 'border-transparent'"
                 style="background: #F8F5F0;"
               >
-                <img :src="imageUrl(img)" alt="Thumbnail" class="w-full h-full object-cover" draggable="false" />
+                <img :src="imageUrl(img)" :alt="$t('productDetail.thumbnail')" class="w-full h-full object-cover" draggable="false" />
               </button>
             </div>
           </div>
@@ -112,7 +112,7 @@
             <div class="space-y-6">
               <div>
                 <span v-if="store.detail.brand" class="section-label block mb-2">{{ store.detail.brand }}</span>
-                <h1 class="text-3xl md:text-4xl font-black leading-tight" style="color: var(--secondary); font-family: 'Playfair Display', serif;">
+                <h1 class="text-3xl md:text-4xl font-black leading-tight" style="color: var(--secondary); font-family: var(--font-heading);">
                   {{ store.detail.name }}
                 </h1>
               </div>
@@ -123,7 +123,7 @@
                     :class="n <= Math.round(store.detail.rating_avg!) ? 'text-[var(--primary)]' : 'text-[#ECE7DF]'" aria-hidden="true" />
                 </div>
                 <span class="text-sm font-bold" style="color: var(--secondary);">{{ store.detail.rating_avg.toFixed(1) }}</span>
-                <span class="text-sm" style="color: var(--text-muted);">({{ store.detail.rating_count }} reviews)</span>
+                <span class="text-sm" style="color: var(--text-muted);">{{ $t('productDetail.reviewCount', { count: store.detail.rating_count }) }}</span>
               </div>
 
               <div class="flex items-baseline gap-3">
@@ -155,7 +155,7 @@
                     <i class="ti ti-spray text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">Type</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.type') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.type }}</p>
                   </div>
                 </div>
@@ -164,7 +164,7 @@
                     <i class="ti ti-user text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">Gender</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.gender') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.gender }}</p>
                   </div>
                 </div>
@@ -173,7 +173,7 @@
                     <i class="ti ti-category text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">Category</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.category') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.department }}</p>
                   </div>
                 </div>
@@ -182,7 +182,7 @@
                     <i class="ti ti-tag text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">Collection</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.collection') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.category.name }}</p>
                   </div>
                 </div>
@@ -193,7 +193,7 @@
                   :class="store.detail.stock > 0 ? 'text-[var(--success)] bg-[var(--success)]/10' : 'text-[var(--danger)] bg-[var(--danger)]/10'"
                 >
                   <i :class="store.detail.stock > 0 ? 'ti ti-circle-check' : 'ti ti-circle-x'" aria-hidden="true" />
-                  {{ store.detail.stock > 0 ? `${store.detail.stock} in stock` : 'Out of stock' }}
+                  {{ store.detail.stock > 0 ? `${store.detail.stock} ${$t('productDetail.inStock')}` : $t('productDetail.outOfStock') }}
                 </span>
               </div>
 
@@ -204,7 +204,7 @@
                     class="w-12 h-12 flex items-center justify-center transition-colors duration-150 rounded-l-full hover:bg-[#F8F5F0]"
                     :disabled="quantity <= 1"
                     style="color: var(--text-muted);"
-                    aria-label="Decrease quantity"
+                    :aria-label="$t('productDetail.decreaseQty')"
                   >
                     <i class="ti ti-minus text-sm" aria-hidden="true" />
                   </button>
@@ -214,7 +214,7 @@
                     class="w-12 h-12 flex items-center justify-center transition-colors duration-150 rounded-r-full hover:bg-[#F8F5F0]"
                     :disabled="quantity >= store.detail.stock"
                     style="color: var(--text-muted);"
-                    aria-label="Increase quantity"
+                    :aria-label="$t('productDetail.increaseQty')"
                   >
                     <i class="ti ti-plus text-sm" aria-hidden="true" />
                   </button>
@@ -234,7 +234,7 @@
                   style="border: 1.5px solid var(--border);"
                 >
                   <i :class="isWishlisted ? 'ti ti-heart-filled' : 'ti ti-heart'" aria-hidden="true" />
-                  {{ isWishlisted ? 'Saved to Wishlist' : 'Add to Wishlist' }}
+                  {{ isWishlisted ? $t('productDetail.savedToWishlist') : $t('productDetail.addToWishlist') }}
                 </button>
 
                 <button
@@ -243,7 +243,7 @@
                   style="border: 1.5px solid var(--border); color: var(--text-muted);"
                 >
                   <i class="ti ti-share" aria-hidden="true" />
-                  Share
+                  {{ $t('productDetail.share') }}
                 </button>
               </div>
             </div>
@@ -261,7 +261,7 @@
               class="w-full flex items-center justify-between px-6 md:px-8 py-5 text-left transition-colors duration-200"
               :style="{ background: openAccordion === idx ? 'rgba(184,138,68,0.03)' : 'transparent' }"
             >
-              <span class="text-base font-bold flex items-center gap-3" style="color: var(--secondary); font-family: 'Playfair Display', serif;">
+              <span class="text-base font-bold flex items-center gap-3" style="color: var(--secondary); font-family: var(--font-heading);">
                 <i :class="section.icon" style="color: var(--primary);" aria-hidden="true" />
                 {{ section.title }}
               </span>
@@ -284,16 +284,16 @@
                   <p>{{ store.detail.description }}</p>
                 </div>
                 <div v-else-if="section.key === 'ingredients'" class="text-sm leading-relaxed" style="color: var(--text-muted);">
-                  <p>Alcohol Denat., Parfum (Fragrance), Aqua (Water), Limonene, Linalool, Citronellol, Geraniol, Coumarin, Alpha-Isomethyl Ionone.</p>
+                  <p>{{ $t('productDetail.ingredientsText') }}</p>
                 </div>
                 <div v-else-if="section.key === 'shipping'" class="space-y-3 text-sm" style="color: var(--text-muted);">
-                  <p><strong style="color: var(--secondary);">Free Shipping</strong> on orders over $100.</p>
-                  <p>Standard delivery: 3–5 business days. Express delivery: 1–2 business days.</p>
-                  <p>International shipping available to select countries. Duties and taxes may apply.</p>
+                  <p><strong style="color: var(--secondary);">{{ $t('productDetail.freeShipping') }}</strong></p>
+                  <p>{{ $t('productDetail.standardDelivery') }}</p>
+                  <p>{{ $t('productDetail.internationalShipping') }}</p>
                 </div>
                 <div v-else-if="section.key === 'reviews'">
                   <div v-if="auth.isLoggedIn && !userReview" class="mb-8 pb-8" style="border-bottom: 1px solid var(--border);">
-                    <h3 class="text-sm font-bold mb-4" style="color: var(--text-muted);">Write a Review</h3>
+                    <h3 class="text-sm font-bold mb-4" style="color: var(--text-muted);">{{ $t('productDetail.writeReview') }}</h3>
                     <div class="space-y-4">
                       <div class="flex items-center gap-1">
                         <button
@@ -302,7 +302,7 @@
                           type="button"
                           class="text-2xl transition"
                           :class="n <= reviewForm.rating ? 'text-[var(--primary)]' : 'text-[#ECE7DF]'"
-                          :aria-label="`Rate ${n} stars`"
+                          :aria-label="$t('productDetail.rateStars', { n })"
                         >
                           <i class="ti ti-star" aria-hidden="true" />
                         </button>
@@ -312,7 +312,7 @@
                         name="comment"
                         v-model="reviewForm.comment"
                         rows="3"
-                        placeholder="Share your experience with this fragrance..."
+                        :placeholder="$t('productDetail.reviewPlaceholder')"
                         class="w-full px-4 py-3 text-sm rounded-xl outline-none resize-none"
                         style="background: var(--background); border: 1px solid var(--border); color: var(--secondary);"
                       />
@@ -323,7 +323,7 @@
                           class="btn-primary text-sm py-2.5 px-6 flex items-center gap-1.5 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
                         >
                           <i v-if="submittingReview" class="ti ti-loader-2 animate-spin" aria-hidden="true" />
-                          {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
+                          {{ submittingReview ? $t('productDetail.submitting') : $t('productDetail.submitReview') }}
                         </button>
                         <p v-if="reviewError" class="text-xs" style="color: var(--danger);">{{ reviewError }}</p>
                       </div>
@@ -351,12 +351,11 @@
 
                   <div v-else class="text-center py-10" style="color: var(--text-muted);">
                     <i class="ti ti-message-circle text-4xl block mb-3" style="color: rgba(184,138,68,0.2);" aria-hidden="true" />
-                    <p class="text-sm font-medium" style="color: var(--secondary);">No reviews yet &mdash; be the first to share your thoughts.</p>
+                    <p class="text-sm font-medium" style="color: var(--secondary);">{{ $t('productDetail.noReviews') }}</p>
                   </div>
 
                   <div v-if="!auth.isLoggedIn" class="mt-5 text-sm text-center" style="color: var(--text-muted);">
-                    <RouterLink to="/login" class="font-semibold" style="color: var(--primary);">Login</RouterLink>
-                    to leave a review
+                    <RouterLink to="/login" class="font-semibold" style="color: var(--primary);">{{ $t('productDetail.loginToReview') }}</RouterLink>
                   </div>
                 </div>
               </div>
@@ -366,7 +365,7 @@
 
         <div v-if="store.detail.related?.length">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-black" style="color: var(--secondary); font-family: 'Playfair Display', serif;">You May Also Like</h2>
+            <h2 class="text-2xl font-black" style="color: var(--secondary); font-family: var(--font-heading);">{{ $t('productDetail.youMayAlsoLike') }}</h2>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <RouterLink
@@ -401,6 +400,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useProductStore } from '@/stores/product'
 import { useCartStore } from '@/stores/cart'
@@ -415,6 +415,7 @@ import CartDrawer from '@/components/layout/CartDrawer.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import AddToCartButton from '@/components/product/AddToCartButton.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const store = useProductStore()
 const auth = useAuthStore()
@@ -471,10 +472,10 @@ const perfumeNotes = computed(() => {
 })
 
 const accordionSections = [
-  { key: 'description', title: 'Description', icon: 'ti ti-file-text' },
-  { key: 'ingredients', title: 'Ingredients', icon: 'ti ti-flask' },
-  { key: 'shipping', title: 'Shipping & Returns', icon: 'ti ti-truck' },
-  { key: 'reviews', title: 'Reviews', icon: 'ti ti-message-circle' },
+  { key: 'description', title: t('productDetail.description'), icon: 'ti ti-file-text' },
+  { key: 'ingredients', title: t('productDetail.ingredients'), icon: 'ti ti-flask' },
+  { key: 'shipping', title: t('productDetail.shippingReturns'), icon: 'ti ti-truck' },
+  { key: 'reviews', title: t('productDetail.reviews'), icon: 'ti ti-message-circle' },
 ]
 
 function handleMouseMove(e: MouseEvent) {
@@ -532,7 +533,7 @@ async function submitReview() {
     await store.fetchProduct(Number(route.params.id))
   } catch (err: unknown) {
     const e = err as { response?: { data?: { message?: string } } }
-    reviewError.value = e.response?.data?.message ?? 'Something went wrong while submitting your review. Please try again.'
+    reviewError.value = e.response?.data?.message ?? t('productDetail.errorSubmitReview')
   } finally {
     submittingReview.value = false
   }

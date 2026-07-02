@@ -5,13 +5,13 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Your</span>
+        <span class="hero-label">{{ $t('wishlist.your') }}</span>
         <h1 class="hero-title">
           <i class="ti ti-heart-filled" aria-hidden="true" />
-          Wishlist
+          {{ $t('wishlist.wishlist') }}
         </h1>
         <p class="hero-count">
-          {{ wishlist.items.length }} {{ wishlist.items.length === 1 ? 'Saved Item' : 'Saved Items' }}
+          {{ wishlist.items.length }} {{ wishlist.items.length === 1 ? $t('wishlist.savedItems') : $t('wishlist.savedItems') }}
         </p>
       </div>
     </section>
@@ -20,14 +20,14 @@
       <div class="section-content">
         <div class="wishlist-header">
           <div>
-            <span class="section-label">Your saved items</span>
+            <span class="section-label">{{ $t('wishlist.savedItems') }}</span>
             <h2 class="wishlist-title">
               <i class="ti ti-heart-filled" aria-hidden="true" />
-              Wishlist ({{ wishlist.items.length }})
+              {{ $t('wishlist.wishlist') }} ({{ wishlist.items.length }})
             </h2>
           </div>
           <RouterLink to="/products" class="btn-secondary discover-btn">
-            Discover More
+            {{ $t('wishlist.discoverMore') }}
             <i class="ti ti-arrow-right" aria-hidden="true" />
           </RouterLink>
         </div>
@@ -46,11 +46,11 @@
           <div class="empty-icon">
             <i class="ti ti-heart-off" aria-hidden="true" />
           </div>
-          <h2 class="empty-title">Your wishlist is waiting to be filled</h2>
-          <p class="empty-desc">Discover fragrances you&rsquo;ll love and save them here for later.</p>
+          <h2 class="empty-title">{{ $t('wishlist.emptyTitle') }}</h2>
+          <p class="empty-desc">{{ $t('wishlist.emptyDesc') }}</p>
           <RouterLink to="/products" class="btn-primary">
             <i class="ti ti-shopping-bag" aria-hidden="true" />
-            Start Shopping
+            {{ $t('wishlist.startShopping') }}
           </RouterLink>
         </div>
 
@@ -63,7 +63,7 @@
         </div>
 
         <div class="mobile-discover">
-          <RouterLink to="/products" class="btn-secondary">Discover More</RouterLink>
+          <RouterLink to="/products" class="btn-secondary">{{ $t('wishlist.discoverMore') }}</RouterLink>
         </div>
       </div>
     </section>
@@ -136,7 +136,7 @@ onMounted(async () => {
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
