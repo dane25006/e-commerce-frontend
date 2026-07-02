@@ -1,14 +1,14 @@
 <template>
   <div class="page">
     <div class="container">
-      <div class="error-code">404</div>
-      <h1 class="error-title">Page Not Found</h1>
+      <div class="error-code">{{ $t('notFound.code') }}</div>
+      <h1 class="error-title">{{ $t('notFound.title') }}</h1>
       <p class="error-desc">
-        Looks like this scent has evaporated. The page you're looking for doesn't exist.
+        {{ $t('notFound.description') }}
       </p>
       <div class="error-actions">
-        <RouterLink to="/" class="btn-primary">Go Home</RouterLink>
-        <RouterLink to="/products" class="btn-secondary">Browse Shop</RouterLink>
+        <RouterLink to="/" class="btn-primary">{{ $t('notFound.goHome') }}</RouterLink>
+        <RouterLink to="/products" class="btn-secondary">{{ $t('notFound.browseShop') }}</RouterLink>
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@
   font-weight: 900;
   line-height: 1;
   margin-bottom: 16px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   background: linear-gradient(135deg, #B88A44, #C9A96E);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -42,7 +42,7 @@
   font-size: 1.5rem;
   font-weight: 900;
   color: #222222;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   margin-bottom: 12px;
 }
 .error-desc {

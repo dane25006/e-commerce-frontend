@@ -5,13 +5,13 @@
 
     <section class="hero-section">
       <div class="hero-bg">
-        <span class="hero-label">Dashboard</span>
-        <h1 class="hero-title">My Dashboard</h1>
+        <span class="hero-label">{{ $t('dashboard.dashboard') }}</span>
+        <h1 class="hero-title">{{ $t('dashboard.myDashboard') }}</h1>
       </div>
     </section>
 
     <div class="page-body">
-      <p class="text-muted">Dashboard content coming soon.</p>
+      <p class="text-muted">{{ $t('dashboard.comingSoon') }}</p>
     </div>
 
     <AppFooter />
@@ -55,7 +55,7 @@ const cartOpen = ref(false)
   margin-bottom: 16px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   color: var(--surface);
