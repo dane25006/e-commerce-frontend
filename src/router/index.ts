@@ -69,6 +69,12 @@ const routes: RouteRecordRaw[] = [
     meta: { auth: true },
   },
   {
+    path: '/notifications',
+    name: 'notifications',
+    component: () => import('@/views/notifications/NotificationsView.vue'),
+    meta: { auth: true },
+  },
+  {
     path: '/settings/telegram',
     name: 'settings-telegram',
     component: () => import('@/views/settings/TelegramView.vue'),
@@ -84,6 +90,30 @@ const routes: RouteRecordRaw[] = [
     path: '/checkout',
     name: 'checkout',
     component: () => import('@/views/checkout/CheckoutView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/payment/bakong/:orderId',
+    name: 'payment-bakong',
+    component: () => import('@/views/payment/PaymentBakongView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/payment/khqr/:orderId',
+    name: 'payment-khqr-modern',
+    component: () => import('@/views/payment/ModernPaymentView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/payment/premium/:orderId',
+    name: 'payment-premium',
+    component: () => import('@/views/payment/PremiumPaymentView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/top-up',
+    name: 'top-up',
+    component: () => import('@/views/payment/TopUpView.vue'),
     meta: { auth: true },
   },
   {

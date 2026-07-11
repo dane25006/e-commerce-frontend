@@ -129,12 +129,12 @@
               </div>
               <div class="totals-row">
                 <span>{{ $t('checkout.shipping') }}</span>
-                <span class="free-badge">{{ cartStore.total >= 100 ? $t('checkout.free') : '$9.99' }}</span>
+                <span :class="shippingBadgeClass">{{ shippingLabel }}</span>
               </div>
               <div class="totals-divider" />
               <div class="totals-row total-row-final">
                 <span>{{ $t('checkout.total') }}</span>
-                <span class="total-amount">${{ (cartStore.total + (cartStore.total >= 100 ? 0 : 9.99)).toFixed(2) }}</span>
+                <span class="total-amount">${{ (cartStore.total + shippingFee).toFixed(2) }}</span>
               </div>
             </div>
 
@@ -163,8 +163,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { useAuthStore } from '@/stores/auth'
 import { imageUrl } from '@/utils/image'
@@ -176,6 +177,7 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 const cartStore = useCartStore()
 const auth = useAuthStore()
 const searchOpen = ref(false)
@@ -184,6 +186,12 @@ const checkoutError = ref('')
 const orderSuccess = ref(false)
 const placedOrderId = ref<number | null>(null)
 
+const shippingFee = computed(() => cartStore.itemCount >= 2 ? 0 : 0.10)
+
+const shippingLabel = computed(() => shippingFee.value > 0 ? `$${shippingFee.value.toFixed(2)}` : 'Free')
+
+const shippingBadgeClass = computed(() => shippingFee.value > 0 ? 'shipping-fee' : 'free-badge')
+
 const form = reactive({
   first_name: '',
   last_name: '',
@@ -191,13 +199,12 @@ const form = reactive({
   address: '',
   city: '',
   zip: '',
-  payment_method: 'cash_on_delivery',
+  payment_method: 'credit_card',
 })
 
 const paymentMethods = [
-  { value: 'cash_on_delivery', labelKey: 'checkout.cod', icon: 'ti-cash', color: '#B88A44' },
   { value: 'credit_card', labelKey: 'checkout.creditCard', icon: 'ti-credit-card', color: '#B88A44' },
-  { value: 'paypal', labelKey: 'checkout.paypal', icon: 'ti-brand-paypal', color: '#B88A44' },
+  { value: 'bakong', labelKey: 'checkout.bakong', icon: 'ti-qrcode', color: '#B88A44' },
 ]
 
 async function placeOrder() {
@@ -221,6 +228,15 @@ async function placeOrder() {
     })
     placedOrderId.value = data.order.id
     await cartStore.clearCart()
+
+    if (form.payment_method === 'bakong') {
+      router.push({
+        name: 'payment-bakong',
+        params: { orderId: data.order.id },
+      })
+      return
+    }
+
     orderSuccess.value = true
   } catch (err: unknown) {
     const e = err as { response?: { data?: { message?: string; errors?: string[] | Record<string, string[]> } } }
