@@ -176,12 +176,12 @@
           </div>
           <div class="totals-row">
             <span>{{ $t('cart.shipping') }}</span>
-            <span class="free-badge">{{ cartStore.subtotal >= 100 ? $t('cart.free') : '$9.99' }}</span>
+            <span :class="shipping > 0 ? 'shipping-fee' : 'free-badge'">{{ shipping > 0 ? `$${shipping.toFixed(2)}` : $t('cart.free') }}</span>
           </div>
           <div class="totals-divider" />
           <div class="totals-row total-final">
             <span>{{ $t('cart.total') }}</span>
-            <span class="total-amount">${{ (cartStore.total >= 100 ? cartStore.total : cartStore.total + 9.99).toFixed(2) }}</span>
+            <span class="total-amount">${{ (cartStore.total + shipping).toFixed(2) }}</span>
           </div>
         </div>
 
@@ -216,7 +216,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
@@ -230,6 +230,7 @@ defineEmits<{ 'update:modelValue': [val: boolean] }>()
 
 const auth = useAuthStore()
 const cartStore = useCartStore()
+const shipping = computed(() => cartStore.itemCount >= 2 ? 0 : 0.10)
 const couponCode = ref('')
 const updatingId = ref<number | null>(null)
 const removingId = ref<number | null>(null)

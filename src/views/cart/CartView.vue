@@ -181,13 +181,13 @@
               </div>
               <div class="summary-row">
                 <span>{{ $t('cart.shipping') }}</span>
-                <span class="summary-val" :class="cartStore.subtotal >= 100 ? 'free-badge' : ''">
-                  {{ cartStore.subtotal >= 100 ? $t('cart.free') : '$9.99' }}
+                <span class="summary-val" :class="shipping > 0 ? 'shipping-fee' : 'free-badge'">
+                  {{ shipping > 0 ? `$${shipping.toFixed(2)}` : $t('cart.free') }}
                 </span>
               </div>
-              <div v-if="cartStore.subtotal < 100" class="shipping-hint">
+              <div v-if="cartStore.itemCount < 2" class="shipping-hint">
                 <i class="ti ti-truck" aria-hidden="true" />
-                {{ $t('cart.shippingHint', { amount: (100 - cartStore.subtotal).toFixed(2) }) }}
+                Add one more item for free shipping
               </div>
               <div class="summary-row">
                 <span>{{ $t('cart.tax') }}</span>
@@ -240,7 +240,7 @@ const couponCode = ref('')
 const updatingId = ref<number | null>(null)
 const removingId = ref<number | null>(null)
 
-const shipping = computed(() => cartStore.subtotal >= 100 ? 0 : 9.99)
+const shipping = computed(() => cartStore.itemCount >= 2 ? 0 : 0.10)
 const tax = computed(() => cartStore.subtotal * 0.08)
 const orderTotal = computed(() => cartStore.total + shipping.value + tax.value)
 

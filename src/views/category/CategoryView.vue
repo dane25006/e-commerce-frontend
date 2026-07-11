@@ -159,7 +159,7 @@ function loadProducts(page = 1) {
   const params: Record<string, string | number> = {
     per_page: 12,
     page,
-    ...categoryFilterMap[label] ?? {},
+    ...categoryFilterMap[label],
   }
   if (backendCategory.value) {
     params.category_id = backendCategory.value.id
