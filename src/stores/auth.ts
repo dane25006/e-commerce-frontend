@@ -6,6 +6,7 @@ import { authService } from '@/services/authService'
 import { getGuestToken, clearGuestToken } from '@/utils/guest'
 import { cartService } from '@/services/cartService'
 import { wishlistService } from '@/services/wishlistService'
+import { useNotificationStore } from '@/stores/notification'
 import type {
   User,
   LoginPayload,
@@ -90,6 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
       const { data } = await authService.register(payload)
       setSession(data)
       await mergeGuestCart()
+      useNotificationStore().startPolling()
       await router.push('/')
     } catch (err: unknown) {
       error.value = extractMessage(err, 'Registration failed.')
@@ -109,6 +111,7 @@ export const useAuthStore = defineStore('auth', () => {
       setSession(data)
       await mergeGuestCart()
       await refetchCartAndWishlist()
+      useNotificationStore().startPolling()
 
       const redirect = router.currentRoute.value.query.redirect as string
       await router.push(redirect || '/')
@@ -124,6 +127,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await authService.logout()
     } finally {
+      useNotificationStore().reset()
       clearSession()
       await router.push('/login')
     }
@@ -144,6 +148,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       await mergeGuestCart()
       await refetchCartAndWishlist()
+      useNotificationStore().startPolling()
 
       const redirect = sessionStorage.getItem('scentique_redirect')
       sessionStorage.removeItem('scentique_redirect')
@@ -180,6 +185,7 @@ export const useAuthStore = defineStore('auth', () => {
         } as any)
         clearTimeout(timeoutId)
         user.value = data.user
+        useNotificationStore().startPolling()
       } catch {
         clearSession()
       } finally {

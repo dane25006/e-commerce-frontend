@@ -108,6 +108,11 @@
             </span>
           </RouterLink>
 
+          <!-- Notifications -->
+          <template v-if="auth.isLoggedIn">
+            <NotificationBell />
+          </template>
+
           <!-- Cart -->
           <button
             @click="$emit('openCart')"
@@ -187,6 +192,15 @@
                   >
                     <i class="ti ti-package text-sm" style="color: var(--primary);" aria-hidden="true" />
                     {{ $t('nav.myOrders') }}
+                  </RouterLink>
+                  <RouterLink
+                    to="/notifications"
+                    @click="dropdownOpen = false"
+                    class="flex items-center gap-2.5 px-4 py-2 text-xs transition-all duration-200"
+                    style="color: var(--secondary);"
+                  >
+                    <i class="ti ti-bell text-sm" style="color: var(--primary);" aria-hidden="true" />
+                    {{ $t('nav.notifications') }}
                   </RouterLink>
                   <RouterLink
                     to="/wishlist"
@@ -326,6 +340,15 @@
               {{ $t('nav.myOrders') }}
             </RouterLink>
             <RouterLink
+              to="/notifications"
+              @click="mobileOpen = false"
+              class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
+              style="color: var(--secondary); font-family: var(--font-body);"
+            >
+              <i class="ti ti-bell text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
+              {{ $t('nav.notifications') }}
+            </RouterLink>
+            <RouterLink
               to="/wishlist"
               @click="mobileOpen = false"
               class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs transition-all duration-200"
@@ -376,6 +399,7 @@ import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import LanguageSwitcher from '@/components/common/LanguageSwitcher.vue'
+import NotificationBell from '@/components/notification/NotificationBell.vue'
 
 defineEmits<{ openSearch: []; openCart: [] }>()
 
