@@ -118,7 +118,6 @@ async function loadOrder() {
     return order
   } catch {
     status.value = 'error'
-    internalStatus.value = 'error'
     errorMessage.value = 'Order not found.'
     return null
   }

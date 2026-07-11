@@ -10,9 +10,16 @@
       src="https://bakong.nbc.gov.kh/images/khqr-logo.svg"
       alt="KHQR"
       class="khqr-logo"
+      @error="logoError = true"
     />
+    <span v-if="logoError" class="logo-fallback">KHQR</span>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+const logoError = ref(false)
+</script>
 
 <style scoped>
 .khqr-header {
@@ -50,5 +57,13 @@
 .khqr-logo {
   height: 28px;
   width: auto;
+}
+
+.logo-fallback {
+  color: #fff;
+  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 2px;
 }
 </style>

@@ -255,10 +255,10 @@ const cancelling = ref(false)
 const premiumStatus = ref<'loading' | 'waiting' | 'success' | 'error'>('loading')
 const premiumError = ref('')
 const qrExpired = ref(false)
-const confirming = ref(false)
 const timerRef = ref<InstanceType<typeof CountdownTimer> | null>(null)
 
 let pollTimer: ReturnType<typeof setInterval> | null = null
+let loadTimer: ReturnType<typeof setTimeout> | null = null
 
 interface PaymentInfo {
   id: number
@@ -347,7 +347,6 @@ async function generatePayment() {
   premiumStatus.value = 'loading'
   premiumError.value = ''
   qrExpired.value = false
-  confirming.value = false
   try {
     const { data } = await paymentService.generate(order.value.id)
     payment.value = data.payment
@@ -383,30 +382,6 @@ function startPolling() {
 
 function stopPolling() {
   if (pollTimer) { clearInterval(pollTimer); pollTimer = null }
-}
-
-async function confirmPayment() {
-  if (!order.value) return
-  confirming.value = true
-  premiumError.value = ''
-  try {
-    const { data } = await paymentService.confirm(order.value.id)
-    if (data.payment.status === 'paid') {
-      premiumStatus.value = 'success'
-      stopPolling()
-      timerRef.value?.stop()
-      await loadOrder()
-    } else {
-      premiumStatus.value = 'error'
-      premiumError.value = t('payment.paymentNotReceived')
-    }
-  } catch (err: unknown) {
-    const e = err as { response?: { data?: { message?: string } } }
-    premiumStatus.value = 'error'
-    premiumError.value = e.response?.data?.message || t('payment.errorConfirm')
-  } finally {
-    confirming.value = false
-  }
 }
 
 function onTimerExpired() {
@@ -471,7 +446,7 @@ async function loadOrder() {
       if (data.order.payment && data.order.payment.status === 'paid') {
         payment.value = data.order.payment
       } else if (!data.order.payment || data.order.payment.status !== 'paid') {
-        setTimeout(() => generatePayment(), 100)
+        loadTimer = setTimeout(() => generatePayment(), 100)
       }
     }
   } catch {
@@ -485,6 +460,7 @@ onMounted(loadOrder)
 
 onUnmounted(() => {
   stopPolling()
+  if (loadTimer) { clearTimeout(loadTimer); loadTimer = null }
 })
 </script>
 
