@@ -23,123 +23,35 @@
       </div>
 
       <template v-else>
-        <!-- "Pay Now" banner shown when pending + bakong but payment section hasn't triggered -->
-        <div v-if="order.status === 'pending' && order.payment_method === 'bakong' && !showPaymentSection" class="pay-now-banner">
-          <div class="pay-now-content">
-            <div class="pay-now-icon"><i class="ti ti-qrcode" /></div>
-            <div class="pay-now-text">
+        <!-- Pay Now banner -->
+        <div v-if="showBanner" class="pay-now-banner">
+          <div class="banner-body">
+            <div class="banner-icon"><i class="ti ti-qrcode" /></div>
+            <div class="banner-text">
               <h3>{{ $t('orders.paymentPending') }}</h3>
               <p>{{ $t('orders.payNowDescription') }}</p>
             </div>
-            <button @click="startPayment" class="pay-now-btn">
-              <i class="ti ti-credit-card" />
-              {{ $t('orders.payNow') }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Premium Payment Card (shown when pending + bakong + not paid) -->
-        <div v-if="showPaymentSection" class="premium-payment-wrap">
-          <div class="premium-card">
-            <PaymentHeader />
-
-            <PaymentAmount
-              :product-name="'Order #' + order.id"
-              :amount="order.total"
-              currency="USD"
-            />
-
-            <div class="divider-line" />
-
-            <!-- Loading skeleton -->
-            <div v-if="premiumStatus === 'loading'" class="skeleton-box">
-              <div class="skeleton sqr" />
-              <div class="skeleton pill" />
-              <div class="skeleton text" />
-            </div>
-
-            <template v-else>
-              <QRCodeCard
-                :qr-string="payment?.qr_string ?? null"
-                :qr-image="null"
-                :expired="qrExpired"
-                @error="onQrError"
-              />
-
-              <CountdownTimer
-                ref="timerRef"
-                :expires-in="1800"
-                @expired="onTimerExpired"
-              />
-
-              <p class="instruction-text">
-                Scan with ABA Mobile or any KHQR-supported banking application.
-              </p>
-
-              <div v-if="!qrExpired && premiumStatus === 'waiting'" class="status-indicator-area">
-                <div class="pulse-dot" />
-                <span>{{ $t('payment.waitingForPayment') }}</span>
-              </div>
-
-              <div class="action-row">
-                <button v-if="!qrExpired && premiumStatus === 'waiting'" @click="checkPaymentNow" class="check-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  {{ $t('payment.checkPayment') }}
-                </button>
-
-                <button v-if="qrExpired" @click="generatePayment" class="generate-btn">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="23 4 23 10 17 10" />
-                    <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
-                  </svg>
-                  {{ $t('payment.generateNewQR') }}
-                </button>
-              </div>
-            </template>
-
-            <PaymentStatus
-              v-if="premiumStatus === 'success' || premiumStatus === 'error'"
-              :status="premiumStatus"
-              :error-message="premiumError"
-              @retry="generatePayment"
-              @done="onPaymentDone"
-            />
-          </div>
-
-          <!-- Items & Summary shown below payment card -->
-          <div class="detail-layout" style="margin-top:20px">
-            <div class="detail-card">
-              <h2 class="section-title">{{ $t('orders.orderItems') }}</h2>
-              <div class="items-list">
-                <div v-for="item in order.items" :key="item.id" class="item-row">
-                  <div class="item-img-box">
-                    <img v-if="item.product?.image_url" :src="imageUrl(item.product.image_url)" :alt="item.product?.name" class="item-img" />
-                    <div v-else class="item-img-placeholder"><i class="ti ti-photo" aria-hidden="true" /></div>
-                  </div>
-                  <div class="item-info">
-                    <p class="item-name">{{ item.product?.name ?? $t('orders.orderItemFallback') }}</p>
-                    <p class="item-meta">{{ $t('orders.qty') }}: {{ item.quantity }} &times; ${{ Number(item.price).toFixed(2) }}</p>
-                  </div>
-                  <p class="item-price">${{ item.subtotal.toFixed(2) }}</p>
-                </div>
-              </div>
-            </div>
-            <div class="detail-card">
-              <h2 class="section-title">{{ $t('orders.orderSummary') }}</h2>
-              <div class="summary-rows">
-                <div class="summary-row"><span>{{ $t('orders.subtotal') }}</span><span>${{ order.total.toFixed(2) }}</span></div>
-                <div class="summary-row"><span>{{ $t('orders.shipping') }}</span><span :class="shippingBadgeClass">{{ shippingLabel }}</span></div>
-                <div class="summary-divider" />
-                <div class="summary-row summary-final"><span>{{ $t('orders.total') }}</span><span class="total-amount">${{ order.total.toFixed(2) }}</span></div>
-              </div>
+            <div class="banner-actions">
+              <button @click="openPaymentModal" class="pay-now-btn">
+                <i class="ti ti-credit-card" />
+                {{ $t('orders.payNow') }}
+              </button>
+              <button @click="dismissBanner" class="pay-later-btn">
+                {{ $t('orders.payLater') }}
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Normal order detail (shown when not in payment flow) -->
-        <div v-if="!showPaymentSection" class="detail-layout">
+        <!-- Payment Modal -->
+        <PaymentModal
+          :visible="paymentModalOpen"
+          :order-id="order.id"
+          @close="paymentModalOpen = false"
+          @success="onPaymentSuccess"
+        />
+
+        <div class="detail-layout">
           <div class="detail-card">
             <div class="detail-header">
               <div>
@@ -150,6 +62,14 @@
                 <span class="badge-dark" :style="statusStyle(order.status)">
                   {{ capitalize(order.status) }}
                 </span>
+                <button
+                  v-if="order.status === 'pending' && order.payment_method === 'bakong' && !showBanner && order.payment?.status !== 'paid'"
+                  @click="openPaymentModal"
+                  class="pay-now-link"
+                >
+                  <i class="ti ti-qrcode" aria-hidden="true" />
+                  {{ $t('orders.payNow') }}
+                </button>
                 <button
                   v-if="order.status === 'pending'"
                   @click="cancelModal?.open()"
@@ -223,18 +143,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { orderService } from '@/services/orderService'
-import { paymentService } from '@/services/paymentService'
 import { imageUrl } from '@/utils/image'
 
-import PaymentHeader from '@/views/payment/components/PaymentHeader.vue'
-import PaymentAmount from '@/views/payment/components/PaymentAmount.vue'
-import QRCodeCard from '@/views/payment/components/QRCodeCard.vue'
-import CountdownTimer from '@/views/payment/components/CountdownTimer.vue'
-import PaymentStatus from '@/views/payment/components/PaymentStatus.vue'
+import PaymentModal from '@/views/payment/PaymentModal.vue'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -251,14 +166,8 @@ const loading = ref(true)
 const cancelModal = ref<InstanceType<typeof ConfirmModal> | null>(null)
 const cancelling = ref(false)
 
-// Premium payment state
-const premiumStatus = ref<'loading' | 'waiting' | 'success' | 'error'>('loading')
-const premiumError = ref('')
-const qrExpired = ref(false)
-const timerRef = ref<InstanceType<typeof CountdownTimer> | null>(null)
-
-let pollTimer: ReturnType<typeof setInterval> | null = null
-let loadTimer: ReturnType<typeof setTimeout> | null = null
+const bannerDismissed = ref(false)
+const paymentModalOpen = ref(false)
 
 interface PaymentInfo {
   id: number
@@ -295,8 +204,11 @@ interface OrderData {
 const order = ref<OrderData | null>(null)
 const payment = ref<PaymentInfo | null>(null)
 
-const showPaymentSection = computed(() => {
-  return order.value?.status === 'pending' && order.value?.payment_method === 'bakong' && payment.value?.status !== 'paid'
+const showBanner = computed(() => {
+  return order.value?.status === 'pending'
+    && order.value?.payment_method === 'bakong'
+    && payment.value?.status !== 'paid'
+    && !bannerDismissed.value
 })
 
 const shippingLabel = computed(() => {
@@ -342,75 +254,17 @@ function formatDate(d: string) {
   return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
-async function generatePayment() {
-  if (!order.value) return
-  premiumStatus.value = 'loading'
-  premiumError.value = ''
-  qrExpired.value = false
-  try {
-    const { data } = await paymentService.generate(order.value.id)
-    payment.value = data.payment
-    await nextTick()
-    timerRef.value?.reset()
-    premiumStatus.value = 'waiting'
-    startPolling()
-  } catch (err: unknown) {
-    const e = err as { response?: { data?: { message?: string } } }
-    premiumStatus.value = 'error'
-    premiumError.value = e.response?.data?.message || t('payment.errorGenerate')
-  }
+function openPaymentModal() {
+  paymentModalOpen.value = true
 }
 
-function startPolling() {
-  stopPolling()
-  pollTimer = setInterval(async () => {
-    if (premiumStatus.value === 'success' || qrExpired.value || !order.value) return
-    try {
-      const { data } = await paymentService.confirm(order.value!.id)
-      if (data.payment.status === 'paid') {
-        payment.value!.status = 'paid'
-        premiumStatus.value = 'success'
-        stopPolling()
-        timerRef.value?.stop()
-        await loadOrder()
-      }
-    } catch {
-      // silent
-    }
-  }, 5000)
+function dismissBanner() {
+  bannerDismissed.value = true
 }
 
-function stopPolling() {
-  if (pollTimer) { clearInterval(pollTimer); pollTimer = null }
-}
-
-function onTimerExpired() {
-  qrExpired.value = true
-  stopPolling()
-}
-
-async function checkPaymentNow() {
-  if (!order.value) return
-  try {
-    const { data } = await paymentService.confirm(order.value.id)
-    if (data.payment.status === 'paid') {
-      premiumStatus.value = 'success'
-      stopPolling()
-      timerRef.value?.stop()
-      await loadOrder()
-    }
-  } catch {
-    // silent
-  }
-}
-
-function onQrError() {
-  premiumStatus.value = 'error'
-  premiumError.value = 'Failed to render QR code.'
-}
-
-function onPaymentDone() {
-  router.push(`/orders/${order.value?.id}`)
+function onPaymentSuccess(orderId: number) {
+  paymentModalOpen.value = false
+  loadOrder()
 }
 
 async function confirmCancel() {
@@ -426,29 +280,12 @@ async function confirmCancel() {
   }
 }
 
-function startPayment() {
-  payment.value = order.value?.payment ?? null
-  generatePayment()
-}
-
-function goToOrders() {
-  router.push('/orders')
-}
-
 async function loadOrder() {
   loading.value = true
   try {
     const { data } = await orderService.getOne(Number(route.params.id))
     order.value = data.order
     payment.value = data.order.payment ?? null
-
-    if (order.value?.status === 'pending' && order.value?.payment_method === 'bakong') {
-      if (data.order.payment && data.order.payment.status === 'paid') {
-        payment.value = data.order.payment
-      } else if (!data.order.payment || data.order.payment.status !== 'paid') {
-        loadTimer = setTimeout(() => generatePayment(), 100)
-      }
-    }
   } catch {
     order.value = null
   } finally {
@@ -457,11 +294,6 @@ async function loadOrder() {
 }
 
 onMounted(loadOrder)
-
-onUnmounted(() => {
-  stopPolling()
-  if (loadTimer) { clearTimeout(loadTimer); loadTimer = null }
-})
 </script>
 
 <style scoped>
@@ -502,459 +334,25 @@ onUnmounted(() => {
 .not-found i { font-size: 48px; display: block; margin-bottom: 12px; color: rgba(184,138,68,0.2); }
 .not-found-title { font-weight: 700; color: var(--text); margin-bottom: 16px; }
 
-/* Payment Section */
-.payment-section {
-  margin-top: 8px;
-}
-
-.payment-layout {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 24px;
-  align-items: start;
-}
-
-.payment-main {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.info-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-}
-
-.info-label { color: var(--text-muted); font-weight: 600; }
-.info-value { font-weight: 700; color: var(--text); }
-.info-value.amount { color: var(--primary); font-size: 20px; }
-.info-value.amount small { font-size: 13px; font-weight: 600; }
-
-.badge-khqr {
-  padding: 3px 10px;
-  border-radius: 100px;
-  background: rgba(184,138,68,0.1);
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.qr-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
-  text-align: center;
-}
-
-.qr-loading, .qr-error, .qr-expired {
-  padding: 40px 0;
-  text-align: center;
-}
-
-.qr-loading i, .qr-error i, .qr-expired i {
-  font-size: 36px;
-  margin-bottom: 12px;
-}
-
-.qr-loading i { color: var(--primary); }
-.qr-error i { color: #dc2626; }
-.qr-error p { color: #dc2626; font-size: 13px; margin-bottom: 16px; }
-.qr-expired i { color: var(--text-muted); }
-.qr-expired h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.qr-expired p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-
-.qr-display {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  padding: 16px;
-  background: #fff;
-  border-radius: 12px;
-  border: 2px solid var(--border);
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.qr-display canvas {
-  display: block;
-  width: 220px;
-  height: 220px;
-  image-rendering: pixelated;
-}
-
-.banks { margin-bottom: 16px; }
-.banks-label { display: block; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.banks-list { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
-.bank-badge { padding: 4px 10px; border-radius: 100px; background: rgba(184,138,68,0.08); color: var(--primary); font-size: 10px; font-weight: 700; }
-
-.countdown-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  margin-bottom: 12px;
-}
-
-.countdown-bar.expired { color: #dc2626; }
-
-.scan-instruction {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 10px 16px;
-  background: rgba(184,138,68,0.06);
-  border-radius: 10px;
-}
-
-/* Sidebar */
-.payment-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 96px;
-}
-
-.status-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  text-align: center;
-}
-
-.status-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.status-item i { font-size: 32px; }
-.status-item.waiting { color: var(--primary); }
-.status-item.waiting i { animation: pulse 2s infinite; }
-.status-item.verifying { color: var(--primary); }
-.status-item.success { color: #16a34a; }
-
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-.poll-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 12px;
-}
-
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 14px 24px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), #C9A96E);
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-primary:hover:not(:disabled) {
-  box-shadow: 0 4px 16px rgba(184,138,68,0.3);
-  transform: translateY(-1px);
-}
-
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.btn-retry {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 10px;
-  background: rgba(184,138,68,0.08);
-  color: var(--primary);
-  font-weight: 600;
-  font-size: 13px;
-  border: 1px solid rgba(184,138,68,0.2);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-retry:hover { background: rgba(184,138,68,0.15); }
-
-.btn-ghost {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 13px;
-  border: 2px solid var(--border);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
-
-.btn-action {
+/* Pay Now link in header */
+.pay-now-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
   border-radius: 10px;
   background: linear-gradient(135deg, var(--primary), #C9A96E);
   color: #fff;
-  font-weight: 700;
-  font-size: 13px;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.btn-action:hover { box-shadow: 0 4px 16px rgba(184,138,68,0.25); transform: translateY(-1px); }
-
-.error-msg {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #dc2626;
-  padding: 10px 14px;
-  background: rgba(220,38,38,0.06);
-  border-radius: 10px;
-}
-
-/* Premium Payment Card */
-.premium-payment-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 8px 0;
-}
-
-.premium-card {
-  width: 100%;
-  max-width: 390px;
-  background: #fff;
-  border-radius: 32px;
-  box-shadow:
-    0 4px 24px rgba(15, 23, 42, 0.08),
-    0 16px 48px rgba(15, 23, 42, 0.04);
-  overflow: hidden;
-  animation: cardIn 0.5s ease;
-}
-
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.divider-line {
-  height: 1px;
-  background: #E5E7EB;
-  margin: 0 24px;
-}
-
-/* Status indicator */
-.status-indicator-area {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 4px 24px 20px;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748B;
-}
-
-.pulse-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #22C55E;
-  animation: pulseAnim 1.5s ease-in-out infinite;
-}
-
-@keyframes pulseAnim {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.3); }
-}
-
-/* Skeleton */
-.skeleton-box {
-  padding: 28px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.skeleton {
-  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 20px;
-}
-
-.skeleton.sqr {
-  width: 260px;
-  height: 260px;
-}
-
-.skeleton.pill {
-  width: 160px;
-  height: 36px;
-  border-radius: 100px;
-}
-
-.skeleton.text {
-  width: 220px;
-  height: 14px;
-  border-radius: 8px;
-}
-
-.instruction-text {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #94A3B8;
-  text-align: center;
-  margin: 0;
-  padding: 0 24px 20px;
-  line-height: 1.5;
-}
-
-.action-row {
-  padding: 0 24px 20px;
-}
-
-.pay-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 16px;
-  border-radius: 14px;
-  background: #EE1C25;
-  color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.pay-btn:hover:not(:disabled) {
-  background: #D9161F;
+.pay-now-link:hover {
+  box-shadow: 0 4px 12px rgba(184,138,68,0.3);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(238, 28, 37, 0.25);
-}
-
-.pay-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-spin {
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.generate-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  background: #1E293B;
-  color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.check-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 12px;
-  border-radius: 14px;
-  background: #EE1C25;
-  color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.check-btn:hover {
-  background: #D9161F;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(238, 28, 37, 0.25);
-}
-
-.generate-btn:hover {
-  background: #334155;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(30, 41, 59, 0.2);
 }
 
 /* Order detail */
@@ -1012,16 +410,17 @@ onUnmounted(() => {
   border: 1px solid rgba(184,138,68,0.2);
   border-radius: var(--radius);
   padding: 20px 24px;
+  margin-bottom: 20px;
 }
 
-.pay-now-content {
+.banner-body {
   display: flex;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.pay-now-icon {
+.banner-icon {
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -1032,26 +431,33 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
-.pay-now-icon i {
+.banner-icon i {
   font-size: 20px;
   color: var(--primary);
 }
 
-.pay-now-text {
+.banner-text {
   flex: 1;
   min-width: 200px;
 }
 
-.pay-now-text h3 {
+.banner-text h3 {
   font-size: 14px;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 2px;
 }
 
-.pay-now-text p {
+.banner-text p {
   font-size: 12px;
   color: var(--text-muted);
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .pay-now-btn {
@@ -1073,6 +479,26 @@ onUnmounted(() => {
 .pay-now-btn:hover {
   box-shadow: 0 4px 16px rgba(184,138,68,0.25);
   transform: translateY(-1px);
+}
+
+.pay-later-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.pay-later-btn:hover {
+  border-color: var(--primary);
+  color: var(--text);
 }
 
 @media (max-width: 768px) {

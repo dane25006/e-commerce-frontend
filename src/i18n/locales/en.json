@@ -494,7 +494,8 @@
     "cancelDetailMessage": "This action cannot be undone. The items will be returned to stock.",
     "paymentPending": "Payment Pending",
     "payNowDescription": "Complete your payment with Bakong KHQR to process your order.",
-    "payNow": "Pay Now"
+    "payNow": "Pay Now",
+    "payLater": "Pay Later"
   },
   "profile": {
     "account": "Account",
