@@ -23,31 +23,12 @@
       </div>
 
       <template v-else>
-        <!-- Pay Now banner -->
-        <div v-if="showBanner" class="pay-now-banner">
-          <div class="banner-body">
-            <div class="banner-icon"><i class="ti ti-qrcode" /></div>
-            <div class="banner-text">
-              <h3>{{ $t('orders.paymentPending') }}</h3>
-              <p>{{ $t('orders.payNowDescription') }}</p>
-            </div>
-            <div class="banner-actions">
-              <button @click="openPaymentModal" class="pay-now-btn">
-                <i class="ti ti-credit-card" />
-                {{ $t('orders.payNow') }}
-              </button>
-              <button @click="dismissBanner" class="pay-later-btn">
-                {{ $t('orders.payLater') }}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Modal -->
-        <PaymentModal
-          :visible="paymentModalOpen"
+        <PaymentPopup
+          v-model="paymentModalOpen"
           :order-id="order.id"
-          @close="paymentModalOpen = false"
+          :product-name="orderProductName"
+          :amount="orderAmount"
+          start-with-qr
           @success="onPaymentSuccess"
         />
 
@@ -63,7 +44,7 @@
                   {{ capitalize(order.status) }}
                 </span>
                 <button
-                  v-if="order.status === 'pending' && order.payment_method === 'bakong' && !showBanner && order.payment?.status !== 'paid'"
+                  v-if="order.status === 'pending' && order.payment_method === 'bakong' && order.payment?.status !== 'paid'"
                   @click="openPaymentModal"
                   class="pay-now-link"
                 >
@@ -149,7 +130,7 @@ import { useI18n } from 'vue-i18n'
 import { orderService } from '@/services/orderService'
 import { imageUrl } from '@/utils/image'
 
-import PaymentModal from '@/views/payment/PaymentModal.vue'
+import PaymentPopup from '@/components/payment/PaymentPopup.vue'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
@@ -166,7 +147,6 @@ const loading = ref(true)
 const cancelModal = ref<InstanceType<typeof ConfirmModal> | null>(null)
 const cancelling = ref(false)
 
-const bannerDismissed = ref(false)
 const paymentModalOpen = ref(false)
 
 interface PaymentInfo {
@@ -204,12 +184,12 @@ interface OrderData {
 const order = ref<OrderData | null>(null)
 const payment = ref<PaymentInfo | null>(null)
 
-const showBanner = computed(() => {
-  return order.value?.status === 'pending'
-    && order.value?.payment_method === 'bakong'
-    && payment.value?.status !== 'paid'
-    && !bannerDismissed.value
+const orderProductName = computed(() => {
+  const first = order.value?.items?.[0]?.product?.name
+  return first || `Order #${order.value?.id || ''}`
 })
+
+const orderAmount = computed(() => order.value?.total || 0)
 
 const shippingLabel = computed(() => {
   if (!order.value) return ''
@@ -256,10 +236,6 @@ function formatDate(d: string) {
 
 function openPaymentModal() {
   paymentModalOpen.value = true
-}
-
-function dismissBanner() {
-  bannerDismissed.value = true
 }
 
 function onPaymentSuccess(orderId: number) {
@@ -403,103 +379,6 @@ onMounted(loadOrder)
 .summary-divider { height: 1px; background: var(--border); margin: 4px 0; }
 .summary-final { font-weight: 900; font-size: 18px; color: var(--text); padding-top: 8px; border-top: 1px solid var(--border); }
 .total-amount { color: var(--primary); }
-
-/* Pay Now Banner */
-.pay-now-banner {
-  background: linear-gradient(135deg, rgba(184,138,68,0.08), rgba(201,169,110,0.04));
-  border: 1px solid rgba(184,138,68,0.2);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 20px;
-}
-
-.banner-body {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.banner-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(184,138,68,0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.banner-icon i {
-  font-size: 20px;
-  color: var(--primary);
-}
-
-.banner-text {
-  flex: 1;
-  min-width: 200px;
-}
-
-.banner-text h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 2px;
-}
-
-.banner-text p {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.banner-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.pay-now-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), #C9A96E);
-  color: #fff;
-  font-weight: 700;
-  font-size: 13px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.pay-now-btn:hover {
-  box-shadow: 0 4px 16px rgba(184,138,68,0.25);
-  transform: translateY(-1px);
-}
-
-.pay-later-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 16px;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 12px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.pay-later-btn:hover {
-  border-color: var(--primary);
-  color: var(--text);
-}
 
 @media (max-width: 768px) {
   .payment-layout { grid-template-columns: 1fr; }

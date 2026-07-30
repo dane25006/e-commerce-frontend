@@ -3,6 +3,7 @@
     <div class="card">
       <PaymentHeader />
 
+      <!-- Step 1: Amount Form -->
       <template v-if="step === 'form'">
         <div class="header-section">
           <h1 class="title">Top Up Balance</h1>
@@ -12,11 +13,11 @@
         <div class="currency-toggle">
           <button
             :class="['curr-btn', { active: currency === 'USD' }]"
-            @click="currency = 'USD'"
+            @click="currency = 'USD'; selectedAmount = 0"
           >$ USD</button>
           <button
             :class="['curr-btn', { active: currency === 'KHR' }]"
-            @click="currency = 'KHR'"
+            @click="currency = 'KHR'; selectedAmount = 0"
           >៛ KHR</button>
         </div>
 
@@ -55,6 +56,7 @@
         </div>
       </template>
 
+      <!-- Step 2: QR Display -->
       <template v-else-if="step === 'qr'">
         <PaymentInfo
           product-name="Account Top-Up"
@@ -65,40 +67,40 @@
         <div class="divider" />
 
         <QRCodeCard
+          v-if="qrString"
           :qr-string="qrString"
           :qr-image="null"
           :expired="expired"
+          :show-retry="expired"
+          retry-text="Generate New QR"
+          :hint="$t('payment.scanInstruction')"
           @error="onQrError"
+          @retry="generatePayment"
         />
 
         <CountdownTimer
+          v-if="qrString && !expired && pageStatus === 'waiting'"
           ref="timerRef"
           :expires-in="expiresIn"
           @expired="onExpired"
         />
 
+        <div v-if="pageStatus === 'waiting' && !expired && qrString" class="waiting-row">
+          <div class="pulse-dot" />
+          <span>{{ $t('payment.waitingForPayment') }}</span>
+        </div>
+
         <PaymentStatus
-          :status="pageStatus"
+          v-if="pageStatus === 'success' || pageStatus === 'error'"
+          :status="pageStatus === 'success' ? 'success' : 'error'"
           :error-message="errorMessage"
           @retry="generatePayment"
           @done="onDone"
         />
 
-        <div v-if="pageStatus !== 'success' && !expired" class="confirm-section">
-          <button
-            :disabled="confirming"
-            class="confirm-btn"
-            @click="confirmPayment"
-          >
-            <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
-            <i v-else class="ti ti-check" />
-            {{ confirming ? 'Verifying...' : 'I Have Paid' }}
-          </button>
-        </div>
-
         <div v-if="expired" class="expired-actions">
           <button class="back-btn" @click="backToForm">
-            <i class="ti ti-arrow-left" /> Try Again
+            <i class="ti ti-arrow-left" /> {{ $t('payment.tryAgain') }}
           </button>
         </div>
       </template>
@@ -107,144 +109,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { topUpService } from '@/services/topUpService'
-import PaymentHeader from './components/PaymentHeader.vue'
-import PaymentInfo from './components/PaymentInfo.vue'
-import QRCodeCard from './components/QRCodeCard.vue'
-import CountdownTimer from './components/CountdownTimer.vue'
-import PaymentStatus from './components/PaymentStatus.vue'
+import { useTopUp } from '@/composables/useTopUp'
 
-type Step = 'form' | 'qr'
-type PageStatus = 'loading' | 'waiting' | 'success' | 'error'
+import PaymentHeader from '@/components/payment/PaymentHeader.vue'
+import PaymentInfo from '@/components/payment/PaymentInfo.vue'
+import QRCodeCard from '@/components/payment/QRCodeCard.vue'
+import CountdownTimer from '@/components/payment/CountdownTimer.vue'
+import PaymentStatus from '@/components/payment/PaymentStatus.vue'
 
 const router = useRouter()
-
-const step = ref<Step>('form')
-const currency = ref('USD')
-const quickAmounts = computed(() => currency.value === 'KHR' ? [1000, 2000, 5000, 10000, 20000] : [5, 10, 20, 50, 100])
-const selectedAmount = ref(0)
-const customAmount = ref('')
-const generating = ref(false)
-
-const amount = ref(0)
-const qrString = ref<string | null>(null)
-const expiresIn = ref(1800)
-const pageStatus = ref<PageStatus>('loading')
-const errorMessage = ref('')
-const expired = ref(false)
-const confirming = ref(false)
-const timerRef = ref<InstanceType<typeof CountdownTimer> | null>(null)
-let currentPaymentId = ref<number | null>(null)
-
-let pollTimer: ReturnType<typeof setInterval> | null = null
-
-const validAmount = computed(() => {
-  const amt = selectedAmount.value > 0
-    ? selectedAmount.value
-    : parseFloat(customAmount.value)
-  if (!amt || isNaN(amt)) return false
-  return currency.value === 'KHR'
-    ? amt >= 100 && amt <= 99999999
-    : amt >= 0.01 && amt <= 999999.99
-})
-
-function getAmount(): number {
-  return selectedAmount.value > 0
-    ? selectedAmount.value
-    : parseFloat(customAmount.value)
-}
-
-async function generatePayment() {
-  generating.value = true
-  step.value = 'form'
-  expired.value = false
-  pageStatus.value = 'loading'
-  errorMessage.value = ''
-
-  const amt = getAmount()
-
-  try {
-    const { data } = await topUpService.generate(amt, currency.value)
-    amount.value = data.payment.amount
-    currency.value = data.payment.currency
-    qrString.value = data.payment.qr_string
-    currentPaymentId.value = data.payment.id
-
-    step.value = 'qr'
-    pageStatus.value = 'waiting'
-    startPolling()
-  } catch {
-    pageStatus.value = 'error'
-    errorMessage.value = 'Failed to generate QR code. Please try again.'
-  } finally {
-    generating.value = false
-  }
-}
-
-function startPolling() {
-  stopPolling()
-  pollTimer = setInterval(async () => {
-    if (pageStatus.value === 'success' || expired.value || !currentPaymentId.value) return
-    try {
-      const { data } = await topUpService.status(currentPaymentId.value)
-      if (data.payment?.status === 'paid') {
-        pageStatus.value = 'success'
-        stopPolling()
-        timerRef.value?.stop()
-      }
-    } catch {
-      // silent
-    }
-  }, 5000)
-}
-
-function stopPolling() {
-  if (pollTimer) { clearInterval(pollTimer); pollTimer = null }
-}
-
-async function confirmPayment() {
-  if (!currentPaymentId.value) return
-  confirming.value = true
-  try {
-    const { data } = await topUpService.status(currentPaymentId.value)
-    if (data.payment?.status === 'paid') {
-      pageStatus.value = 'success'
-      stopPolling()
-      timerRef.value?.stop()
-    } else {
-      pageStatus.value = 'error'
-      errorMessage.value = 'Payment not yet received. Please try again.'
-    }
-  } catch {
-    pageStatus.value = 'error'
-    errorMessage.value = 'Verification failed. Please try again.'
-  } finally {
-    confirming.value = false
-  }
-}
-
-function onExpired() {
-  expired.value = true
-  stopPolling()
-}
-
-function onQrError() {
-  pageStatus.value = 'error'
-  errorMessage.value = 'Failed to render QR code.'
-}
+const {
+  step, currency, quickAmounts, selectedAmount, customAmount, generating,
+  amount, qrString, expiresIn, pageStatus, errorMessage,
+  expired, timerRef, validAmount,
+  generatePayment, onExpired, onQrError, backToForm,
+} = useTopUp()
 
 function onDone() {
   router.push('/profile')
-}
-
-function backToForm() {
-  step.value = 'form'
-  expired.value = false
-  pageStatus.value = 'loading'
-  errorMessage.value = ''
-  stopPolling()
 }
 </script>
 
@@ -312,16 +195,8 @@ function backToForm() {
   transition: all 0.2s;
 }
 
-.curr-btn:hover {
-  border-color: #EE1C25;
-  color: #EE1C25;
-}
-
-.curr-btn.active {
-  border-color: #EE1C25;
-  background: #FEF2F2;
-  color: #EE1C25;
-}
+.curr-btn:hover { border-color: #EE1C25; color: #EE1C25; }
+.curr-btn.active { border-color: #EE1C25; background: #FEF2F2; color: #EE1C25; }
 
 .quick-amounts {
   display: flex;
@@ -344,16 +219,8 @@ function backToForm() {
   transition: all 0.2s;
 }
 
-.amount-btn:hover {
-  border-color: #EE1C25;
-  color: #EE1C25;
-}
-
-.amount-btn.active {
-  border-color: #EE1C25;
-  background: #FEF2F2;
-  color: #EE1C25;
-}
+.amount-btn:hover { border-color: #EE1C25; color: #EE1C25; }
+.amount-btn.active { border-color: #EE1C25; background: #FEF2F2; color: #EE1C25; }
 
 .custom-input {
   display: flex;
@@ -365,9 +232,7 @@ function backToForm() {
   transition: border-color 0.2s;
 }
 
-.custom-input:focus-within {
-  border-color: #EE1C25;
-}
+.custom-input:focus-within { border-color: #EE1C25; }
 
 .prefix {
   font-size: 20px;
@@ -386,23 +251,13 @@ function backToForm() {
   background: transparent;
 }
 
-.custom-input input::placeholder {
-  color: #D1D5DB;
-}
+.custom-input input::placeholder { color: #D1D5DB; }
 
 input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
 
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-.actions {
-  padding: 0 24px 24px;
-}
+.actions { padding: 0 24px 24px; }
 
 .pay-btn {
   display: flex;
@@ -427,52 +282,35 @@ input[type="number"] {
   box-shadow: 0 4px 16px rgba(238, 28, 37, 0.3);
 }
 
-.pay-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.pay-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.divider {
-  height: 1px;
-  background: #E5E7EB;
-  margin: 0 24px;
-}
+.divider { height: 1px; background: #E5E7EB; margin: 0 24px; }
 
-.confirm-section {
-  padding: 0 24px 24px;
-}
-
-.confirm-btn {
+.waiting-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 16px;
-  border-radius: 14px;
-  background: #EE1C25;
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
+  gap: 10px;
+  padding: 4px 24px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
 }
 
-.confirm-btn:hover:not(:disabled) {
-  background: #D9161F;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(238, 28, 37, 0.3);
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22C55E;
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
-.confirm-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
 }
 
-.expired-actions {
-  padding: 0 24px 24px;
-}
+.expired-actions { padding: 0 24px 24px; }
 
 .back-btn {
   display: flex;
@@ -499,5 +337,20 @@ input[type="number"] {
 @media (max-width: 480px) {
   .topup-page { padding: 12px; }
   .card { border-radius: 24px; }
+  .header-section { padding: 8px 16px 16px; }
+  .currency-toggle,
+  .quick-amounts,
+  .custom-input,
+  .actions,
+  .expired-actions,
+  .waiting-row { padding-left: 16px; padding-right: 16px; }
+  .custom-input { margin: 0 16px 20px; }
+  .divider { margin: 0 16px; }
+}
+
+@media (max-width: 360px) {
+  .topup-page { padding: 8px; }
+  .quick-amounts { gap: 8px; }
+  .amount-btn { min-width: 52px; padding: 9px 12px; }
 }
 </style>

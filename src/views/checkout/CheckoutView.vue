@@ -157,6 +157,14 @@
       </div>
     </div>
 
+    <PaymentPopup
+      v-model="paymentOpen"
+      :order-id="paymentOrderId"
+      :product-name="paymentProductName"
+      :amount="paymentAmount"
+      start-with-qr
+      @success="onPaymentSuccess"
+    />
     <AppFooter />
     <SearchModal v-model="searchOpen" />
   </div>
@@ -175,6 +183,7 @@ import AnnouncementBar from '@/components/layout/AnnouncementBar.vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
+import PaymentPopup from '@/components/payment/PaymentPopup.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -185,6 +194,10 @@ const placing = ref(false)
 const checkoutError = ref('')
 const orderSuccess = ref(false)
 const placedOrderId = ref<number | null>(null)
+const paymentOpen = ref(false)
+const paymentOrderId = ref<number | null>(null)
+const paymentProductName = ref('')
+const paymentAmount = ref(0)
 
 const shippingFee = computed(() => cartStore.itemCount >= 2 ? 0 : 0.10)
 
@@ -230,10 +243,11 @@ async function placeOrder() {
     await cartStore.clearCart()
 
     if (form.payment_method === 'bakong') {
-      router.push({
-        name: 'payment-bakong',
-        params: { orderId: data.order.id },
-      })
+      const firstItem = data.order.items?.[0]?.product?.name || `Order #${data.order.id}`
+      paymentOrderId.value = data.order.id
+      paymentProductName.value = firstItem
+      paymentAmount.value = data.order.total
+      paymentOpen.value = true
       return
     }
 
@@ -257,6 +271,12 @@ async function placeOrder() {
   } finally {
     placing.value = false
   }
+}
+
+function onPaymentSuccess(orderId: number) {
+  paymentOpen.value = false
+  placedOrderId.value = orderId
+  orderSuccess.value = true
 }
 
 onMounted(async () => {

@@ -344,7 +344,10 @@
     "qrExpiredDesc": "The QR code has expired. Please generate a new one to continue.",
     "scanInstruction": "Scan with ABA Mobile or any KHQR-supported banking application.",
     "retry": "Retry",
-    "checkPayment": "Check Payment"
+    "checkPayment": "Check Payment",
+    "downloadQR": "Download",
+    "copyQR": "Copy QR",
+    "copied": "Copied"
   },
   "products": {
     "exclusiveCollection": "Exclusive Collection",

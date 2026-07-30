@@ -338,7 +338,16 @@
     "acceptedBy": "ទទួលយកដោយ",
     "autoRefresh": "កំពុងធ្វើឱ្យស្ថានភាពប្រសើរឡើង...",
     "paymentNotReceived": "ការទូទាត់មិនទាន់ទទួលបានទេ។ សូមព្យាយាមម្តងទៀតបន្ទាប់ពីការទូទាត់។",
-    "cancelPayment": "បោះបង់ការទូទាត់"
+    "cancelPayment": "បោះបង់ការទូទាត់",
+    "generateNewQR": "បង្កើត QR ថ្មី",
+    "qrExpired": "QR កូដបានផុតកំណត់",
+    "qrExpiredDesc": "QR កូដបានផុតកំណត់។ សូមបង្កើតថ្មីដើម្បីបន្ត។",
+    "scanInstruction": "ស្កេនជាមួយ ABA Mobile ឬកម្មវិធីធនាគារណាមួយដែលគាំទ្រ KHQR។",
+    "retry": "ព្យាយាមម្តងទៀត",
+    "checkPayment": "ពិនិត្យការទូទាត់",
+    "downloadQR": "ទាញយក",
+    "copyQR": "ចម្លង QR",
+    "copied": "បានចម្លង"
   },
   "products": {
     "exclusiveCollection": "បណ្ដុំពិសេស",

@@ -66,4 +66,18 @@ const logoError = ref(false)
   font-size: 20px;
   letter-spacing: 2px;
 }
+
+@media (max-width: 430px) {
+  .khqr-header {
+    height: 60px;
+    border-radius: 0;
+    padding: 0 16px;
+  }
+  .back-btn {
+    left: 16px;
+    width: 36px;
+    height: 36px;
+  }
+  .khqr-logo { height: 24px; }
+}
 </style>

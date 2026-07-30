@@ -53,14 +53,14 @@ export const useNotificationStore = defineStore('notification', () => {
 
   async function markAsRead(id: number) {
     await notificationService.markAsRead(id)
-    const idx = notifications.value.findIndex((n) => n.id === id)
-    if (idx !== -1) {
-      notifications.value[idx].is_read = true
-      notifications.value[idx].read_at = new Date().toISOString()
+    const notification = notifications.value.find((n) => n.id === id)
+    if (notification) {
+      notification.is_read = true
+      notification.read_at = new Date().toISOString()
     }
-    const recentIdx = recentNotifications.value.findIndex((n) => n.id === id)
-    if (recentIdx !== -1) {
-      recentNotifications.value[recentIdx].is_read = true
+    const recentNotification = recentNotifications.value.find((n) => n.id === id)
+    if (recentNotification) {
+      recentNotification.is_read = true
     }
     unreadCount.value = Math.max(0, unreadCount.value - 1)
   }

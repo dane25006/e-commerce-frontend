@@ -1,6 +1,7 @@
 import axios from 'axios'
 import config from '@/config/app'
 import { useAuthStore } from '@/stores/auth'
+import router from '@/router'
 
 const AUTH_TOKEN_KEY = 'scentique_auth_token'
 const AUTH_SESSION_KEY = 'scentique_has_session'
@@ -43,7 +44,6 @@ api.interceptors.response.use(
       localStorage.removeItem(AUTH_SESSION_KEY)
 
       if (window.location.pathname !== '/login') {
-        const { default: router } = await import('@/router')
         router.push('/login')
       }
     }

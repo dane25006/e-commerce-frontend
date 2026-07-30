@@ -87,17 +87,6 @@
 
             <!-- Actions -->
             <div class="modal-actions">
-              <button
-                v-if="payment.status !== 'paid'"
-                @click="confirmPayment"
-                :disabled="confirming"
-                class="confirm-btn"
-              >
-                <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
-                <i v-else class="ti ti-check" />
-                {{ confirming ? $t('payment.verifying') : $t('payment.iHavePaid') }}
-              </button>
-
               <button @click="onCancel" class="cancel-btn">
                 <i class="ti ti-x" />
                 {{ $t('payment.cancelPayment') }}
@@ -111,8 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, watch, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { paymentService } from '@/services/paymentService'
 import QRCode from 'qrcode'
@@ -129,26 +117,23 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const router = useRouter()
 
 const loading = ref(false)
-const confirming = ref(false)
 const error = ref('')
 const payment = ref<Payment | null>(null)
 const qrCanvas = ref<HTMLCanvasElement | null>(null)
 const countdown = ref(600)
-const countdownFormatted = ref('10:00')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
-let pollTimer: ReturnType<typeof setInterval> | null = null
+let pollTimer: ReturnType<typeof setTimeout> | null = null
+let polling = false
+let consecutiveErrors = 0
+
+const POLL_INTERVAL = 4000
 
 const formattedCountdown = computed(() => {
   const total = Math.max(0, countdown.value)
-  const h = Math.floor(total / 3600)
-  const m = Math.floor((total % 3600) / 60)
+  const m = Math.floor(total / 60)
   const s = total % 60
-  if (h > 0) {
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
-  }
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
 })
 
@@ -213,50 +198,59 @@ function stopCountdown() {
 }
 
 function startPolling() {
-  pollTimer = setInterval(async () => {
-    if (!payment.value || payment.value.status === 'paid') return
-    try {
-      const { data } = await paymentService.status(props.orderId!)
-      if (data.payment) {
-        payment.value = data.payment
-        if (data.payment.status === 'paid') {
-          stopPolling()
-          stopCountdown()
-          emit('success', props.orderId!)
-        }
+  stopPolling()
+  polling = true
+  schedulePoll()
+}
+
+function schedulePoll() {
+  if (!polling) return
+  pollTimer = setTimeout(pollOnce, POLL_INTERVAL)
+}
+
+async function pollOnce() {
+  if (!polling) return
+  if (!payment.value || payment.value.status === 'paid') {
+    polling = false
+    return
+  }
+  if (typeof document !== 'undefined' && document.hidden) {
+    schedulePoll()
+    return
+  }
+  try {
+    const { data } = await paymentService.status(props.orderId!)
+    consecutiveErrors = 0
+    if (data.payment) {
+      payment.value = data.payment
+      if (data.payment.status === 'paid') {
+        stopPolling()
+        stopCountdown()
+        emit('success', props.orderId!)
+        return
       }
-    } catch {
-      // silent
     }
-  }, 5000)
+  } catch {
+    consecutiveErrors++
+    if (consecutiveErrors >= 5) {
+      stopPolling()
+      return
+    }
+  }
+  schedulePoll()
 }
 
 function stopPolling() {
+  polling = false
   if (pollTimer) {
-    clearInterval(pollTimer)
+    clearTimeout(pollTimer)
     pollTimer = null
   }
 }
 
-async function confirmPayment() {
-  if (!props.orderId) return
-  confirming.value = true
-  error.value = ''
-  try {
-    const { data } = await paymentService.confirm(props.orderId)
-    if (data.payment.status === 'paid') {
-      payment.value!.status = 'paid'
-      stopPolling()
-      stopCountdown()
-      emit('success', props.orderId)
-    } else {
-      error.value = t('payment.paymentNotReceived')
-    }
-  } catch (err: unknown) {
-    const e = err as { response?: { data?: { message?: string } } }
-    error.value = e.response?.data?.message || t('payment.errorConfirm')
-  } finally {
-    confirming.value = false
+function resumeIfVisible() {
+  if (typeof document !== 'undefined' && !document.hidden && polling && !pollTimer && payment.value && payment.value.status !== 'paid') {
+    schedulePoll()
   }
 }
 
@@ -273,7 +267,16 @@ function onCancel() {
   emit('close')
 }
 
-onUnmounted(cleanup)
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', resumeIfVisible)
+}
+
+onUnmounted(() => {
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('visibilitychange', resumeIfVisible)
+  }
+  cleanup()
+})
 </script>
 
 <style scoped>
@@ -537,33 +540,6 @@ onUnmounted(cleanup)
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-}
-
-.confirm-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 14px 24px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), #C9A96E);
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.confirm-btn:hover:not(:disabled) {
-  box-shadow: 0 4px 16px rgba(184, 138, 68, 0.3);
-  transform: translateY(-1px);
-}
-
-.confirm-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .cancel-btn {

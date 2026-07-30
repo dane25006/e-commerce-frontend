@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import axios from 'axios'
 import config from '@/config/app'
 import router from '@/router'
 import { authService } from '@/services/authService'
@@ -7,6 +8,8 @@ import { getGuestToken, clearGuestToken } from '@/utils/guest'
 import { cartService } from '@/services/cartService'
 import { wishlistService } from '@/services/wishlistService'
 import { useNotificationStore } from '@/stores/notification'
+import { useCartStore } from '@/stores/cart'
+import { useWishlistStore } from '@/stores/wishlist'
 import type {
   User,
   LoginPayload,
@@ -36,7 +39,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function getCsrfCookie(): Promise<void> {
     try {
-      const { default: axios } = await import('axios')
       await axios.get(`${config.apiBaseUrl}/sanctum/csrf-cookie`, {
         withCredentials: true,
         headers: { Accept: 'application/json' },
@@ -75,8 +77,6 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function refetchCartAndWishlist(): Promise<void> {
-    const { useCartStore } = await import('@/stores/cart')
-    const { useWishlistStore } = await import('@/stores/wishlist')
     await Promise.allSettled([
       useCartStore().fetchCart(),
       useWishlistStore().fetchWishlist(),
