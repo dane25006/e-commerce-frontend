@@ -59,27 +59,6 @@
                   <i class="ti ti-arrow-right" aria-hidden="true" />
                 </button>
               </div>
-
-              <!-- Popular Tags -->
-              <div class="popular-tags">
-                <span class="tags-label">{{ $t('hero.popularSearches') }}:</span>
-                <button
-                  v-for="tag in popularTags"
-                  :key="tag.label"
-                  class="tag-chip"
-                  @click="handleTagClick(tag.query)"
-                >
-                  {{ tag.label }}
-                </button>
-              </div>
-            </div>
-
-            <!-- Trust Indicators -->
-            <div class="hero-trust fade-in-left" style="animation-delay: 0.45s;">
-              <div v-for="item in trustItems" :key="item.key" class="trust-item">
-                <i :class="item.icon" class="trust-icon" aria-hidden="true" />
-                <span class="trust-label">{{ item.label }}</span>
-              </div>
             </div>
           </div>
         </div>
@@ -203,35 +182,11 @@ function handleMouseLeave() {
   tiltY.value = 0
 }
 
-const popularTags = [
-  { label: 'Dior', query: 'Dior' },
-  { label: 'Chanel', query: 'Chanel' },
-  { label: 'Versace', query: 'Versace' },
-  { label: 'Tom Ford', query: 'Tom Ford' },
-  { label: 'Gucci', query: 'Gucci' },
-  { label: 'Floral', query: 'Floral' },
-  { label: 'Woody', query: 'Woody' },
-  { label: 'Fresh', query: 'Fresh' },
-  { label: 'Unisex', query: 'Unisex' },
-]
-
-const trustItems = [
-  { icon: 'ti ti-shield-check', key: 'trustAuthentic', label: t('hero.trustAuthentic') },
-  { icon: 'ti ti-truck', key: 'trustShipping', label: t('hero.trustShipping') },
-  { icon: 'ti ti-lock', key: 'trustPayment', label: t('hero.trustPayment') },
-  { icon: 'ti ti-refresh', key: 'trustReturns', label: t('hero.trustReturns') },
-  { icon: 'ti ti-star', key: 'trustReviews', label: t('hero.trustReviews') },
-]
-
 function handleSearch() {
   const q = searchQuery.value.trim()
   if (q) {
     router.push(`/products?search=${encodeURIComponent(q)}`)
   }
-}
-
-function handleTagClick(query: string) {
-  router.push(`/products?search=${encodeURIComponent(query)}`)
 }
 </script>
 
@@ -581,66 +536,6 @@ function handleTagClick(query: string) {
   transform: scale(1.06);
   background: linear-gradient(135deg, #A7772F, #B88A44);
   box-shadow: 0 4px 14px rgba(184, 138, 68, 0.35);
-}
-
-.popular-tags {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.875rem;
-  flex-wrap: wrap;
-}
-
-.tags-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.tag-chip {
-  font-size: 0.7rem;
-  font-weight: 500;
-  padding: 0.25rem 0.8rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(6px);
-  color: var(--secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid rgba(184, 138, 68, 0.12);
-}
-
-.tag-chip:hover {
-  background: rgba(184, 138, 68, 0.12);
-  color: var(--primary);
-  border-color: rgba(184, 138, 68, 0.28);
-  transform: translateY(-1px);
-}
-
-/* ========== Trust Items ========== */
-.hero-trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem 1.5rem;
-}
-
-.trust-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.trust-icon {
-  font-size: 0.875rem;
-  color: var(--primary);
-}
-
-.trust-label {
-  font-size: 0.725rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  white-space: nowrap;
 }
 
 /* ========== Right Visual Showcase ========== */
