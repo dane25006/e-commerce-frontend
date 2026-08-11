@@ -197,7 +197,7 @@ export const useAuthStore = defineStore('auth', () => {
     return bootPromise
   }
 
-  async function updateProfile(name: string, email: string, avatar?: string | null): Promise<void> {
+  async function updateProfile(name: string, email: string, avatar?: string | File | null): Promise<void> {
     const { data } = await authService.updateProfile({ name, email, avatar })
     user.value = data.user
   }

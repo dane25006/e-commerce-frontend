@@ -127,18 +127,19 @@ export function useTopUp() {
     if (!currentPaymentId.value) return
     confirming.value = true
     try {
-      const { data } = await topUpService.status(currentPaymentId.value)
+      const { data } = await topUpService.confirm(currentPaymentId.value)
       if (data.payment?.status === 'paid') {
         pageStatus.value = 'success'
         stopPolling()
         timerRef.value?.stop?.()
       } else {
         pageStatus.value = 'error'
-        errorMessage.value = 'Payment not yet received. Please try again.'
+        errorMessage.value = 'Payment not yet received. Please try again after paying.'
       }
-    } catch {
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } }
       pageStatus.value = 'error'
-      errorMessage.value = 'Verification failed. Please try again.'
+      errorMessage.value = e.response?.data?.message || 'Payment verification failed. Please try again.'
     } finally {
       confirming.value = false
     }

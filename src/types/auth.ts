@@ -5,6 +5,7 @@ export interface User {
   role: 'customer' | 'admin'
   avatar: string | null
   google_id: string | null
+  is_google_user?: boolean
   created_at: string
 }
 
@@ -20,8 +21,14 @@ export interface RegisterPayload {
   password_confirmation: string
 }
 
+export interface UpdateProfilePayload {
+  name: string
+  email: string
+  avatar?: string | File | null
+}
+
 export interface ChangePasswordPayload {
-  current_password: string
+  current_password?: string
   password: string
   password_confirmation: string
 }

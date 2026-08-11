@@ -95,9 +95,9 @@
                 class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-gray-50
                        transition text-sm text-gray-700"
               >
-                <div class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center
-                            text-indigo-700 text-xs font-medium">
-                  {{ initials }}
+                <div class="w-7 h-7 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center text-indigo-700 text-xs font-medium flex-shrink-0">
+                  <img v-if="auth.user?.avatar" :src="auth.user.avatar" class="w-full h-full object-cover" alt="Avatar" />
+                  <span v-else>{{ initials }}</span>
                 </div>
                 <span class="hidden sm:block">{{ auth.userName }}</span>
                 <i class="ti ti-chevron-down text-gray-400 text-sm" aria-hidden="true" />

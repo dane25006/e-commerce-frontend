@@ -87,6 +87,15 @@
 
             <!-- Actions -->
             <div class="modal-actions">
+              <button
+                v-if="payment.status !== 'paid'"
+                :disabled="confirming"
+                class="confirm-btn"
+                @click="confirmPayment"
+              >
+                <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
+                <template v-else>I've Paid / Check Status</template>
+              </button>
               <button @click="onCancel" class="cancel-btn">
                 <i class="ti ti-x" />
                 {{ $t('payment.cancelPayment') }}
@@ -123,12 +132,37 @@ const error = ref('')
 const payment = ref<Payment | null>(null)
 const qrCanvas = ref<HTMLCanvasElement | null>(null)
 const countdown = ref(600)
+const confirming = ref(false)
 let countdownTimer: ReturnType<typeof setInterval> | null = null
 let pollTimer: ReturnType<typeof setTimeout> | null = null
 let polling = false
 let consecutiveErrors = 0
 
 const POLL_INTERVAL = 4000
+
+async function confirmPayment() {
+  if (!props.orderId) return
+  confirming.value = true
+  error.value = ''
+  try {
+    const { data } = await paymentService.confirm(props.orderId)
+    if (data.payment && data.payment.status === 'paid') {
+      if (payment.value) {
+        payment.value = { ...payment.value, status: 'paid', paid_at: data.payment.paid_at }
+      }
+      stopPolling()
+      stopCountdown()
+      emit('success', props.orderId)
+    } else {
+      error.value = t('payment.notYetReceived') || 'Payment not yet received. Please try again after paying.'
+    }
+  } catch (err: unknown) {
+    const e = err as { response?: { data?: { message?: string } } }
+    error.value = e.response?.data?.message || t('payment.errorVerify') || 'Payment verification failed. Please try again.'
+  } finally {
+    confirming.value = false
+  }
+}
 
 const formattedCountdown = computed(() => {
   const total = Math.max(0, countdown.value)
@@ -540,6 +574,34 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
+}
+
+.confirm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 13px 24px;
+  border-radius: 10px;
+  background: var(--primary, #EE1C25);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(238, 28, 37, 0.2);
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: #D9161F;
+  transform: translateY(-1px);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .cancel-btn {

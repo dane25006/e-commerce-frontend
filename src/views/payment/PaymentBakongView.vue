@@ -38,9 +38,19 @@
         />
 
         <div class="status-area">
-          <div v-if="status === 'waiting' && !expired && qrString" class="waiting-indicator">
-            <div class="pulse-dot" />
-            <span>{{ $t('payment.waitingForPayment') }}</span>
+          <div v-if="status === 'waiting' && !expired && qrString" class="waiting-box">
+            <div class="waiting-indicator">
+              <div class="pulse-dot" />
+              <span>{{ $t('payment.waitingForPayment') }}</span>
+            </div>
+            <button
+              :disabled="confirming"
+              class="confirm-pay-btn"
+              @click="confirmPayment"
+            >
+              <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
+              <template v-else>I've Paid / Check Status</template>
+            </button>
           </div>
         </div>
 
@@ -80,8 +90,8 @@ import PaymentStatus from '@/components/payment/PaymentStatus.vue'
 const router = useRouter()
 const {
   orderId, status, qrString, amount, currency, productName, errorMessage,
-  expired, timerRef,
-  loadOrder, generatePayment, onExpired, onQrError,
+  expired, confirming, timerRef,
+  loadOrder, generatePayment, confirmPayment, onExpired, onQrError,
 } = usePayment()
 
 function onDone() {
@@ -155,7 +165,15 @@ onMounted(async () => {
 .status-area {
   display: flex;
   justify-content: center;
-  padding: 4px 24px 16px;
+  padding: 4px 24px 24px;
+}
+
+.waiting-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .waiting-indicator {
@@ -165,6 +183,34 @@ onMounted(async () => {
   font-size: 14px;
   font-weight: 500;
   color: #64748B;
+}
+
+.confirm-pay-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 100px;
+  background: #EE1C25;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(238, 28, 37, 0.25);
+}
+
+.confirm-pay-btn:hover:not(:disabled) {
+  background: #D9161F;
+  transform: translateY(-1px);
+}
+
+.confirm-pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .pulse-dot {

@@ -85,9 +85,19 @@
           @expired="onExpired"
         />
 
-        <div v-if="pageStatus === 'waiting' && !expired && qrString" class="waiting-row">
-          <div class="pulse-dot" />
-          <span>{{ $t('payment.waitingForPayment') }}</span>
+        <div v-if="pageStatus === 'waiting' && !expired && qrString" class="waiting-area">
+          <div class="waiting-row">
+            <div class="pulse-dot" />
+            <span>{{ $t('payment.waitingForPayment') }}</span>
+          </div>
+          <button
+            :disabled="confirming"
+            class="confirm-topup-btn"
+            @click="confirmPayment"
+          >
+            <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
+            <template v-else>I've Paid / Check Status</template>
+          </button>
         </div>
 
         <PaymentStatus
@@ -122,8 +132,8 @@ const router = useRouter()
 const {
   step, currency, quickAmounts, selectedAmount, customAmount, generating,
   amount, qrString, expiresIn, pageStatus, errorMessage,
-  expired, timerRef, validAmount,
-  generatePayment, onExpired, onQrError, backToForm,
+  expired, confirming, timerRef, validAmount,
+  generatePayment, confirmPayment, onExpired, onQrError, backToForm,
 } = useTopUp()
 
 function onDone() {
@@ -286,15 +296,50 @@ input[type="number"] { -moz-appearance: textfield; }
 
 .divider { height: 1px; background: #E5E7EB; margin: 0 24px; }
 
+.waiting-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 24px 24px;
+}
+
 .waiting-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 4px 24px 16px;
   font-size: 14px;
   font-weight: 500;
   color: #6B7280;
+}
+
+.confirm-topup-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: #EE1C25;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(238, 28, 37, 0.25);
+}
+
+.confirm-topup-btn:hover:not(:disabled) {
+  background: #D9161F;
+  transform: translateY(-1px);
+}
+
+.confirm-topup-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .pulse-dot {

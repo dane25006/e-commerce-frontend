@@ -2,7 +2,14 @@ import api from '@/plugins/axios'
 
 export const orderService = {
   checkout(payload: { shipping_address: string; payment_method: string }) {
-    return api.post<{ message: string; order: { id: number } }>('/checkout', payload)
+    return api.post<{
+      message: string
+      order: {
+        id: number
+        total: number
+        items?: Array<{ product?: { name: string } }>
+      }
+    }>('/checkout', payload)
   },
 
   list() {

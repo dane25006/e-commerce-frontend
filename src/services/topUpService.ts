@@ -21,4 +21,8 @@ export const topUpService = {
   status(paymentId: number) {
     return api.get<TopUpStatusResponse>(`/top-up/${paymentId}/status`)
   },
+
+  confirm(paymentId: number) {
+    return api.post<TopUpStatusResponse>(`/top-up/${paymentId}/confirm`)
+  },
 }

@@ -19,11 +19,20 @@ export const authService = {
     return api.get<{ success: boolean; user: User }>('/profile', config)
   },
 
-  updateProfile(payload: { name: string; email: string; avatar?: string | null }) {
+  updateProfile(payload: { name: string; email: string; avatar?: string | File | null }) {
+    if (payload.avatar instanceof File) {
+      const formData = new FormData()
+      formData.append('name', payload.name)
+      formData.append('email', payload.email)
+      formData.append('avatar', payload.avatar)
+      return api.post<{ success: boolean; message: string; user: User }>('/profile', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+    }
     return api.put<{ success: boolean; message: string; user: User }>('/profile', payload)
   },
 
-  changePassword(payload: { current_password: string; password: string; password_confirmation: string }) {
+  changePassword(payload: { current_password?: string; password: string; password_confirmation: string }) {
     return api.put('/password', payload)
   },
 }
