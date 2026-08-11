@@ -8,12 +8,6 @@
       <div class="bg-blob blob-3" />
       <div class="bg-glow-orb orb-1" />
       <div class="bg-glow-orb orb-2" />
-      <div class="sparkle sparkle-1" />
-      <div class="sparkle sparkle-2" />
-      <div class="sparkle sparkle-3" />
-      <div class="sparkle sparkle-4" />
-      <div class="sparkle sparkle-5" />
-      <div class="sparkle sparkle-6" />
     </div>
 
     <div class="hero-container">
@@ -340,40 +334,6 @@ function handleTagClick(query: string) {
 @keyframes orbPulse {
   0%, 100% { opacity: 0.25; transform: scale(1); }
   50% { opacity: 0.45; transform: scale(1.08); }
-}
-
-/* Sparkles */
-.sparkle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--primary);
-  border-radius: 50%;
-  opacity: 0;
-  animation: sparkle 5s ease-in-out infinite;
-}
-
-.sparkle::before {
-  content: '✦';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 11px;
-  color: var(--primary);
-}
-
-.sparkle-1 { top: 12%; left: 8%; animation-delay: 0s; }
-.sparkle-2 { top: 22%; right: 18%; animation-delay: 0.9s; }
-.sparkle-3 { bottom: 25%; left: 25%; animation-delay: 1.8s; }
-.sparkle-4 { bottom: 15%; right: 30%; animation-delay: 2.7s; }
-.sparkle-5 { top: 50%; left: 4%; animation-delay: 3.6s; }
-.sparkle-6 { top: 65%; right: 6%; animation-delay: 0.5s; }
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  30% { opacity: 0.7; transform: scale(1) rotate(180deg); }
-  60% { opacity: 0; transform: scale(0) rotate(360deg); }
 }
 
 /* ========== Container ========== */
