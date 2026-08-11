@@ -1,34 +1,24 @@
 <template>
-  <section class="hero-section">
+  <section class="hero-section" @mousemove="handleMouseMove" @mouseleave="handleMouseLeave">
+    <!-- Ambient Background Elements -->
     <div class="hero-bg-layer">
       <div class="bg-grid" />
       <div class="bg-blob blob-1" />
       <div class="bg-blob blob-2" />
       <div class="bg-blob blob-3" />
-      <div class="bg-blob blob-4" />
-      <div class="bg-blob blob-5" />
       <div class="bg-glow-orb orb-1" />
       <div class="bg-glow-orb orb-2" />
-      <div class="bg-glow-orb orb-3" />
-      <div class="bg-glow-orb orb-4" />
-      <div class="bg-bottle-silhouette silhouette-1" />
-      <div class="bg-bottle-silhouette silhouette-2" />
-      <div class="bg-botanical botanical-1" />
-      <div class="bg-botanical botanical-2" />
-      <div class="bg-botanical botanical-3" />
-      <div class="bg-botanical botanical-4" />
       <div class="sparkle sparkle-1" />
       <div class="sparkle sparkle-2" />
       <div class="sparkle sparkle-3" />
       <div class="sparkle sparkle-4" />
       <div class="sparkle sparkle-5" />
       <div class="sparkle sparkle-6" />
-      <div class="sparkle sparkle-7" />
-      <div class="sparkle sparkle-8" />
     </div>
 
     <div class="hero-container">
       <div class="hero-inner">
+        <!-- Left Content -->
         <div class="hero-content">
           <div class="content-inner">
             <span class="hero-badge fade-in-left">
@@ -45,6 +35,7 @@
               {{ $t('hero.description') }}
             </p>
 
+            <!-- Action Buttons -->
             <div class="hero-cta fade-in-left" style="animation-delay: 0.3s;">
               <RouterLink to="/products" class="btn-primary hero-btn-primary">
                 <i class="ti ti-shopping-bag" aria-hidden="true" />
@@ -58,6 +49,7 @@
               </RouterLink>
             </div>
 
+            <!-- Search Bar -->
             <div class="hero-search fade-in-left" style="animation-delay: 0.35s;">
               <div class="search-box">
                 <i class="ti ti-search search-icon" aria-hidden="true" />
@@ -73,6 +65,8 @@
                   <i class="ti ti-arrow-right" aria-hidden="true" />
                 </button>
               </div>
+
+              <!-- Popular Tags -->
               <div class="popular-tags">
                 <span class="tags-label">{{ $t('hero.popularSearches') }}:</span>
                 <button
@@ -86,6 +80,7 @@
               </div>
             </div>
 
+            <!-- Trust Indicators -->
             <div class="hero-trust fade-in-left" style="animation-delay: 0.45s;">
               <div v-for="item in trustItems" :key="item.key" class="trust-item">
                 <i :class="item.icon" class="trust-icon" aria-hidden="true" />
@@ -95,26 +90,42 @@
           </div>
         </div>
 
+        <!-- Right Visual Showcase -->
         <div class="hero-visual">
-          <div class="visual-wrapper fade-in-right" style="animation-delay: 0.2s;">
+          <div
+            class="visual-wrapper fade-in-right"
+            :style="{
+              transform: `perspective(1000px) rotateY(${tiltX}deg) rotateX(${tiltY}deg)`,
+            }"
+          >
+            <!-- Glowing Background Aura -->
             <div class="visual-glow-bg" />
-            <div class="visual-glow-bg visual-glow-secondary" />
+            <div class="visual-glow-secondary" />
 
-            <div class="visual-frame">
-              <div class="visual-bottle">
-                <div class="bottle-glow" />
-                <div class="bottle-inner">
-                  <span class="bottle-brand">SCENTIQUE</span>
-                  <div class="bottle-liquid" />
-                </div>
+            <!-- Pedestal & Perfume Showcase -->
+            <div class="perfume-showcase-card">
+              <!-- Halo ring -->
+              <div class="showcase-ring" />
+
+              <!-- High-definition Perfume Bottle Image -->
+              <div class="bottle-image-wrap">
+                <img
+                  src="/images/luxury_perfume_hero.png"
+                  alt="Scentique Luxury Fragrance"
+                  class="bottle-hero-img"
+                />
+                <!-- Subtle light flare on the glass -->
+                <div class="glass-light-flare" />
               </div>
-              <div class="particle particle-1" />
-              <div class="particle particle-2" />
-              <div class="particle particle-3" />
-              <div class="particle particle-4" />
-              <div class="particle particle-5" />
+
+              <!-- Illuminated Pedestal Base -->
+              <div class="pedestal-platform">
+                <div class="pedestal-glass" />
+                <div class="pedestal-glow" />
+              </div>
             </div>
 
+            <!-- Floating Card: Top Right - Rating -->
             <div class="float-card card-rating">
               <div class="float-card-icon rating-stars">
                 <i class="ti ti-star-filled" aria-hidden="true" />
@@ -125,6 +136,7 @@
               </div>
             </div>
 
+            <!-- Floating Card: Top Left - Sales -->
             <div class="float-card card-sales">
               <div class="float-card-icon sales-icon">
                 <i class="ti ti-flame" aria-hidden="true" />
@@ -135,6 +147,13 @@
               </div>
             </div>
 
+            <!-- Floating Badge: Discount -->
+            <div class="float-badge badge-discount">
+              <span class="discount-pct">{{ $t('hero.discountBadge') }}</span>
+              <span class="discount-sub">{{ $t('hero.discountSub') }}</span>
+            </div>
+
+            <!-- Floating Card: Bottom Right - Delivery -->
             <div class="float-card card-delivery">
               <div class="float-card-icon delivery-icon">
                 <i class="ti ti-truck" aria-hidden="true" />
@@ -145,6 +164,7 @@
               </div>
             </div>
 
+            <!-- Floating Card: Bottom Left - Authentic -->
             <div class="float-card card-authentic">
               <div class="float-card-icon authentic-icon">
                 <i class="ti ti-shield-check" aria-hidden="true" />
@@ -153,11 +173,6 @@
                 <p class="float-card-value">{{ $t('hero.authenticBadge') }}</p>
                 <p class="float-card-label">{{ $t('hero.authenticSub') }}</p>
               </div>
-            </div>
-
-            <div class="float-badge badge-discount">
-              <span class="discount-pct">{{ $t('hero.discountBadge') }}</span>
-              <span class="discount-sub">{{ $t('hero.discountSub') }}</span>
             </div>
           </div>
         </div>
@@ -177,16 +192,33 @@ const router = useRouter()
 const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement | null>(null)
 
+// 3D Parallax Tilt
+const tiltX = ref(0)
+const tiltY = ref(0)
+
+function handleMouseMove(e: MouseEvent) {
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  const x = (e.clientX - rect.left) / rect.width - 0.5
+  const y = (e.clientY - rect.top) / rect.height - 0.5
+  tiltX.value = +(x * 8).toFixed(2)
+  tiltY.value = +(-y * 8).toFixed(2)
+}
+
+function handleMouseLeave() {
+  tiltX.value = 0
+  tiltY.value = 0
+}
+
 const popularTags = [
-  { label: t('hero.tagDior'), query: 'Dior' },
-  { label: t('hero.tagChanel'), query: 'Chanel' },
-  { label: t('hero.tagVersace'), query: 'Versace' },
-  { label: t('hero.tagTomFord'), query: 'Tom Ford' },
-  { label: t('hero.tagGucci'), query: 'Gucci' },
-  { label: t('hero.tagFloral'), query: 'Floral' },
-  { label: t('hero.tagWoody'), query: 'Woody' },
-  { label: t('hero.tagFresh'), query: 'Fresh' },
-  { label: t('hero.tagUnisex'), query: 'Unisex' },
+  { label: 'Dior', query: 'Dior' },
+  { label: 'Chanel', query: 'Chanel' },
+  { label: 'Versace', query: 'Versace' },
+  { label: 'Tom Ford', query: 'Tom Ford' },
+  { label: 'Gucci', query: 'Gucci' },
+  { label: 'Floral', query: 'Floral' },
+  { label: 'Woody', query: 'Woody' },
+  { label: 'Fresh', query: 'Fresh' },
+  { label: 'Unisex', query: 'Unisex' },
 ]
 
 const trustItems = [
@@ -214,12 +246,12 @@ function handleTagClick(query: string) {
 .hero-section {
   position: relative;
   overflow: hidden;
-  min-height: 620px;
+  min-height: 640px;
   background:
     radial-gradient(ellipse 80% 60% at 50% 0%, #FFFDF8 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 80% 80%, #F6E7C1 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 20% 90%, #EFD9C6 0%, transparent 50%),
-    linear-gradient(175deg, #FFFDF8 0%, #FCF8F2 25%, #F8F4ED 50%, #F5F1EA 75%, #FAF7F2 100%);
+    radial-gradient(ellipse 60% 50% at 85% 75%, rgba(246, 231, 193, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 85%, rgba(239, 217, 198, 0.35) 0%, transparent 50%),
+    linear-gradient(175deg, #FFFDF8 0%, #FCF8F2 30%, #F8F4ED 65%, #FAF7F2 100%);
 }
 
 /* ========== Background Layer ========== */
@@ -231,17 +263,15 @@ function handleTagClick(query: string) {
   z-index: 0;
 }
 
-/* --- Grid Texture --- */
 .bg-grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(184,138,68,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(184,138,68,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(184, 138, 68, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 138, 68, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
-/* --- Blurred Circles --- */
 .bg-blob {
   position: absolute;
   border-radius: 50%;
@@ -249,183 +279,70 @@ function handleTagClick(query: string) {
 }
 
 .blob-1 {
-  top: -180px;
-  right: -120px;
+  top: -150px;
+  right: -100px;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(184,138,68,0.12), transparent 70%);
-  animation: blobFloat 18s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(184, 138, 68, 0.15), transparent 70%);
+  animation: blobFloat 20s ease-in-out infinite;
 }
 
 .blob-2 {
-  bottom: -200px;
-  left: -150px;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, rgba(196,154,90,0.08), transparent 70%);
-  animation: blobFloat 22s ease-in-out infinite reverse;
+  bottom: -180px;
+  left: -120px;
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.12), transparent 70%);
+  animation: blobFloat 24s ease-in-out infinite reverse;
 }
 
 .blob-3 {
-  top: 30%;
-  left: 60%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(239,217,198,0.1), transparent 70%);
-  animation: blobFloat 15s ease-in-out infinite;
+  top: 35%;
+  left: 55%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(239, 217, 198, 0.15), transparent 70%);
+  animation: blobFloat 18s ease-in-out infinite;
   animation-delay: -5s;
-}
-
-.blob-4 {
-  top: 60%;
-  left: 10%;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(184,138,68,0.06), transparent 70%);
-  animation: blobFloat 20s ease-in-out infinite;
-  animation-delay: -8s;
-}
-
-.blob-5 {
-  top: 15%;
-  left: 35%;
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(246,231,193,0.1), transparent 70%);
-  animation: blobFloat 12s ease-in-out infinite;
-  animation-delay: -3s;
 }
 
 @keyframes blobFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(20px, -30px) scale(1.05); }
-  66% { transform: translate(-15px, 20px) scale(0.95); }
+  33% { transform: translate(25px, -30px) scale(1.06); }
+  66% { transform: translate(-20px, 20px) scale(0.96); }
 }
 
-/* --- Glow Orbs --- */
 .bg-glow-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.3;
+  filter: blur(100px);
+  opacity: 0.35;
   animation: orbPulse 6s ease-in-out infinite;
 }
 
 .orb-1 {
-  width: 500px;
-  height: 500px;
-  top: -100px;
-  left: -100px;
-  background: radial-gradient(circle, rgba(246,231,193,0.25), transparent 70%);
-  animation-delay: 0s;
+  width: 450px;
+  height: 450px;
+  top: 10%;
+  right: 15%;
+  background: radial-gradient(circle, rgba(246, 231, 193, 0.4), transparent 70%);
 }
 
 .orb-2 {
-  width: 400px;
-  height: 400px;
-  bottom: -80px;
-  right: -80px;
-  background: radial-gradient(circle, rgba(239,217,198,0.2), transparent 70%);
-  animation-delay: -2s;
-}
-
-.orb-3 {
-  width: 300px;
-  height: 300px;
-  top: 40%;
-  right: 30%;
-  background: radial-gradient(circle, rgba(184,138,68,0.12), transparent 70%);
-  animation-delay: -4s;
-}
-
-.orb-4 {
-  width: 350px;
-  height: 350px;
-  bottom: 20%;
-  left: 20%;
-  background: radial-gradient(circle, rgba(201,169,110,0.1), transparent 70%);
-  animation-delay: -1s;
+  width: 380px;
+  height: 380px;
+  bottom: 5%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(184, 138, 68, 0.15), transparent 70%);
+  animation-delay: -3s;
 }
 
 @keyframes orbPulse {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(1.1); }
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.08); }
 }
 
-/* --- Bottle Silhouettes --- */
-.bg-bottle-silhouette {
-  position: absolute;
-  opacity: 0.04;
-  filter: blur(2px);
-  color: var(--primary);
-  font-size: 220px;
-  font-weight: 900;
-  transform: rotate(-20deg);
-}
-
-.silhouette-1 {
-  top: 5%;
-  right: 3%;
-  font-size: 280px;
-  animation: silhouetteDrift 20s ease-in-out infinite;
-}
-
-.silhouette-2 {
-  bottom: 3%;
-  left: 2%;
-  font-size: 200px;
-  animation: silhouetteDrift 25s ease-in-out infinite reverse;
-}
-
-@keyframes silhouetteDrift {
-  0%, 100% { transform: rotate(-20deg) translateY(0); }
-  50% { transform: rotate(-20deg) translateY(-25px); }
-}
-
-/* --- Botanical Decorations --- */
-.bg-botanical {
-  position: absolute;
-  opacity: 0.06;
-  font-size: 60px;
-  pointer-events: none;
-}
-
-.botanical-1 {
-  top: 8%;
-  left: 4%;
-  font-size: 50px;
-  animation: botanicalSway 12s ease-in-out infinite;
-}
-
-.botanical-2 {
-  bottom: 12%;
-  right: 6%;
-  font-size: 45px;
-  animation: botanicalSway 14s ease-in-out infinite reverse;
-}
-
-.botanical-3 {
-  top: 50%;
-  left: 1%;
-  font-size: 35px;
-  animation: botanicalSway 10s ease-in-out infinite;
-  animation-delay: -4s;
-}
-
-.botanical-4 {
-  top: 20%;
-  right: 2%;
-  font-size: 40px;
-  animation: botanicalSway 16s ease-in-out infinite;
-  animation-delay: -7s;
-}
-
-@keyframes botanicalSway {
-  0%, 100% { transform: rotate(-5deg) translateY(0); }
-  50% { transform: rotate(5deg) translateY(-10px); }
-}
-
-/* --- Sparkles --- */
+/* Sparkles */
 .sparkle {
   position: absolute;
   width: 6px;
@@ -442,23 +359,21 @@ function handleTagClick(query: string) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 10px;
+  font-size: 11px;
   color: var(--primary);
 }
 
-.sparkle-1 { top: 15%; left: 10%; animation-delay: 0s; }
-.sparkle-2 { top: 25%; right: 15%; animation-delay: 0.8s; }
-.sparkle-3 { bottom: 30%; left: 20%; animation-delay: 1.6s; }
-.sparkle-4 { bottom: 15%; right: 25%; animation-delay: 2.4s; }
-.sparkle-5 { top: 45%; left: 5%; animation-delay: 3.2s; }
-.sparkle-6 { top: 60%; right: 8%; animation-delay: 0.4s; }
-.sparkle-7 { bottom: 45%; left: 35%; animation-delay: 1.2s; }
-.sparkle-8 { bottom: 55%; right: 5%; animation-delay: 2s; }
+.sparkle-1 { top: 12%; left: 8%; animation-delay: 0s; }
+.sparkle-2 { top: 22%; right: 18%; animation-delay: 0.9s; }
+.sparkle-3 { bottom: 25%; left: 25%; animation-delay: 1.8s; }
+.sparkle-4 { bottom: 15%; right: 30%; animation-delay: 2.7s; }
+.sparkle-5 { top: 50%; left: 4%; animation-delay: 3.6s; }
+.sparkle-6 { top: 65%; right: 6%; animation-delay: 0.5s; }
 
 @keyframes sparkle {
   0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  25% { opacity: 0.6; transform: scale(1) rotate(180deg); }
-  50% { opacity: 0; transform: scale(0) rotate(360deg); }
+  30% { opacity: 0.7; transform: scale(1) rotate(180deg); }
+  60% { opacity: 0; transform: scale(0) rotate(360deg); }
 }
 
 /* ========== Container ========== */
@@ -466,32 +381,32 @@ function handleTagClick(query: string) {
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.25rem;
   z-index: 1;
 }
 
 @media (min-width: 640px) {
-  .hero-container { padding: 0 1.5rem; }
+  .hero-container { padding: 0 2rem; }
 }
 
 @media (min-width: 1024px) {
-  .hero-container { padding: 0 2rem; }
+  .hero-container { padding: 0 2.5rem; }
 }
 
 .hero-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 620px;
-  gap: 2.5rem;
-  padding: 3rem 0 4rem;
+  min-height: 640px;
+  gap: 3rem;
+  padding: 3.5rem 0 4.5rem;
 }
 
 @media (min-width: 1024px) {
   .hero-inner {
     flex-direction: row;
-    gap: 3rem;
-    padding: 0;
+    gap: 3.5rem;
+    padding: 2.5rem 0;
   }
 }
 
@@ -504,7 +419,7 @@ function handleTagClick(query: string) {
 @media (min-width: 1024px) {
   .hero-content {
     width: 52%;
-    padding: 4rem 0;
+    padding: 3rem 0;
   }
 }
 
@@ -512,194 +427,157 @@ function handleTagClick(query: string) {
   max-width: 560px;
 }
 
-@media (min-width: 1024px) {
-  .content-inner {
-    margin: 0;
-  }
-}
-
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.4rem 1rem;
+  gap: 0.5rem;
+  padding: 0.45rem 1.15rem;
   border-radius: 9999px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   margin-bottom: 1.25rem;
-  background: linear-gradient(135deg, rgba(184,138,68,0.12), rgba(196,154,90,0.08));
+  background: linear-gradient(135deg, rgba(184, 138, 68, 0.12), rgba(201, 169, 110, 0.08));
   color: var(--primary);
-  border: 1px solid rgba(184,138,68,0.15);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 12px rgba(184,138,68,0.06);
+  border: 1px solid rgba(184, 138, 68, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 14px rgba(184, 138, 68, 0.08);
 }
 
 .hero-title {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 900;
-  line-height: 1.15;
-  margin-bottom: 1rem;
+  line-height: 1.12;
+  margin-bottom: 1.125rem;
   color: var(--text);
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   letter-spacing: -0.02em;
 }
 
 @media (min-width: 768px) {
-  .hero-title { font-size: 2.5rem; }
+  .hero-title { font-size: 2.85rem; }
 }
 
 @media (min-width: 1024px) {
-  .hero-title { font-size: 3rem; }
-}
-
-@media (min-width: 1280px) {
-  .hero-title { font-size: 3.5rem; }
+  .hero-title { font-size: 3.4rem; }
 }
 
 .hero-title-accent {
-  background: linear-gradient(135deg, var(--primary), #C9A96E);
+  background: linear-gradient(135deg, #B88A44 0%, #D4AF37 50%, #9E7431 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(184, 138, 68, 0.15));
 }
 
 .hero-desc {
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  margin-bottom: 1.75rem;
-  max-width: 480px;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 1.85rem;
+  max-width: 500px;
   color: var(--text-muted);
   font-weight: 400;
 }
 
-@media (min-width: 1024px) {
-  .hero-desc {
-    margin-left: 0;
-  }
-}
-
-/* ========== CTA ========== */
+/* ========== CTA Buttons ========== */
 .hero-cta {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.125rem;
+  margin-bottom: 2.25rem;
   flex-wrap: wrap;
 }
 
 .hero-btn-primary {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   font-size: 0.875rem;
-  padding: 0.8125rem 1.75rem;
+  font-weight: 700;
+  padding: 0.875rem 2rem;
   border-radius: 9999px;
-  background: linear-gradient(135deg, var(--primary), #C49A5A);
+  background: linear-gradient(135deg, #B88A44, #C9A96E);
   color: #fff;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   text-decoration: none;
   box-shadow:
-    0 4px 24px rgba(184,138,68,0.35),
-    0 1px 3px rgba(0,0,0,0.08);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 50%);
-  pointer-events: none;
-}
-
-.hero-btn-primary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s;
-}
-
-.hero-btn-primary:hover::after {
-  transform: translateX(100%);
+    0 4px 18px rgba(184, 138, 68, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .hero-btn-primary:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 8px 32px rgba(184,138,68,0.45),
-    0 2px 6px rgba(0,0,0,0.1);
+    0 6px 24px rgba(184, 138, 68, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #A7772F, #B88A44);
 }
 
 .hero-btn-secondary {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.625rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--secondary);
   text-decoration: none;
-  transition: color 0.3s ease;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
 }
 
 .hero-btn-secondary:hover {
   color: var(--primary);
+  background: rgba(184, 138, 68, 0.06);
 }
 
 .btn-secondary-ring {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--border);
-  transition: all 0.3s ease;
+  background: rgba(184, 138, 68, 0.1);
   color: var(--primary);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: all 0.25s ease;
 }
 
 .hero-btn-secondary:hover .btn-secondary-ring {
-  border-color: var(--primary);
-  background: rgba(184,138,68,0.08);
-  box-shadow: 0 4px 16px rgba(184,138,68,0.12);
+  background: var(--primary);
+  color: #fff;
 }
 
-/* ========== Search ========== */
+/* ========== Search Bar ========== */
 .hero-search {
-  margin-bottom: 1.75rem;
+  margin-bottom: 2rem;
 }
 
 .search-box {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  gap: 0.75rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.125rem;
   border-radius: 9999px;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(184,138,68,0.12);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(184, 138, 68, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 4px 24px rgba(184, 138, 68, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
   max-width: 480px;
-  box-shadow:
-    0 2px 12px rgba(0,0,0,0.04),
-    0 1px 3px rgba(184,138,68,0.03);
 }
 
 .search-box:focus-within {
   border-color: var(--primary);
+  background: #ffffff;
   box-shadow:
-    0 0 0 3px rgba(184,138,68,0.1),
-    0 4px 20px rgba(184,138,68,0.08);
-  background: rgba(255,255,255,0.95);
+    0 0 0 4px rgba(184, 138, 68, 0.12),
+    0 6px 28px rgba(184, 138, 68, 0.12);
 }
 
 .search-icon {
@@ -720,13 +598,13 @@ function handleTagClick(query: string) {
 }
 
 .search-input::placeholder {
-  color: #b5b5b5;
+  color: #a0a0a0;
 }
 
 .search-btn {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -734,78 +612,78 @@ function handleTagClick(query: string) {
   color: #fff;
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(184,138,68,0.2);
+  box-shadow: 0 2px 10px rgba(184, 138, 68, 0.25);
 }
 
 .search-btn:hover {
-  background: var(--primary-hover);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(184,138,68,0.3);
+  transform: scale(1.06);
+  background: linear-gradient(135deg, #A7772F, #B88A44);
+  box-shadow: 0 4px 14px rgba(184, 138, 68, 0.35);
 }
 
 .popular-tags {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 0.875rem;
   flex-wrap: wrap;
 }
 
 .tags-label {
-  font-size: 0.6875rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
 }
 
 .tag-chip {
-  font-size: 0.6875rem;
+  font-size: 0.7rem;
   font-weight: 500;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 0.8rem;
   border-radius: 9999px;
-  border: none;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(4px);
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px);
+  color: var(--secondary);
   cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid rgba(184,138,68,0.08);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(184, 138, 68, 0.12);
 }
 
 .tag-chip:hover {
-  background: rgba(184,138,68,0.15);
-  border-color: rgba(184,138,68,0.2);
+  background: rgba(184, 138, 68, 0.12);
+  color: var(--primary);
+  border-color: rgba(184, 138, 68, 0.28);
   transform: translateY(-1px);
 }
 
-/* ========== Trust ========== */
+/* ========== Trust Items ========== */
 .hero-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.25rem;
+  gap: 0.85rem 1.5rem;
 }
 
 .trust-item {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: 0.4rem;
 }
 
 .trust-icon {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--primary);
 }
 
 .trust-label {
-  font-size: 0.6875rem;
+  font-size: 0.725rem;
   font-weight: 500;
   color: var(--text-muted);
   white-space: nowrap;
 }
 
-/* ========== Right Visual ========== */
+/* ========== Right Visual Showcase ========== */
 .hero-visual {
   width: 100%;
   display: flex;
@@ -817,201 +695,156 @@ function handleTagClick(query: string) {
 @media (min-width: 1024px) {
   .hero-visual {
     width: 48%;
-    padding: 4rem 0;
+    padding: 2rem 0;
   }
 }
 
 .visual-wrapper {
   position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+  will-change: transform;
 }
 
-/* --- Bottle Glow Layers --- */
 .visual-glow-bg {
   position: absolute;
-  inset: 0;
+  width: 90%;
+  height: 90%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(184,138,68,0.15), rgba(201,169,110,0.08) 40%, transparent 70%);
-  animation: pulseGlow 4s ease-in-out infinite;
-  filter: blur(20px);
-}
-
-.visual-glow-secondary {
-  width: 70%;
-  height: 70%;
-  top: 15%;
-  left: 15%;
-  background: radial-gradient(circle, rgba(246,231,193,0.2), rgba(239,217,198,0.08) 40%, transparent 65%);
-  animation-delay: 2s;
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.25), rgba(184, 138, 68, 0.1) 45%, transparent 70%);
+  animation: pulseGlow 5s ease-in-out infinite;
   filter: blur(30px);
 }
 
-@keyframes pulseGlow {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.1); opacity: 1; }
+.visual-glow-secondary {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(246, 231, 193, 0.35), transparent 65%);
+  animation: pulseGlow 5s ease-in-out infinite reverse;
+  filter: blur(25px);
 }
 
-/* --- Glass Ring Behind Bottle --- */
-.visual-frame {
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(0.95); opacity: 0.6; }
+  50% { transform: scale(1.08); opacity: 0.9; }
+}
+
+/* Perfume Showcase Card */
+.perfume-showcase-card {
   position: relative;
-  width: 200px;
-  height: 280px;
+  width: 300px;
+  height: 380px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.visual-frame::before {
-  content: '';
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  border: 1px solid rgba(184,138,68,0.08);
-  background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 60%);
-  backdrop-filter: blur(4px);
-  box-shadow:
-    0 0 60px rgba(184,138,68,0.06),
-    inset 0 0 60px rgba(184,138,68,0.03);
-  animation: ringPulse 5s ease-in-out infinite;
-}
-
-@keyframes ringPulse {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-}
-
-@media (min-width: 768px) {
-  .visual-frame {
-    width: 240px;
-    height: 340px;
-  }
-  .visual-frame::before {
-    width: 300px;
-    height: 300px;
-  }
-}
-
-/* --- Perfume Bottle --- */
-.visual-bottle {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 40% 40% 20% 20% / 50% 50% 20% 20%;
-  background: linear-gradient(180deg, #C49A5A 0%, var(--primary) 40%, #8E6F3E 100%);
-  box-shadow:
-    0 20px 60px rgba(184,138,68,0.3),
-    0 8px 20px rgba(0,0,0,0.06),
-    inset 0 -20px 40px rgba(0,0,0,0.1),
-    inset 0 20px 40px rgba(255,255,255,0.08);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
-  animation: floatBottle 6s ease-in-out infinite;
   z-index: 1;
 }
 
-@keyframes floatBottle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+@media (min-width: 640px) {
+  .perfume-showcase-card {
+    width: 340px;
+    height: 420px;
+  }
 }
 
-.bottle-glow {
+.showcase-ring {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 40%, rgba(184,138,68,0.05) 60%, rgba(255,255,255,0.08) 100%);
-  pointer-events: none;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 138, 68, 0.15);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+  backdrop-filter: blur(4px);
+  box-shadow:
+    0 0 60px rgba(184, 138, 68, 0.08),
+    inset 0 0 40px rgba(184, 138, 68, 0.04);
+  animation: ringPulse 6s ease-in-out infinite;
 }
 
-.bottle-inner {
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+.bottle-image-wrap {
   position: relative;
-  width: 100%;
-  height: 30%;
+  width: 250px;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-  background: rgba(255,255,255,0.06);
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.bottle-brand {
-  font-size: 6px;
-  font-weight: 800;
-  letter-spacing: 0.3em;
-  color: rgba(255,255,255,0.5);
-  text-transform: uppercase;
-}
-
-.bottle-liquid {
-  position: absolute;
-  top: 40%;
-  left: 10%;
-  right: 10%;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(196,154,90,0.3), rgba(184,138,68,0.15));
-  border-radius: 50% 50% 20% 20% / 20% 20% 20% 20%;
-  filter: blur(1px);
-}
-
-/* --- Particles --- */
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(184,138,68,0.25), transparent 70%);
-  animation: particleFloat 8s ease-in-out infinite;
+  animation: bottleFloat 6s ease-in-out infinite;
   z-index: 2;
 }
 
-.particle-1 {
-  width: 8px;
-  height: 8px;
-  top: 5%;
-  right: -25px;
-  animation-delay: 0s;
+@media (min-width: 640px) {
+  .bottle-image-wrap {
+    width: 280px;
+    height: 360px;
+  }
 }
 
-.particle-2 {
-  width: 5px;
-  height: 5px;
-  top: 25%;
-  left: -20px;
-  animation-delay: 2s;
+@keyframes bottleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
-.particle-3 {
-  width: 6px;
-  height: 6px;
-  bottom: 15%;
-  right: -30px;
-  animation-delay: 4s;
+.bottle-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(184, 138, 68, 0.25)) drop-shadow(0 8px 12px rgba(0, 0, 0, 0.08));
+  border-radius: 20px;
+  transition: transform 0.3s ease;
 }
 
-.particle-4 {
-  width: 10px;
+.glass-light-flare {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+}
+
+/* Pedestal Platform */
+.pedestal-platform {
+  position: absolute;
+  bottom: 10px;
+  width: 260px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.pedestal-glass {
+  width: 100%;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(184, 138, 68, 0.2);
+  box-shadow:
+    0 10px 25px rgba(184, 138, 68, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.pedestal-glow {
+  position: absolute;
+  width: 80%;
   height: 10px;
-  bottom: 35%;
-  left: -25px;
-  animation-delay: 1s;
-}
-
-.particle-5 {
-  width: 4px;
-  height: 4px;
-  top: 45%;
-  right: 25%;
-  animation-delay: 3s;
-}
-
-@keyframes particleFloat {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
-  50% { transform: translateY(-35px) scale(1.8); opacity: 0.7; }
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(184, 138, 68, 0.3), transparent 70%);
+  filter: blur(6px);
 }
 
 /* ========== Floating Info Cards ========== */
@@ -1019,17 +852,17 @@ function handleTagClick(query: string) {
   position: absolute;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: 14px;
+  gap: 0.625rem;
+  padding: 0.625rem 0.95rem;
+  border-radius: 16px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.06),
-    0 1px 3px rgba(0,0,0,0.03),
-    inset 0 1px 0 rgba(255,255,255,0.6);
+    0 10px 32px rgba(0, 0, 0, 0.07),
+    0 2px 6px rgba(184, 138, 68, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   animation: cardFloat 5s ease-in-out infinite;
   white-space: nowrap;
   z-index: 3;
@@ -1041,135 +874,80 @@ function handleTagClick(query: string) {
 }
 
 .float-card-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   flex-shrink: 0;
-  backdrop-filter: blur(4px);
 }
 
 .float-card-text {
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .float-card-value {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 800;
   color: var(--text);
   margin: 0;
 }
 
 .float-card-label {
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   color: var(--text-muted);
-  margin: 0;
+  margin: 1px 0 0;
 }
 
 .card-rating {
-  top: -5px;
-  right: -15px;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
+  top: 10px;
+  right: -20px;
   animation-delay: 0s;
 }
 
 .card-rating .float-card-icon {
-  background: rgba(184,138,68,0.12);
+  background: rgba(184, 138, 68, 0.12);
   color: var(--primary);
 }
 
 .card-sales {
-  top: 20%;
-  left: -55px;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
+  top: 22%;
+  left: -40px;
   animation-delay: 0.8s;
 }
 
 .card-sales .float-card-icon {
-  background: rgba(231,76,60,0.1);
+  background: rgba(231, 76, 60, 0.1);
   color: #E74C3C;
 }
 
 .card-delivery {
-  bottom: 18%;
-  right: -45px;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
+  bottom: 12%;
+  right: -25px;
   animation-delay: 1.6s;
 }
 
 .card-delivery .float-card-icon {
-  background: rgba(46,139,87,0.1);
+  background: rgba(46, 139, 87, 0.1);
   color: #2E8B57;
 }
 
 .card-authentic {
-  bottom: 2%;
-  left: -40px;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
+  bottom: 0%;
+  left: -30px;
   animation-delay: 2.4s;
 }
 
 .card-authentic .float-card-icon {
-  background: rgba(184,138,68,0.12);
+  background: rgba(184, 138, 68, 0.12);
   color: var(--primary);
 }
 
-@media (max-width: 1023px) {
-  .card-sales, .card-authentic {
-    display: none;
-  }
-
-  .card-rating {
-    top: -10px;
-    right: 0;
-  }
-
-  .card-delivery {
-    bottom: 10%;
-    right: 0;
-  }
-}
-
-@media (max-width: 639px) {
-  .float-card {
-    padding: 0.375rem 0.625rem;
-  }
-
-  .float-card-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    font-size: 0.625rem;
-  }
-
-  .float-card-value {
-    font-size: 0.625rem;
-  }
-
-  .float-card-label {
-    font-size: 0.5rem;
-  }
-
-  .card-rating {
-    top: -5px;
-    right: 5px;
-  }
-
-  .card-delivery {
-    display: none;
-  }
-}
-
-/* --- Discount Badge --- */
 .float-badge {
   position: absolute;
-  padding: 0.5rem 0.8rem;
+  padding: 0.55rem 0.95rem;
   border-radius: 14px;
   text-align: center;
   animation: cardFloat 5s ease-in-out infinite;
@@ -1179,17 +957,17 @@ function handleTagClick(query: string) {
 
 .badge-discount {
   top: 6%;
-  left: -50px;
+  left: -35px;
   background: linear-gradient(135deg, var(--primary), #C49A5A);
   box-shadow:
-    0 4px 20px rgba(184,138,68,0.3),
-    0 1px 3px rgba(0,0,0,0.06);
-  border: 1px solid rgba(255,255,255,0.15);
+    0 6px 20px rgba(184, 138, 68, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .discount-pct {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 900;
   color: #fff;
   line-height: 1.1;
@@ -1197,14 +975,42 @@ function handleTagClick(query: string) {
 
 .discount-sub {
   display: block;
-  font-size: 0.5rem;
+  font-size: 0.55rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 @media (max-width: 1023px) {
-  .badge-discount {
+  .card-sales, .card-authentic {
+    display: none;
+  }
+
+  .card-rating {
+    top: -5px;
+    right: 0;
+  }
+
+  .card-delivery {
+    bottom: 5%;
+    right: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .float-card {
+    padding: 0.4rem 0.7rem;
+  }
+
+  .float-card-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 0.7rem;
+  }
+
+  .card-delivery {
     display: none;
   }
 }
