@@ -3,13 +3,13 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('products.exclusiveCollection') }}</span>
-        <h1 class="hero-title">{{ $t('products.allFragrances') }}</h1>
-        <p v-if="store.meta" class="hero-count">{{ $t('products.count', { count: store.meta.total }) }}</p>
-      </div>
-    </section>
+    <PageBanner
+      placement="all_fragrances"
+      :default-title="$t('products.allFragrances')"
+      :default-badge="$t('products.exclusiveCollection')"
+      :count="store.meta?.total"
+      :count-label="store.meta ? $t('products.count', { count: store.meta.total }) : ''"
+    />
 
     <div class="page-container">
       <div class="toolbar">
@@ -395,6 +395,7 @@ import SearchModal from '@/components/layout/SearchModal.vue'
 import { CategoryFilter } from '@/features/categories'
 import ProductCard from '@/components/product/ProductCard.vue'
 import ProductQuickView from '@/components/product/ProductQuickView.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 
 const { t } = useI18n()
 const store = useProductStore()

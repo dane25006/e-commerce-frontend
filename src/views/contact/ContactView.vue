@@ -3,13 +3,12 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('contact.getInTouch') }}</span>
-        <h1 class="hero-title">{{ $t('contact.contactUs') }}</h1>
-        <p class="hero-count">{{ $t('contact.heroDesc') }}</p>
-      </div>
-    </section>
+    <PageBanner
+      placement="contact"
+      :default-title="$t('contact.contactUs')"
+      :default-badge="$t('contact.getInTouch')"
+      :default-subtitle="$t('contact.heroDesc')"
+    />
 
     <div class="contact-layout">
       <div class="contact-grid">
@@ -91,6 +90,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 
 const { t } = useI18n()
 const contactInfo = computed(() => [

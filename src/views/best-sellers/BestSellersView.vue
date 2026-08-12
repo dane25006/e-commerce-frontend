@@ -3,13 +3,13 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('bestSellers.topRated') }}</span>
-        <h1 class="hero-title">{{ $t('bestSellers.bestSellers') }}</h1>
-        <p v-if="meta" class="hero-count">{{ $t('products.count', { count: meta.total }) }}</p>
-      </div>
-    </section>
+    <PageBanner
+      placement="best_sellers"
+      :default-title="$t('bestSellers.bestSellers')"
+      :default-badge="$t('bestSellers.topRated')"
+      :count="meta?.total"
+      :count-label="meta ? $t('products.count', { count: meta.total }) : ''"
+    />
 
     <div class="page-container">
       <div class="toolbar">
@@ -374,6 +374,7 @@ import SearchModal from '@/components/layout/SearchModal.vue'
 import { CategoryFilter } from '@/features/categories'
 import ProductCard from '@/components/product/ProductCard.vue'
 import ProductQuickView from '@/components/product/ProductQuickView.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 import { useProductFilters } from '@/composables/useProductFilters'
 
 const {

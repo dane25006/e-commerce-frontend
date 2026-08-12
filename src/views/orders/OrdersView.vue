@@ -3,12 +3,11 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('orders.your') }}</span>
-        <h1 class="hero-title">{{ $t('orders.orders') }}</h1>
-      </div>
-    </section>
+    <PageBanner
+      placement="orders"
+      :default-title="$t('orders.orders')"
+      :default-badge="$t('orders.your')"
+    />
 
     <div class="page-body">
       <div v-if="loading" class="loading-list">
@@ -130,6 +129,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 
 interface Order {
   id: number

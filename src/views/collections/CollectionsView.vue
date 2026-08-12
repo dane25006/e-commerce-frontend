@@ -3,13 +3,12 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('collections.curated') }}</span>
-        <h1 class="hero-title">{{ $t('collections.ourCollections') }}</h1>
-        <p class="hero-count">{{ $t('collections.heroDesc') }}</p>
-      </div>
-    </section>
+    <PageBanner
+      placement="collections"
+      :default-title="$t('collections.ourCollections')"
+      :default-badge="$t('collections.curated')"
+      :default-subtitle="$t('collections.heroDesc')"
+    />
 
     <div class="collections-list">
 
@@ -52,6 +51,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 
 interface Collection {
   tag: string

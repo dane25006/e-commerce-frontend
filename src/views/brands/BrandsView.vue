@@ -3,13 +3,12 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('brands.luxuryHouses') }}</span>
-        <h1 class="hero-title">{{ $t('brands.featuredBrands') }}</h1>
-        <p class="hero-count">{{ $t('brands.heroDesc') }}</p>
-      </div>
-    </section>
+    <PageBanner
+      placement="brands"
+      :default-title="$t('brands.featuredBrands')"
+      :default-badge="$t('brands.luxuryHouses')"
+      :default-subtitle="$t('brands.heroDesc')"
+    />
 
     <div class="brands-grid">
 
@@ -52,6 +51,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 
 interface Brand {
   name: string

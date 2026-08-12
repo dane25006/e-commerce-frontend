@@ -3,13 +3,12 @@
     <AnnouncementBar />
     <AppNavbar @open-search="searchOpen = true" @open-cart="cartOpen = true" />
 
-    <section class="hero-section">
-      <div class="hero-bg">
-        <span class="hero-label">{{ $t('about.ourStory') }}</span>
-        <h1 class="hero-title">{{ $t('about.aboutScentique') }}</h1>
-        <p class="hero-count">{{ $t('about.heroDesc') }}</p>
-      </div>
-    </section>
+    <PageBanner
+      placement="about"
+      :default-title="$t('about.aboutScentique')"
+      :default-badge="$t('about.ourStory')"
+      :default-subtitle="$t('about.heroDesc')"
+    />
 
     <div class="content">
 
@@ -61,6 +60,7 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
+import PageBanner from '@/components/common/PageBanner.vue'
 
 const { t } = useI18n()
 const values = computed(() => [
