@@ -15,7 +15,7 @@
           <div class="brand-icon-wrapper">
             <i class="ti ti-gift text-white text-xl" aria-hidden="true" />
           </div>
-          <h3 class="brand-title" :style="{ fontFamily: '\'Playfair Display\', serif' }">{{ $t('auth.joinWorld') }}</h3>
+          <h3 class="brand-title" :style="{ fontFamily: 'var(--font-heading)' }">{{ $t('auth.joinWorld') }}</h3>
           <p class="brand-description">{{ $t('auth.joinDesc') }}</p>
         </div>
       </div>
@@ -32,7 +32,7 @@
 
         <div class="form-card">
           <div class="form-header">
-            <h1 class="form-title" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">{{ $t('auth.createYourAccount') }}</h1>
+            <h1 class="form-title" :style="{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }">{{ $t('auth.createYourAccount') }}</h1>
             <div class="gold-accent" :style="{ background: 'var(--primary)' }" />
             <p class="form-subtitle" :style="{ color: 'var(--text-muted)' }">{{ $t('auth.registerSubtitle') }}</p>
           </div>
@@ -376,7 +376,7 @@ onUnmounted(() => {
 }
 
 .brand-title {
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 700;
   color: #FFFFFF;
   margin-bottom: 10px;
@@ -384,7 +384,7 @@ onUnmounted(() => {
 }
 
 .brand-description {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.55);
   line-height: 1.7;
 }
@@ -413,7 +413,7 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-bottom: 36px;
   transition: opacity 0.2s;
   text-decoration: none;
@@ -437,7 +437,7 @@ onUnmounted(() => {
 }
 
 .form-title {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 900;
   margin-bottom: 4px;
 }
@@ -450,7 +450,7 @@ onUnmounted(() => {
 }
 
 .form-subtitle {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 /* API Error */
@@ -458,7 +458,7 @@ onUnmounted(() => {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 12px 16px;
   margin-bottom: 24px;
 }
@@ -493,7 +493,7 @@ onUnmounted(() => {
 .field-input {
   width: 100%;
   padding: 22px 14px 6px;
-  font-size: 14px;
+  font-size: 0.875rem;
   background: transparent;
   border: none;
   outline: none;
@@ -510,7 +510,7 @@ onUnmounted(() => {
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 14px;
+  font-size: 0.875rem;
   pointer-events: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: left center;
@@ -521,7 +521,7 @@ onUnmounted(() => {
 .field-input:not(:placeholder-shown) ~ .field-label {
   top: 10px;
   transform: translateY(0);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -556,7 +556,7 @@ onUnmounted(() => {
 
 .field-msg-error {
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   padding-left: 4px;
   color: #E53935;
@@ -570,7 +570,7 @@ onUnmounted(() => {
   justify-content: center;
   gap: 8px;
   color: #FFFFFF;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   padding: 14px 16px;
   border: none;
@@ -601,7 +601,7 @@ onUnmounted(() => {
 }
 
 .divider-text {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -609,7 +609,7 @@ onUnmounted(() => {
 /* Switch */
 .switch-text {
   text-align: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-top: 32px;
 }
 

@@ -249,7 +249,7 @@ onMounted(loadOrders)
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -347,19 +347,19 @@ onMounted(loadOrders)
 }
 
 .empty-icon i {
-  font-size: 48px;
+  font-size: 3rem;
   color: rgba(184,138,68,0.25);
 }
 
 .empty-title {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .empty-desc {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
   margin-bottom: 32px;
 }
@@ -400,13 +400,13 @@ onMounted(loadOrders)
 }
 
 .order-id {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 900;
   color: var(--text);
 }
 
 .order-date {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -415,13 +415,13 @@ onMounted(loadOrders)
 }
 
 .order-total-amount {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--text);
 }
 
 .order-count {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -464,7 +464,7 @@ onMounted(loadOrders)
 }
 
 .progress-dot i {
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .progress-dot.done {
@@ -474,7 +474,7 @@ onMounted(loadOrders)
 }
 
 .progress-label {
-  font-size: 9px;
+  font-size: 0.5625rem;
   margin-top: 4px;
   font-weight: 700;
   white-space: nowrap;
@@ -508,7 +508,7 @@ onMounted(loadOrders)
 }
 
 .view-details-link {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
@@ -523,7 +523,7 @@ onMounted(loadOrders)
 }
 
 .cancel-order-btn {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   display: flex;
@@ -546,7 +546,7 @@ onMounted(loadOrders)
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 
   .page-body {

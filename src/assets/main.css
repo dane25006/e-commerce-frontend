@@ -291,6 +291,18 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.4;
 }
 
+[lang="km"] .section-label,
+[lang="km"] .hero-label,
+[lang="km"] .badge-label,
+[lang="km"] .banner-badge,
+[lang="km"] [class*="tracking-"],
+[lang="km"] .tracking-widest,
+[lang="km"] .tracking-wider,
+[lang="km"] .tracking-wide {
+  letter-spacing: var(--letter-spacing-khmer, 0.02em);
+  text-transform: none;
+}
+
 /* ── Inputs ── */
 input, select, textarea { font-family: var(--font-body); }
 
@@ -357,23 +369,23 @@ input, select, textarea { font-family: var(--font-body); }
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 16px;
 }
 .hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 900;
   color: var(--surface);
   margin: 0 0 12px;
   letter-spacing: 0.01em;
   line-height: 1.15;
 }
 .hero-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.4);
   margin: 0;
   font-weight: 400;

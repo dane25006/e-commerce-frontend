@@ -24,7 +24,7 @@
       </svg>
       <span
         v-if="store.unreadCount > 0"
-        class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[8px] font-bold rounded-full text-white animate-scale-in"
+        class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[0.5rem] font-bold rounded-full text-white animate-scale-in"
         style="background: var(--primary);"
       >
         {{ store.unreadCount > 9 ? '9+' : store.unreadCount }}
@@ -48,7 +48,7 @@
               <button
                 v-if="store.unreadCount > 0"
                 @click="handleMarkAllRead"
-                class="text-[10px] font-semibold tracking-wide uppercase transition-colors"
+                class="text-[0.625rem] font-semibold tracking-wide uppercase transition-colors"
                 style="color: var(--primary);"
               >
                 {{ $t('notifications.markAllRead') }}
@@ -100,12 +100,12 @@
                     </div>
                     <p
                       v-if="item.message"
-                      class="text-[11px] mt-0.5 line-clamp-2"
+                      class="text-[0.6875rem] mt-0.5 line-clamp-2"
                       :class="item.is_read ? 'text-slate-400' : 'text-slate-500'"
                     >
                       {{ item.message }}
                     </p>
-                    <p class="text-[10px] mt-1" style="color: #9ca3af;">{{ timeAgo(item.sent_at) }}</p>
+                    <p class="text-[0.625rem] mt-1" style="color: #9ca3af;">{{ timeAgo(item.sent_at) }}</p>
                   </div>
                 </div>
               </div>
@@ -118,7 +118,7 @@
               style="color: var(--primary); border-color: var(--border); background: #fafafa;"
             >
               {{ $t('notifications.viewAll') }}
-              <i class="ti ti-chevron-right text-[10px]" />
+              <i class="ti ti-chevron-right text-[0.625rem]" />
             </RouterLink>
           </div>
         </div>

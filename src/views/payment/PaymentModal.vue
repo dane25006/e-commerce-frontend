@@ -87,15 +87,6 @@
 
             <!-- Actions -->
             <div class="modal-actions">
-              <button
-                v-if="payment.status !== 'paid'"
-                :disabled="confirming"
-                class="confirm-btn"
-                @click="confirmPayment"
-              >
-                <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
-                <template v-else>I've Paid / Check Status</template>
-              </button>
               <button @click="onCancel" class="cancel-btn">
                 <i class="ti ti-x" />
                 {{ $t('payment.cancelPayment') }}
@@ -352,7 +343,7 @@ onUnmounted(() => {
   justify-content: center;
   cursor: pointer;
   z-index: 1;
-  font-size: 16px;
+  font-size: 1rem;
   transition: all 0.2s;
 }
 
@@ -378,12 +369,12 @@ onUnmounted(() => {
 }
 
 .header-icon i {
-  font-size: 24px;
+  font-size: 1.5rem;
   color: #fff;
 }
 
 .header-title {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text);
 }
@@ -399,24 +390,24 @@ onUnmounted(() => {
 }
 
 .loading-state i {
-  font-size: 36px;
+  font-size: 2.25rem;
   color: var(--primary);
   margin-bottom: 12px;
 }
 
 .loading-state p {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
 .error-state i {
-  font-size: 36px;
+  font-size: 2.25rem;
   color: #dc2626;
   margin-bottom: 12px;
 }
 
 .error-state p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: #dc2626;
   margin-bottom: 16px;
 }
@@ -428,7 +419,7 @@ onUnmounted(() => {
   color: #fff;
   border: none;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 
@@ -443,7 +434,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .order-label {
@@ -457,7 +448,7 @@ onUnmounted(() => {
 }
 
 .order-value.amount {
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--primary);
 }
 
@@ -465,7 +456,7 @@ onUnmounted(() => {
   padding: 3px 10px;
   border-radius: 100px;
   background: rgba(184, 138, 68, 0.1);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
 }
 
@@ -501,7 +492,7 @@ onUnmounted(() => {
 
 .accepted-label {
   display: block;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -517,7 +508,7 @@ onUnmounted(() => {
 }
 
 .bank-item {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--primary);
 }
@@ -534,7 +525,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
@@ -559,7 +550,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text);
   font-variant-numeric: tabular-nums;
@@ -587,7 +578,7 @@ onUnmounted(() => {
   background: var(--primary, #EE1C25);
   color: #ffffff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.875rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
@@ -615,7 +606,7 @@ onUnmounted(() => {
   background: transparent;
   color: var(--text-muted);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
   border: 2px solid var(--border);
   cursor: pointer;
   transition: all 0.2s;

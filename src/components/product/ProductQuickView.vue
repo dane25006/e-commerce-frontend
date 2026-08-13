@@ -209,7 +209,7 @@ async function handleAddToCart() {
   justify-content: center;
   padding: 40px;
   color: rgba(184, 138, 68, 0.18);
-  font-size: 100px;
+  font-size: 6.25rem;
   width: 100%;
   height: 100%;
 }
@@ -224,7 +224,7 @@ async function handleAddToCart() {
 }
 
 .badge {
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   color: #fff;
   padding: 4px 12px;
@@ -256,7 +256,7 @@ async function handleAddToCart() {
   justify-content: center;
   background: rgba(255, 255, 255, 0.92);
   color: var(--text-muted, #6F6F6F);
-  font-size: 18px;
+  font-size: 1.125rem;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -298,7 +298,7 @@ async function handleAddToCart() {
 }
 
 .modal-category {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -306,7 +306,7 @@ async function handleAddToCart() {
 }
 
 .modal-brand {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 999px;
@@ -316,7 +316,7 @@ async function handleAddToCart() {
 
 .modal-title {
   font-family: var(--font-heading);
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 700;
   line-height: 1.2;
   color: var(--text, #222222);
@@ -325,7 +325,7 @@ async function handleAddToCart() {
 
 @media (min-width: 768px) {
   .modal-title {
-    font-size: 30px;
+    font-size: 1.875rem;
   }
 }
 
@@ -333,7 +333,7 @@ async function handleAddToCart() {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted, #6F6F6F);
   margin-bottom: 14px;
 }
@@ -357,22 +357,22 @@ async function handleAddToCart() {
 
 .star-active {
   color: var(--primary, #B88A44);
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 
 .star-inactive {
   color: #E7E1D8;
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 
 .rating-value {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text, #222222);
 }
 
 .rating-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted, #6F6F6F);
 }
 
@@ -385,21 +385,21 @@ async function handleAddToCart() {
 }
 
 .price-sale {
-  font-size: 30px;
+  font-size: 1.875rem;
   font-weight: 900;
   color: var(--primary, #B88A44);
   letter-spacing: -0.01em;
 }
 
 .price-strikethrough {
-  font-size: 18px;
+  font-size: 1.125rem;
   text-decoration: line-through;
   color: var(--text-muted, #6F6F6F);
   font-weight: 500;
 }
 
 .price-current {
-  font-size: 30px;
+  font-size: 1.875rem;
   font-weight: 900;
   color: var(--text, #222222);
 }
@@ -409,7 +409,7 @@ async function handleAddToCart() {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   padding: 5px 14px;
   border-radius: 999px;
@@ -429,7 +429,7 @@ async function handleAddToCart() {
 
 /* ── Description ── */
 .modal-description {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.7;
   color: var(--text-muted, #6F6F6F);
   display: -webkit-box;
@@ -460,7 +460,7 @@ async function handleAddToCart() {
   border-radius: var(--radius-sm, 10px);
   background: var(--primary, #B88A44);
   color: #fff;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -499,7 +499,7 @@ async function handleAddToCart() {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary, #B88A44);
   text-decoration: none;

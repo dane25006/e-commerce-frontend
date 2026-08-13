@@ -11,7 +11,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <span class="section-label block mb-3">{{ $t('home.ourFavoritePicks') }}</span>
-          <h2 class="text-2xl md:text-3xl lg:text-4xl font-black" style="color: var(--text); font-family: var(--font-body); letter-spacing: -0.02em;">
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold" style="color: var(--text); font-family: var(--font-heading); letter-spacing: -0.02em;">
             {{ $t('home.exploreMostLoved') }}
           </h2>
           <p class="text-sm mt-4 max-w-lg mx-auto" style="color: var(--text-muted);">{{ $t('home.exploreMostLovedDesc') }}</p>
@@ -77,7 +77,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <span class="section-label block mb-3">{{ $t('home.luxuryBrands') }}</span>
-          <h2 class="text-3xl md:text-4xl font-black" style="color: var(--text); font-family: var(--font-body); letter-spacing: -0.02em;">{{ $t('home.featuredHouses') }}</h2>
+          <h2 class="text-3xl md:text-4xl font-extrabold" style="color: var(--text); font-family: var(--font-heading); letter-spacing: -0.02em;">{{ $t('home.featuredHouses') }}</h2>
         </div>
         <div class="grid grid-cols-3 md:grid-cols-6 gap-6 md:gap-8">
           <div
@@ -97,7 +97,7 @@
         <div class="flex items-end justify-between mb-8">
           <div>
             <span class="section-label block mb-1">{{ $t('home.newArrivalsLabel') }}</span>
-            <h2 class="text-3xl md:text-4xl font-black" style="color: #2E2E2E; font-family: var(--font-body); letter-spacing: -0.02em;">{{ $t('home.newArrivalsTitle') }}</h2>
+            <h2 class="text-3xl md:text-4xl font-extrabold" style="color: #2E2E2E; font-family: var(--font-heading); letter-spacing: -0.02em;">{{ $t('home.newArrivalsTitle') }}</h2>
           </div>
           <RouterLink to="/products?sort=newest" class="btn-outline text-sm py-2 px-4 hidden sm:flex items-center gap-1.5">
             {{ $t('home.viewAll') }}
@@ -159,7 +159,7 @@
         <div class="flex items-end justify-between mb-8">
           <div>
             <span class="section-label block mb-1">{{ $t('home.bestSellersLabel') }}</span>
-            <h2 class="text-3xl md:text-4xl font-black" style="color: #2E2E2E; font-family: var(--font-body); letter-spacing: -0.02em;">{{ $t('home.bestSellersTitle') }}</h2>
+            <h2 class="text-3xl md:text-4xl font-extrabold" style="color: #2E2E2E; font-family: var(--font-heading); letter-spacing: -0.02em;">{{ $t('home.bestSellersTitle') }}</h2>
           </div>
           <RouterLink to="/products?sort=rating" class="btn-outline text-sm py-2 px-4 hidden sm:flex items-center gap-1.5">
             {{ $t('home.viewAll') }}
@@ -225,7 +225,7 @@
     <section class="section-padding" style="background: var(--secondary);">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <span class="section-label block mb-3" style="color: var(--primary);">{{ $t('home.stayConnected') }}</span>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4" style="font-family: var(--font-body); letter-spacing: -0.02em;">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4" style="font-family: var(--font-heading); letter-spacing: -0.02em;">
           {{ $t('home.joinWorld') }}
         </h2>
         <p class="text-sm mb-8 max-w-md mx-auto" style="color: rgba(255,255,255,0.5);">
@@ -257,7 +257,7 @@
           </div>
           <div class="relative">
             <span class="section-label block mb-4" style="color: rgba(255,255,255,0.7);">{{ $t('home.joinScentique') }}</span>
-            <h2 class="text-3xl md:text-4xl font-black text-white mb-4" style="font-family: var(--font-body); letter-spacing: -0.02em;">
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-4" style="font-family: var(--font-heading); letter-spacing: -0.02em;">
               {{ $t('home.readyToFind') }}
             </h2>
             <p class="text-base mb-8 max-w-md mx-auto" style="color: rgba(255,255,255,0.7);">

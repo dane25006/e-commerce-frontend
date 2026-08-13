@@ -70,8 +70,8 @@ onUnmounted(stop)
   padding: 10px 20px;
   border-radius: 100px;
   background: #F1F5F9;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
   font-weight: 500;
   color: #1E293B;
   transition: all 0.3s;

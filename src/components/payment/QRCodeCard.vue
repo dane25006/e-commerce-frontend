@@ -235,14 +235,14 @@ watch(() => props.qrString, async () => {
 }
 
 .center-label {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 800;
   color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .compact .center-label {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .qr-veil {
@@ -256,14 +256,14 @@ watch(() => props.qrString, async () => {
   justify-content: center;
   gap: 8px;
   color: #DC2626;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
   font-weight: 700;
   padding: 12px;
   text-align: center;
 }
 
-.qr-veil i { font-size: 28px; }
+.qr-veil i { font-size: 1.75rem; }
 
 .expired-veil-enter-active,
 .expired-veil-leave-active { transition: opacity 0.25s ease; }
@@ -272,16 +272,16 @@ watch(() => props.qrString, async () => {
 
 .expired-label {
   margin-top: 12px;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
   font-weight: 600;
   color: #DC2626;
 }
 
 .hint {
   margin-top: 12px;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
   font-weight: 500;
   color: #94A3B8;
   text-align: center;
@@ -307,9 +307,9 @@ watch(() => props.qrString, async () => {
   background: #F1F5F9;
   color: #334155;
   border: 1px solid #E2E8F0;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -320,7 +320,7 @@ watch(() => props.qrString, async () => {
   transform: translateY(-1px);
 }
 
-.action-btn i { font-size: 15px; }
+.action-btn i { font-size: 0.9375rem; }
 
 .retry-wrap {
   padding-bottom: 8px;
@@ -336,9 +336,9 @@ watch(() => props.qrString, async () => {
   background: var(--primary, #B88A44);
   color: #fff;
   border: none;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
 }

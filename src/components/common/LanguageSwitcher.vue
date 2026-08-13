@@ -81,18 +81,18 @@ onUnmounted(() => document.removeEventListener('mousedown', onClickOutside))
 
 .flag {
   font-size: 1.2em;
-  line-height: 1;
+  line-height: 1.4;
   border-radius: 2px;
 }
 
 .label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   white-space: nowrap;
 }
 
 .arrow {
-  font-size: 10px;
+  font-size: 0.625rem;
   transition: transform 0.2s;
   color: var(--text-muted);
 }
@@ -124,7 +124,7 @@ onUnmounted(() => document.removeEventListener('mousedown', onClickOutside))
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text);
   transition: background 0.15s;
@@ -142,7 +142,7 @@ onUnmounted(() => document.removeEventListener('mousedown', onClickOutside))
 
 .check {
   margin-left: auto;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--primary);
 }
 

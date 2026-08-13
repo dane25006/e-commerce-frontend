@@ -225,7 +225,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -243,7 +243,7 @@ onMounted(async () => {
 }
 
 .hero-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.4);
   margin: 0;
   font-weight: 400;
@@ -263,7 +263,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
@@ -351,14 +351,14 @@ onMounted(async () => {
 }
 
 .state-icon {
-  font-size: 40px;
+  font-size: 2.5rem;
   display: block;
   margin-bottom: 12px;
   color: rgba(184,138,68,0.25);
 }
 
 .state-text {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
   margin: 0 0 16px;
 }
@@ -371,7 +371,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: transparent;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   border: 1px solid var(--border);
   cursor: pointer;
@@ -402,7 +402,7 @@ onMounted(async () => {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -432,7 +432,7 @@ onMounted(async () => {
 
 .page-dots {
   padding: 0 4px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 </style>

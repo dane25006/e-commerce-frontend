@@ -193,14 +193,14 @@ function goToSearch() {
 }
 
 .search-bar-icon {
-  font-size: 20px;
+  font-size: 1.25rem;
   color: var(--primary);
   flex-shrink: 0;
 }
 
 .search-input {
   flex: 1;
-  font-size: 15px;
+  font-size: 0.9375rem;
   outline: none;
   border: none;
   background: none;
@@ -228,7 +228,7 @@ function goToSearch() {
 
 .esc-key {
   display: none;
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 4px 8px;
   border-radius: 6px;
   font-family: 'SF Mono', 'Fira Code', monospace;
@@ -295,7 +295,7 @@ function goToSearch() {
 
 .results-label {
   padding: 12px 20px 8px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -340,7 +340,7 @@ function goToSearch() {
 }
 
 .result-img-ph i {
-  font-size: 18px;
+  font-size: 1.125rem;
   color: rgba(184,138,68,0.15);
 }
 
@@ -350,7 +350,7 @@ function goToSearch() {
 }
 
 .result-name {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text);
   overflow: hidden;
@@ -364,13 +364,13 @@ function goToSearch() {
 }
 
 .result-price {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--primary);
 }
 
 .result-arrow {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--border);
   transition: all 0.2s;
 }
@@ -388,7 +388,7 @@ function goToSearch() {
 .view-all-btn {
   width: 100%;
   text-align: center;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary);
   border: none;
@@ -407,14 +407,14 @@ function goToSearch() {
 }
 
 .no-results i {
-  font-size: 32px;
+  font-size: 2rem;
   display: block;
   margin-bottom: 8px;
   color: rgba(184,138,68,0.2);
 }
 
 .no-results p {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
@@ -423,7 +423,7 @@ function goToSearch() {
 }
 
 .quick-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -438,7 +438,7 @@ function goToSearch() {
 }
 
 .quick-tag {
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 6px 14px;
   border-radius: 999px;
   font-weight: 500;

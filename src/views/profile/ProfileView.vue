@@ -19,6 +19,7 @@
               <img
                 v-if="effectiveAvatar && !headerAvatarErr"
                 :src="effectiveAvatar"
+                referrerpolicy="no-referrer"
                 class="avatar-img"
                 @error="headerAvatarErr = true"
                 alt="Profile Avatar"
@@ -172,6 +173,7 @@
               <div v-if="effectiveAvatar" class="avatar-preview-container">
                 <img
                   :src="effectiveAvatar"
+                  referrerpolicy="no-referrer"
                   class="avatar-preview"
                   :alt="$t('profile.avatarPreview')"
                   @error="previewError = true"
@@ -350,6 +352,7 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 import SearchModal from '@/components/layout/SearchModal.vue'
 import CartDrawer from '@/components/layout/CartDrawer.vue'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
+import { imageUrl } from '@/utils/image'
 
 const auth = useAuthStore()
 const searchOpen = ref(false)
@@ -399,8 +402,8 @@ const initials = computed(() =>
 
 const effectiveAvatar = computed(() => {
   if (filePreviewUrl.value) return filePreviewUrl.value
-  if (profileForm.avatar.trim()) return profileForm.avatar.trim()
-  return auth.user?.avatar || null
+  if (profileForm.avatar.trim()) return imageUrl(profileForm.avatar.trim())
+  return auth.user?.avatar ? imageUrl(auth.user.avatar) : null
 })
 
 const pwMismatch = computed(() =>
@@ -541,7 +544,7 @@ watch(
   border-radius: 100px;
   background: rgba(184, 138, 68, 0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -860,7 +863,7 @@ watch(
   cursor: pointer;
   transition: color 0.2s;
   padding: 0;
-  line-height: 1;
+  line-height: 1.4;
 }
 
 .toggle-pw:hover {

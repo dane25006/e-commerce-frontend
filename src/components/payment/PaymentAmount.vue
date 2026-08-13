@@ -27,16 +27,16 @@ const formatted = computed(() => props.amount.toFixed(2))
 }
 
 .product-name {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 15px;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
   font-weight: 500;
   color: #64748B;
   margin: 0 0 8px;
 }
 
 .amount {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 54px;
+  font-family: var(--font-body);
+  font-size: 3.375rem;
   font-weight: 700;
   color: #1E293B;
   margin: 0;
@@ -45,7 +45,7 @@ const formatted = computed(() => props.amount.toFixed(2))
 }
 
 .currency {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 600;
   color: #94A3B8;
   margin-left: 8px;

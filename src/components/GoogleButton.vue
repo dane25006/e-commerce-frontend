@@ -43,7 +43,7 @@ function handleClick() {
   border-radius: 8px;
   background: #ffffff;
   color: #374151;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;

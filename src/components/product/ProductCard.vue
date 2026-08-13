@@ -36,7 +36,7 @@
 
       <!-- Brand badge -->
       <div v-if="product.brand" class="absolute bottom-14 left-3">
-        <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full shadow-sm" style="background: rgba(255,255,255,0.92); color: var(--primary); backdrop-filter: blur(6px); border: 1px solid rgba(184,138,68,0.15);">
+        <span class="text-[0.625rem] font-semibold px-2.5 py-1 rounded-full shadow-sm" style="background: rgba(255,255,255,0.92); color: var(--primary); backdrop-filter: blur(6px); border: 1px solid rgba(184,138,68,0.15);">
           {{ product.brand }}
         </span>
       </div>
@@ -67,9 +67,9 @@
     <!-- Body -->
     <div class="p-4 flex flex-col flex-1">
       <div class="flex items-center gap-1.5 mb-1">
-        <span v-if="product.type" class="text-[10px] font-medium uppercase tracking-wider" style="color: var(--primary);">{{ product.type }}</span>
-        <span v-if="product.type && product.gender" class="text-[10px]" style="color: var(--border);">|</span>
-        <span v-if="product.gender" class="text-[10px] font-medium" style="color: var(--text-muted);">{{ product.gender }}</span>
+        <span v-if="product.type" class="text-[0.625rem] font-medium uppercase tracking-wider" style="color: var(--primary);">{{ product.type }}</span>
+        <span v-if="product.type && product.gender" class="text-[0.625rem]" style="color: var(--border);">|</span>
+        <span v-if="product.gender" class="text-[0.625rem] font-medium" style="color: var(--text-muted);">{{ product.gender }}</span>
       </div>
       <RouterLink :to="`/products/${product.id}`">
         <h3 class="text-sm font-bold line-clamp-2 leading-snug mb-1 transition" style="color: var(--text); font-family: var(--font-heading);">

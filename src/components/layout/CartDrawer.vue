@@ -318,18 +318,18 @@ async function removeItem(item: CartItem) {
 }
 
 .drawer-icon-box i {
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--primary);
 }
 
 .drawer-title {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--text);
 }
 
 .drawer-count {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -420,19 +420,19 @@ async function removeItem(item: CartItem) {
 }
 
 .empty-icon i {
-  font-size: 36px;
+  font-size: 2.25rem;
   color: rgba(184,138,68,0.25);
 }
 
 .empty-title {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 4px;
 }
 
 .empty-desc {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
   margin-bottom: 24px;
 }
@@ -485,7 +485,7 @@ async function removeItem(item: CartItem) {
 }
 
 .drawer-item-img-ph i {
-  font-size: 24px;
+  font-size: 1.5rem;
   color: rgba(184,138,68,0.15);
 }
 
@@ -495,7 +495,7 @@ async function removeItem(item: CartItem) {
 }
 
 .drawer-item-name {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text);
   overflow: hidden;
@@ -509,7 +509,7 @@ async function removeItem(item: CartItem) {
 }
 
 .drawer-item-price {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   margin-top: 2px;
   color: var(--primary);
@@ -557,7 +557,7 @@ async function removeItem(item: CartItem) {
 }
 
 .qty-value {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   width: 20px;
   text-align: center;
@@ -571,7 +571,7 @@ async function removeItem(item: CartItem) {
 }
 
 .drawer-subtotal {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text);
 }
@@ -610,7 +610,7 @@ async function removeItem(item: CartItem) {
 }
 
 .coupon-msg {
-  font-size: 11px;
+  font-size: 0.6875rem;
   margin-top: -4px;
 }
 
@@ -626,7 +626,7 @@ async function removeItem(item: CartItem) {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .totals-row {
@@ -656,7 +656,7 @@ async function removeItem(item: CartItem) {
 
 .total-final {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--text);
 }
 
@@ -675,7 +675,7 @@ async function removeItem(item: CartItem) {
   background: linear-gradient(135deg, var(--primary), #C9A96E);
   color: #fff;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
   text-decoration: none;
   text-align: center;
   box-shadow: var(--shadow-sm);
@@ -695,7 +695,7 @@ async function removeItem(item: CartItem) {
 
 .continue-link {
   width: 100%;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   text-align: center;
   color: var(--primary);

@@ -50,7 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBannerStore } from '@/stores/banner'
 import type { Banner } from '@/types/banner'
 
@@ -71,32 +72,62 @@ const props = withDefaults(
   }
 )
 
+const { locale } = useI18n()
 const bannerStore = useBannerStore()
-const banner = ref<Banner | null>(null)
 
-onMounted(async () => {
-  banner.value = await bannerStore.fetchBannerByPlacement(props.placement)
+// Static instant fallback images per placement to eliminate slow background pop-in
+const defaultImageMap: Record<string, string> = {
+  all_fragrances: '/images/all_fragrances.png',
+  products: '/images/all_fragrances.png',
+  new_arrivals: '/images/new_arrivals.png',
+  best_sellers: '/images/best_sellers.png',
+  collections: '/images/all_fragrances.png',
+  brands: '/images/best_sellers.png',
+  about: '/images/all_fragrances.png',
+  contact: '/images/new_arrivals.png',
+  orders: '/images/best_sellers.png',
+}
+
+// Instant synchronous retrieval from memory store if already fetched
+const banner = ref<Banner | null>(bannerStore.getBanner(props.placement))
+
+async function loadBanner() {
+  const existing = bannerStore.getBanner(props.placement)
+  if (existing) {
+    banner.value = existing
+  } else {
+    banner.value = await bannerStore.fetchBannerByPlacement(props.placement)
+  }
+}
+
+onMounted(() => {
+  loadBanner()
+})
+
+watch(() => props.placement, () => {
+  loadBanner()
 })
 
 const displayTitle = computed(() => {
+  // In Khmer mode, prioritize the translated title from view props so localized strings are not overwritten by English DB
+  if (locale.value === 'km') {
+    return props.defaultTitle
+  }
   return banner.value?.title || props.defaultTitle
 })
 
 const displayBadge = computed(() => {
-  if (banner.value) {
-    return banner.value.badge || ''
+  if (locale.value === 'km') {
+    return props.defaultBadge
   }
-  return props.defaultBadge
+  return banner.value?.badge || props.defaultBadge
 })
 
 const displaySubtitle = computed(() => {
-  if (banner.value?.subtitle) {
-    return banner.value.subtitle
+  if (locale.value === 'km') {
+    return props.defaultSubtitle || ''
   }
-  if (props.defaultSubtitle) {
-    return props.defaultSubtitle
-  }
-  return ''
+  return banner.value?.subtitle || props.defaultSubtitle || ''
 })
 
 const textAlign = computed(() => {
@@ -108,15 +139,14 @@ const overlayOpacity = computed(() => {
 })
 
 const bgStyle = computed(() => {
-  if (banner.value?.image) {
-    return {
-      backgroundImage: `url('${banner.value.image}')`,
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
-    }
-  }
+  const normKey = props.placement.toLowerCase().replace(/-/g, '_')
+  const defaultImg = defaultImageMap[normKey] || defaultImageMap[props.placement] || '/images/all_fragrances.png'
+  const finalImageUrl = banner.value?.image || defaultImg
+
   return {
-    background: 'radial-gradient(ellipse 70% 50% at 50% 50%, #2A211C 0%, #191412 100%)',
+    backgroundImage: `url('${finalImageUrl}')`,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
   }
 })
 </script>
@@ -228,7 +258,7 @@ const bgStyle = computed(() => {
 
 /* Title */
 .banner-title {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-heading);
   font-size: clamp(2rem, 4.5vw, 3.25rem);
   font-weight: 900;
   color: #FFFFFF;

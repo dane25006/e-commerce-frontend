@@ -313,7 +313,7 @@ onMounted(() => cartStore.fetchCart())
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -331,7 +331,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .hero-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.4);
   margin: 0;
   font-weight: 400;
@@ -424,19 +424,19 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .empty-icon i {
-  font-size: 56px;
+  font-size: 3.5rem;
   color: rgba(184,138,68,0.25);
 }
 
 .empty-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .empty-desc {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--text-muted);
   margin-bottom: 32px;
 }
@@ -504,7 +504,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .cart-item-img-placeholder i {
-  font-size: 28px;
+  font-size: 1.75rem;
   color: rgba(184,138,68,0.15);
 }
 
@@ -517,7 +517,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .cart-item-name {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   margin-top: 4px;
   overflow: hidden;
@@ -532,7 +532,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .cart-item-price {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   margin-top: 2px;
   color: var(--primary);
@@ -583,7 +583,7 @@ onMounted(() => cartStore.fetchCart())
 .qty-value {
   width: 32px;
   text-align: center;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text);
 }
@@ -595,7 +595,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .item-subtotal {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 900;
   color: var(--text);
 }
@@ -631,7 +631,7 @@ onMounted(() => cartStore.fetchCart())
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
@@ -646,7 +646,7 @@ onMounted(() => cartStore.fetchCart())
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text-muted);
   border: none;
@@ -673,7 +673,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .sidebar-label {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 12px;
@@ -692,7 +692,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .coupon-msg {
-  font-size: 12px;
+  font-size: 0.75rem;
   margin-top: 8px;
 }
 
@@ -717,7 +717,7 @@ onMounted(() => cartStore.fetchCart())
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .summary-row {
@@ -739,7 +739,7 @@ onMounted(() => cartStore.fetchCart())
 }
 
 .shipping-hint {
-  font-size: 12px;
+  font-size: 0.75rem;
   padding: 8px 12px;
   border-radius: 10px;
   display: flex;
@@ -757,7 +757,7 @@ onMounted(() => cartStore.fetchCart())
 
 .summary-total-row {
   font-weight: 900;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--text);
 }
 
@@ -777,7 +777,7 @@ onMounted(() => cartStore.fetchCart())
   background: linear-gradient(135deg, var(--primary), #C9A96E);
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-decoration: none;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s;
@@ -805,13 +805,13 @@ onMounted(() => cartStore.fetchCart())
   align-items: center;
   gap: 4px;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 500;
 }
 
 .trust-item i {
   color: var(--primary);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .list-enter-active,
@@ -844,7 +844,7 @@ onMounted(() => cartStore.fetchCart())
   }
 
   .hero-title {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
 
   .page-body {

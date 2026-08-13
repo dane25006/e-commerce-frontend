@@ -110,7 +110,7 @@ async function disconnect() {
 
 .hero-label {
   display: inline-block;
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #B88A44;
@@ -119,7 +119,7 @@ async function disconnect() {
 }
 
 .hero-title {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 800;
   color: #2B2B2B;
   font-family: var(--font-heading);

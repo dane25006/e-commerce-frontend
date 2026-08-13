@@ -91,7 +91,7 @@
           </div>
         </template>
 
-        <!-- Paid Success -->
+        <!-- Step 3: Paid Success -->
         <template v-else-if="step === 'paid'">
           <div class="success-screen">
             <div class="success-icon-wrap">
@@ -144,10 +144,8 @@ let countdownTimer: ReturnType<typeof setInterval> | null = null
 let pollTimer: ReturnType<typeof setTimeout> | null = null
 let polling = false
 let consecutiveErrors = 0
-let pollCount = 0
 
-const POLL_INTERVAL = 4000
-const CONFIRM_AFTER_POLLS = 3
+const POLL_INTERVAL = 3000
 
 const productName = computed(() => props.productName || `Order #${props.orderId}`)
 const amount = computed(() => props.amount || 0)
@@ -220,7 +218,6 @@ function stopCountdown() {
 function startPolling() {
   stopPolling()
   polling = true
-  pollCount = 0
   schedulePoll()
 }
 
@@ -239,7 +236,6 @@ async function pollOnce() {
     schedulePoll()
     return
   }
-  pollCount++
   try {
     const { data } = await paymentService.status(props.orderId!)
     consecutiveErrors = 0
@@ -253,16 +249,9 @@ async function pollOnce() {
         return
       }
     }
-    if (pollCount >= CONFIRM_AFTER_POLLS) {
-      try {
-        await paymentService.confirm(props.orderId!)
-      } catch {
-        // confirm may fail if not yet paid
-      }
-    }
   } catch {
     consecutiveErrors++
-    if (consecutiveErrors >= 5) {
+    if (consecutiveErrors >= 10) {
       stopPolling()
       return
     }
@@ -301,18 +290,7 @@ function onCancel() {
   emit('update:modelValue', false)
 }
 
-if (typeof document !== 'undefined') {
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && polling && !pollTimer && payment.value && !paid.value) {
-      schedulePoll()
-    }
-  })
-}
-
 onUnmounted(() => {
-  if (typeof document !== 'undefined') {
-    document.removeEventListener('visibilitychange', () => {})
-  }
   cleanup()
 })
 </script>
@@ -325,50 +303,62 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .popup-container {
   width: 100%;
-  max-width: 340px;
+  max-width: 360px;
+  background: #ffffff;
   border-radius: 20px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  animation: cardIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-body);
 }
 
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(20px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* ========== STEP 1: CHECKOUT ========== */
 
 .checkout-top {
-  background: #0B101A;
-  padding: 24px 24px 20px;
+  padding: 24px 20px 20px;
+  background: #FAFAF9;
+  border-bottom: 1px dashed #E2E8F0;
   text-align: center;
 }
 
 .checkout-label {
-  display: inline-block;
-  font-size: 9px;
+  font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 10px;
+  letter-spacing: 0.12em;
+  color: #94A3B8;
+  display: block;
+  margin-bottom: 4px;
 }
 
 .product-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 12px;
-  line-height: 1.3;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0 0 8px;
 }
 
 .price-row {
@@ -379,55 +369,54 @@ onUnmounted(() => {
 }
 
 .price-amount {
-  font-size: 32px;
+  font-size: 1.75rem;
   font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.5px;
+  color: #0F172A;
 }
 
 .price-currency {
-  font-size: 12px;
+  font-size: 0.75rem;
+  color: #64748B;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
 }
 
-/* Bottom half */
 .checkout-bottom {
-  background: #fff;
-  padding: 18px 24px 16px;
+  padding: 20px;
 }
 
 .method-label {
-  display: block;
-  font-size: 9px;
+  font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.1em;
   color: #94A3B8;
+  display: block;
   margin-bottom: 12px;
 }
 
 .payment-btn {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  gap: 12px;
   padding: 12px 14px;
-  border-radius: 14px;
-  background: #F9FAFB;
-  border: none;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s ease;
   text-align: left;
 }
 
 .payment-btn:hover {
-  background: #F1F5F9;
+  border-color: #E6CA85;
+  background: #FFFDF9;
+  box-shadow: 0 2px 8px rgba(184, 138, 68, 0.1);
 }
 
 .pay-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   background: #EE1C25;
   display: flex;
   align-items: center;
@@ -436,10 +425,10 @@ onUnmounted(() => {
 }
 
 .khqr-badge {
-  font-size: 10px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.5px;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
 }
 
 .pay-info {
@@ -448,93 +437,120 @@ onUnmounted(() => {
 }
 
 .pay-title {
-  display: block;
-  font-size: 13px;
+  font-size: 0.875rem;
   font-weight: 700;
   color: #1E293B;
-  margin-bottom: 1px;
+  display: block;
 }
 
 .pay-desc {
+  font-size: 0.6875rem;
+  color: #64748B;
   display: block;
-  font-size: 11px;
-  font-weight: 500;
-  color: #94A3B8;
+  margin-top: 1px;
 }
 
 .pay-arrow {
-  font-size: 15px;
   color: #94A3B8;
-  flex-shrink: 0;
+  font-size: 0.875rem;
 }
 
 .footer-note {
+  font-size: 0.6875rem;
+  color: #94A3B8;
+  text-align: center;
+  margin: 16px 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  margin-top: 14px;
-  font-size: 10px;
-  font-weight: 500;
-  color: #94A3B8;
 }
 
 .footer-note i {
-  font-size: 11px;
+  color: #22C55E;
 }
 
 /* ========== STEP 2: QR CODE ========== */
 
 .qr-header {
-  background: #EE1C25;
-  padding: 12px 16px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  padding: 14px 16px;
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .back-btn {
   position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  left: 12px;
+  background: none;
   border: none;
-  background: rgba(200, 16, 26, 0.6);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #64748B;
+  font-size: 1.125rem;
   cursor: pointer;
-  font-size: 15px;
-  transition: background 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s;
 }
 
 .back-btn:hover {
-  background: rgba(200, 16, 26, 0.8);
+  background: #F1F5F9;
+  color: #1E293B;
 }
 
 .khqr-logo {
-  font-size: 17px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 2px;
+  font-size: 0.875rem;
+  font-weight: 900;
+  color: #EE1C25;
+  letter-spacing: 0.1em;
 }
 
 .qr-body {
-  background: #fff;
-  padding: 18px 24px 22px;
+  padding: 16px 20px 20px;
   text-align: center;
 }
 
+.loading-state,
+.error-state {
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #64748B;
+  font-size: 0.8125rem;
+}
+
+.loading-state i {
+  font-size: 1.5rem;
+  color: #B88A44;
+}
+
+.error-state i {
+  font-size: 1.5rem;
+  color: #DC2626;
+}
+
+.retry-btn {
+  margin-top: 8px;
+  padding: 6px 16px;
+  border-radius: 8px;
+  background: #1E293B;
+  color: #fff;
+  font-size: 0.75rem;
+  border: none;
+  cursor: pointer;
+}
+
 .qr-product {
-  font-size: 12px;
+  font-size: 0.8125rem;
+  color: #64748B;
   font-weight: 500;
-  color: #94A3B8;
-  margin-bottom: 4px;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .qr-amount-row {
@@ -542,51 +558,47 @@ onUnmounted(() => {
   align-items: baseline;
   justify-content: center;
   gap: 4px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .qr-amount {
-  font-size: 28px;
+  font-size: 1.5rem;
   font-weight: 800;
-  color: #1E293B;
-  letter-spacing: -0.5px;
+  color: #0F172A;
 }
 
 .qr-currency {
-  font-size: 13px;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: #64748B;
 }
 
 .dashed-divider {
-  border: none;
-  border-top: 1.5px dashed #CBD5E1;
-  margin-bottom: 18px;
+  border-top: 1px dashed #E2E8F0;
+  margin: 0 0 14px;
 }
 
 .qr-code-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .timer-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
-  border-radius: 100px;
+  padding: 4px 12px;
+  border-radius: 9999px;
   background: #F1F5F9;
-  font-size: 12px;
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: #1E293B;
-  font-variant-numeric: tabular-nums;
-  transition: all 0.3s;
+  color: #475569;
 }
 
 .timer-pill.expired {
-  background: #FEF2F2;
+  background: #FEE2E2;
   color: #DC2626;
 }
 
@@ -594,80 +606,21 @@ onUnmounted(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  flex-shrink: 0;
 }
 
 .timer-dot.green {
   background: #22C55E;
-  box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
-  animation: pulse-dot 1.5s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
 }
 
 .timer-dot.red {
   background: #DC2626;
-  box-shadow: 0 0 4px rgba(220, 38, 38, 0.4);
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.3); }
 }
 
 .qr-footer-text {
-  margin-top: 16px;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 0.6875rem;
   color: #94A3B8;
-}
-
-/* ========== STATES ========== */
-
-.loading-state,
-.error-state {
-  text-align: center;
-  padding: 32px 0;
-}
-
-.loading-state i {
-  font-size: 28px;
-  color: #EE1C25;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.loading-state p {
-  font-size: 13px;
-  color: #94A3B8;
-}
-
-.error-state i {
-  font-size: 28px;
-  color: #DC2626;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.error-state p {
-  font-size: 12px;
-  color: #DC2626;
-  margin-bottom: 14px;
-}
-
-.retry-btn {
-  padding: 8px 22px;
-  border-radius: 10px;
-  background: #EE1C25;
-  color: #fff;
-  border: none;
-  font-weight: 700;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.retry-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  margin: 12px 0 0;
 }
 
 /* ========== STEP 3: SUCCESS ========== */
@@ -690,7 +643,7 @@ onUnmounted(() => {
 }
 
 .success-icon-wrap i {
-  font-size: 22px;
+  font-size: 1.375rem;
   color: #fff;
 }
 
@@ -700,14 +653,14 @@ onUnmounted(() => {
 }
 
 .success-title {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   color: #1E293B;
   margin-bottom: 4px;
 }
 
 .success-desc {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #64748B;
   margin-bottom: 20px;
 }
@@ -719,7 +672,7 @@ onUnmounted(() => {
   background: #1E293B;
   color: #fff;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 0.8125rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;

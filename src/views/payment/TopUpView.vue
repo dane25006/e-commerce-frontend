@@ -90,14 +90,6 @@
             <div class="pulse-dot" />
             <span>{{ $t('payment.waitingForPayment') }}</span>
           </div>
-          <button
-            :disabled="confirming"
-            class="confirm-topup-btn"
-            @click="confirmPayment"
-          >
-            <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
-            <template v-else>I've Paid / Check Status</template>
-          </button>
         </div>
 
         <PaymentStatus
@@ -172,14 +164,14 @@ function onDone() {
 }
 
 .title {
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 700;
   color: #111827;
   margin: 0 0 4px;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #6B7280;
   margin: 0;
 }
@@ -198,7 +190,7 @@ function onDone() {
   border-radius: 12px;
   border: 2px solid #E5E7EB;
   background: #fff;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: #374151;
   cursor: pointer;
@@ -222,7 +214,7 @@ function onDone() {
   border-radius: 12px;
   border: 2px solid #E5E7EB;
   background: #fff;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: #374151;
   cursor: pointer;
@@ -245,7 +237,7 @@ function onDone() {
 .custom-input:focus-within { border-color: #EE1C25; }
 
 .prefix {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #9CA3AF;
   margin-right: 8px;
@@ -255,7 +247,7 @@ function onDone() {
   flex: 1;
   border: none;
   outline: none;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #111827;
   background: transparent;
@@ -280,7 +272,7 @@ input[type="number"] { -moz-appearance: textfield; }
   background: #EE1C25;
   color: #fff;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 0.9375rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
@@ -309,7 +301,7 @@ input[type="number"] { -moz-appearance: textfield; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   color: #6B7280;
 }
@@ -320,7 +312,7 @@ input[type="number"] { -moz-appearance: textfield; }
   border-radius: 14px;
   background: #EE1C25;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -368,7 +360,7 @@ input[type="number"] { -moz-appearance: textfield; }
   background: #111827;
   color: #fff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.875rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;

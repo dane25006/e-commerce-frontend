@@ -61,7 +61,7 @@ const testimonials = [
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 900;
   color: var(--text);
   margin: 8px 0 0;
@@ -90,12 +90,12 @@ const testimonials = [
 }
 
 .star {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--primary);
 }
 
 .testimonial-text {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.7;
   color: var(--text-muted);
   margin: 0 0 20px;
@@ -118,21 +118,21 @@ const testimonials = [
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--surface);
   background: linear-gradient(135deg, var(--primary), #C49A5A);
   flex-shrink: 0;
 }
 
 .author-name {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text);
   margin: 0 0 2px;
 }
 
 .author-title {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--primary);
   margin: 0;
 }

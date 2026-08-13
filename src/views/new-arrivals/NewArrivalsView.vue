@@ -419,7 +419,7 @@ const {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -437,7 +437,7 @@ const {
 }
 
 .hero-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.4);
   margin: 0;
   font-weight: 400;
@@ -473,7 +473,7 @@ const {
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--primary);
   pointer-events: none;
 }
@@ -485,7 +485,7 @@ const {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 14px;
+  font-size: 0.875rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -506,7 +506,7 @@ const {
 }
 
 .product-count {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -517,7 +517,7 @@ const {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 13px;
+  font-size: 0.8125rem;
   outline: none;
   cursor: pointer;
   transition: border-color 0.2s;
@@ -567,7 +567,7 @@ const {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
@@ -578,12 +578,12 @@ const {
 }
 
 .chip-x {
-  font-size: 14px;
-  line-height: 1;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 .chip-clear {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   background: none;
   border: none;
@@ -632,7 +632,7 @@ const {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -643,7 +643,7 @@ const {
 }
 
 .chevron {
-  font-size: 10px;
+  font-size: 0.625rem;
   transition: transform 0.25s ease;
   color: var(--primary);
 }
@@ -677,14 +677,14 @@ const {
 }
 
 .checkbox-label {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
   cursor: pointer;
   flex: 1;
 }
 
 .filter-count {
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 2px 8px;
   border-radius: 100px;
   background: var(--background);
@@ -701,7 +701,7 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   margin-top: 4px;
 }
@@ -710,7 +710,7 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
@@ -837,14 +837,14 @@ const {
 }
 
 .state-icon {
-  font-size: 40px;
+  font-size: 2.5rem;
   display: block;
   margin-bottom: 12px;
   color: rgba(184,138,68,0.25);
 }
 
 .state-text {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
   margin: 0 0 16px;
 }
@@ -857,7 +857,7 @@ const {
   border-radius: 100px;
   background: var(--primary);
   color: var(--surface);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -876,7 +876,7 @@ const {
   border-radius: 100px;
   background: transparent;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   border: 1px solid var(--border);
   cursor: pointer;
@@ -906,7 +906,7 @@ const {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -936,7 +936,7 @@ const {
 
 .page-dots {
   padding: 0 4px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
@@ -963,14 +963,14 @@ const {
 }
 
 .mobile-filters-title {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 
 .mobile-filters-close {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 1.25rem;
   color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
@@ -992,7 +992,7 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;

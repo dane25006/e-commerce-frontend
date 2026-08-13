@@ -95,7 +95,7 @@ const posts = computed(() => [
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 900;
   color: var(--text);
   margin: 8px 0 0;
@@ -143,7 +143,7 @@ const posts = computed(() => [
 }
 
 .blog-image-icon {
-  font-size: 48px;
+  font-size: 3rem;
   color: rgba(255, 255, 255, 0.45);
 }
 
@@ -154,7 +154,7 @@ const posts = computed(() => [
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 100px;
@@ -166,7 +166,7 @@ const posts = computed(() => [
 }
 
 .blog-category {
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -175,7 +175,7 @@ const posts = computed(() => [
 
 .blog-title {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text);
   margin: 8px 0 10px;
@@ -187,7 +187,7 @@ const posts = computed(() => [
 }
 
 .blog-excerpt {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.6;
   color: var(--text-muted);
   margin: 0 0 16px;
@@ -201,7 +201,7 @@ const posts = computed(() => [
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--primary);
   transition: gap 0.2s;

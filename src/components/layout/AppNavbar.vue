@@ -28,9 +28,9 @@
           >
             <span class="text-white text-lg font-bold tracking-tight" style="font-family: var(--font-heading);">S</span>
           </div>
-          <div class="leading-none">
+          <div class="flex flex-col justify-center gap-0.5">
             <div class="text-sm tracking-[0.2em] font-semibold" :class="isKhmer ? '' : 'uppercase'" style="color: var(--secondary); font-family: var(--font-heading);">{{ $t('app.name') }}</div>
-            <div class="text-[8px] tracking-[0.25em] font-medium" :class="isKhmer ? 'khmer-brand' : 'uppercase'" style="color: var(--primary);">{{ $t('app.tagline') }}</div>
+            <div class="text-[0.5rem] tracking-[0.25em] font-medium" :class="isKhmer ? 'khmer-brand' : 'uppercase'" style="color: var(--primary);">{{ $t('app.tagline') }}</div>
           </div>
         </RouterLink>
 
@@ -45,12 +45,12 @@
           >
             <RouterLink
               :to="link.to"
-              class="px-3.5 py-2 text-[10px] tracking-[0.15em] font-bold rounded-lg transition-all duration-300 flex items-center gap-1 nav-link"
+              class="px-3.5 py-2 text-[0.625rem] tracking-[0.15em] font-bold rounded-lg transition-all duration-300 flex items-center gap-1 nav-link"
               :class="[isActive(link.to) ? 'active' : '', isKhmer ? 'khmer-nav' : 'uppercase']"
               style="color: var(--secondary); font-family: var(--font-body);"
             >
               {{ link.label }}
-              <i v-if="link.children" class="ti ti-chevron-down text-[9px] transition-transform duration-200" :class="{ 'rotate-180': hoveredMenu === link.label }" aria-hidden="true" />
+              <i v-if="link.children" class="ti ti-chevron-down text-[0.5625rem] transition-transform duration-200" :class="{ 'rotate-180': hoveredMenu === link.label }" aria-hidden="true" />
             </RouterLink>
 
             <Transition name="mega">
@@ -68,8 +68,8 @@
                 >
                   <i :class="child.icon" class="text-sm w-5 text-center" style="color: var(--primary);" aria-hidden="true" />
                   <div>
-                     <p class="font-bold text-[13px]" style="color: var(--secondary); font-family: var(--font-body);">{{ child.label }}</p>
-                    <p v-if="child.desc" class="text-[10px] tracking-wide" style="color: #999999; font-family: var(--font-body);">{{ child.desc }}</p>
+                     <p class="font-bold text-[0.8125rem]" style="color: var(--secondary); font-family: var(--font-body);">{{ child.label }}</p>
+                    <p v-if="child.desc" class="text-[0.625rem] tracking-wide" style="color: #999999; font-family: var(--font-body);">{{ child.desc }}</p>
                   </div>
                 </RouterLink>
               </div>
@@ -101,7 +101,7 @@
             <i class="ti ti-heart text-lg" aria-hidden="true" />
             <span
               v-if="wishlistCount > 0"
-              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[8px] font-bold rounded-full text-white animate-scale-in"
+              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[0.5rem] font-bold rounded-full text-white animate-scale-in"
               style="background: var(--primary);"
             >
               {{ wishlistCount > 9 ? '9+' : wishlistCount }}
@@ -124,7 +124,7 @@
             <i class="ti ti-shopping-bag text-lg" aria-hidden="true" />
             <span
               v-if="cartCount > 0"
-              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[8px] font-bold rounded-full text-white animate-scale-in"
+              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center px-1 text-[0.5rem] font-bold rounded-full text-white animate-scale-in"
               style="background: var(--primary);"
             >
               {{ cartCount > 9 ? '9+' : cartCount }}
@@ -135,14 +135,14 @@
           <template v-if="!auth.isLoggedIn">
             <RouterLink
               to="/login"
-              class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-3 py-2 rounded-lg transition-all duration-300"
+              class="hidden sm:block text-[0.625rem] tracking-[0.1em] uppercase font-medium px-3 py-2 rounded-lg transition-all duration-300"
               style="color: var(--secondary);"
             >
               {{ $t('nav.login') }}
             </RouterLink>
             <RouterLink
               to="/register"
-              class="hidden sm:block text-[10px] tracking-[0.1em] uppercase font-medium px-4 py-2 rounded-lg transition-all duration-300"
+              class="hidden sm:block text-[0.625rem] tracking-[0.1em] uppercase font-medium px-4 py-2 rounded-lg transition-all duration-300"
               style="background: var(--primary); color: white;"
             >
               {{ $t('nav.register') }}
@@ -156,13 +156,13 @@
                 class="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-lg transition-all duration-300 text-xs group"
                 style="color: var(--secondary);"
               >
-                <div class="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-white text-[10px] font-bold ring-2 transition-all duration-300 flex-shrink-0"
+                <div class="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-white text-[0.625rem] font-bold ring-2 transition-all duration-300 flex-shrink-0"
                   style="background: var(--primary);">
-                  <img v-if="auth.user?.avatar && !avatarImgError" :src="auth.user.avatar" class="w-full h-full object-cover" @error="avatarImgError = true" alt="Avatar" />
+                  <img v-if="auth.user?.avatar && !avatarImgError" :src="imageUrl(auth.user.avatar)" referrerpolicy="no-referrer" class="w-full h-full object-cover" @error="avatarImgError = true" alt="Avatar" />
                   <span v-else>{{ initials }}</span>
                 </div>
-                <span class="hidden sm:block font-medium max-w-[80px] truncate text-[12px]">{{ auth.userName }}</span>
-                <i class="ti ti-chevron-down text-[10px] transition-transform duration-200"
+                <span class="hidden sm:block font-medium max-w-[80px] truncate text-[0.75rem]">{{ auth.userName }}</span>
+                <i class="ti ti-chevron-down text-[0.625rem] transition-transform duration-200"
                   :class="{ 'rotate-180': dropdownOpen }" style="color: var(--primary);" aria-hidden="true" />
               </button>
 
@@ -174,7 +174,7 @@
                 >
                   <div class="px-4 py-2 border-b mb-1 min-w-0" style="border-color: var(--border);">
                     <div class="flex items-center gap-1.5">
-                      <p class="text-[12px] font-semibold truncate" style="color: var(--secondary);" :title="auth.userName">{{ auth.userName }}</p>
+                      <p class="text-[0.75rem] font-semibold truncate" style="color: var(--secondary);" :title="auth.userName">{{ auth.userName }}</p>
                       <span v-if="auth.user?.google_id" class="inline-flex items-center flex-shrink-0" title="Google Account">
                         <svg class="w-3 h-3" viewBox="0 0 24 24">
                           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -184,7 +184,7 @@
                         </svg>
                       </span>
                     </div>
-                    <p class="text-[10px] truncate" style="color: #999999;" :title="auth.user?.email">{{ auth.user?.email }}</p>
+                    <p class="text-[0.625rem] truncate" style="color: #999999;" :title="auth.user?.email">{{ auth.user?.email }}</p>
                   </div>
                   <RouterLink
                     to="/profile"
@@ -268,9 +268,9 @@
             <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: var(--primary);">
               <span class="text-white text-sm font-bold" style="font-family: var(--font-heading);">S</span>
             </div>
-            <div class="leading-none">
-              <div class="text-xs tracking-[0.2em] font-semibold uppercase" style="color: var(--secondary); font-family: var(--font-heading);">{{ $t('app.name') }}</div>
-              <div class="text-[7px] tracking-[0.25em] font-medium uppercase" style="color: var(--primary);">{{ $t('app.tagline') }}</div>
+            <div class="flex flex-col justify-center gap-0.5">
+              <div class="text-xs tracking-[0.2em] font-semibold" :class="isKhmer ? '' : 'uppercase'" style="color: var(--secondary); font-family: var(--font-heading);">{{ $t('app.name') }}</div>
+              <div class="text-[0.4375rem] tracking-[0.25em] font-medium" :class="isKhmer ? 'khmer-brand' : 'uppercase'" style="color: var(--primary);">{{ $t('app.tagline') }}</div>
             </div>
           </div>
           <button
@@ -293,7 +293,7 @@
               style="color: var(--secondary); font-family: var(--font-body);"
             >
               {{ link.label }}
-              <i v-if="link.children" class="ti ti-chevron-right text-[10px]" style="color: var(--primary);" aria-hidden="true" />
+              <i v-if="link.children" class="ti ti-chevron-right text-[0.625rem]" style="color: var(--primary);" aria-hidden="true" />
             </RouterLink>
 
             <div v-if="link.children" class="ml-4 mt-1 space-y-0.5">
@@ -312,10 +312,10 @@
           </div>
 
           <div v-if="!auth.isLoggedIn" class="pt-4 mt-4 space-y-2 px-2" style="border-top: 1px solid var(--border);">
-            <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="border: 1px solid var(--primary); color: var(--primary); font-family: var(--font-body);">
+            <RouterLink to="/login" @click="mobileOpen = false" class="block w-full text-center text-[0.625rem] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="border: 1px solid var(--primary); color: var(--primary); font-family: var(--font-body);">
               {{ $t('nav.login') }}
             </RouterLink>
-            <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center text-[10px] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="background: var(--primary); color: white; font-family: var(--font-body);">
+            <RouterLink to="/register" @click="mobileOpen = false" class="block w-full text-center text-[0.625rem] tracking-[0.1em] uppercase font-medium py-2.5 rounded-lg transition-all duration-200" style="background: var(--primary); color: white; font-family: var(--font-body);">
               {{ $t('nav.register') }}
             </RouterLink>
           </div>
@@ -324,7 +324,7 @@
             <div class="pt-4 mt-4 px-2" style="border-top: 1px solid var(--border);">
               <div class="flex items-center gap-3 px-2 py-2 mb-2">
                 <div class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background: var(--primary);">
-                  <img v-if="auth.user?.avatar && !avatarImgError" :src="auth.user.avatar" class="w-full h-full object-cover" @error="avatarImgError = true" alt="Avatar" />
+                  <img v-if="auth.user?.avatar && !avatarImgError" :src="imageUrl(auth.user.avatar)" referrerpolicy="no-referrer" class="w-full h-full object-cover" @error="avatarImgError = true" alt="Avatar" />
                   <span v-else>{{ initials }}</span>
                 </div>
                 <div class="min-w-0 flex-1">
@@ -432,6 +432,7 @@ import { useWishlistStore } from '@/stores/wishlist'
 import ConfirmModal from '@/components/common/ConfirmModal.vue'
 import LanguageSwitcher from '@/components/common/LanguageSwitcher.vue'
 import NotificationBell from '@/components/notification/NotificationBell.vue'
+import { imageUrl } from '@/utils/image'
 
 defineEmits<{ openSearch: []; openCart: [] }>()
 
@@ -635,7 +636,7 @@ onUnmounted(() => {
 
 /* Khmer creative styling */
 .khmer-nav {
-  font-size: 13px;
+  font-size: 0.8125rem;
   letter-spacing: 0.06em;
   font-weight: 700;
   padding-top: 3px;
@@ -643,7 +644,7 @@ onUnmounted(() => {
 }
 
 .khmer-brand {
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   font-weight: 700;
   color: var(--primary);

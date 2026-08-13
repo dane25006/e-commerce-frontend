@@ -61,9 +61,9 @@ const logoError = ref(false)
 
 .logo-fallback {
   color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1.25rem;
   letter-spacing: 2px;
 }
 

@@ -54,7 +54,7 @@ const features = [
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 900;
   color: var(--text);
   margin: 8px 0 0;
@@ -93,7 +93,7 @@ const features = [
   justify-content: center;
   margin: 0 auto 20px;
   background: rgba(184, 138, 68, 0.1);
-  font-size: 24px;
+  font-size: 1.5rem;
   color: var(--primary);
   transition: all 0.4s ease;
 }
@@ -106,14 +106,14 @@ const features = [
 
 .feature-title {
   font-family: var(--font-heading);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--text);
   margin: 0 0 6px;
 }
 
 .feature-desc {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
   margin: 0;
   line-height: 1.5;

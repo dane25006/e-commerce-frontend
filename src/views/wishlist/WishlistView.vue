@@ -128,7 +128,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -146,7 +146,7 @@ onMounted(async () => {
 }
 
 .hero-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.4);
   margin: 0;
   font-weight: 400;
@@ -170,7 +170,7 @@ onMounted(async () => {
 }
 
 .wishlist-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 900;
   color: var(--text);
   display: flex;
@@ -253,19 +253,19 @@ onMounted(async () => {
 }
 
 .empty-icon i {
-  font-size: 56px;
+  font-size: 3.5rem;
   color: rgba(184,138,68,0.25);
 }
 
 .empty-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .empty-desc {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--text-muted);
   margin-bottom: 32px;
   max-width: 400px;
@@ -301,7 +301,7 @@ onMounted(async () => {
 
 @media (max-width: 640px) {
   .hero-title {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
 
   .products-grid {

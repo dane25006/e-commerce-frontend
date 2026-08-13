@@ -219,7 +219,7 @@ onUnmounted(() => clearInterval(timer))
 
 .promo-visual-brand {
   color: rgba(255,255,255,0.5);
-  font-size: 7px;
+  font-size: 0.4375rem;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -227,7 +227,7 @@ onUnmounted(() => clearInterval(timer))
 
 .promo-visual-floral {
   position: absolute;
-  font-size: 24px;
+  font-size: 1.5rem;
   opacity: 0.5;
 }
 
@@ -239,13 +239,13 @@ onUnmounted(() => clearInterval(timer))
 .promo-visual-floral--left {
   bottom: 32px;
   left: 8px;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .promo-visual-floral--center {
   top: 50%;
   left: 0;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .promo-banner-content {
@@ -260,7 +260,7 @@ onUnmounted(() => clearInterval(timer))
 
 .promo-banner-title {
   font-family: var(--font-heading);
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 900;
   color: var(--text);
   margin: 12px 0 8px;
@@ -269,13 +269,13 @@ onUnmounted(() => clearInterval(timer))
 
 @media (min-width: 768px) {
   .promo-banner-title {
-    font-size: 40px;
+    font-size: 2.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .promo-banner-title {
-    font-size: 48px;
+    font-size: 3rem;
   }
 }
 
@@ -284,7 +284,7 @@ onUnmounted(() => clearInterval(timer))
 }
 
 .promo-banner-code-text {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--text-muted);
   margin: 0 0 28px;
 }
@@ -327,13 +327,13 @@ onUnmounted(() => clearInterval(timer))
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 900;
   color: var(--primary);
 }
 
 .countdown-label {
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--text-muted);
   margin: 6px 0 0;
   font-weight: 600;
@@ -345,7 +345,7 @@ onUnmounted(() => clearInterval(timer))
 .countdown-sep {
   color: rgba(184,138,68,0.4);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1.25rem;
   align-self: flex-start;
   margin-top: 4px;
 }

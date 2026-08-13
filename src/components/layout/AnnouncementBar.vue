@@ -179,7 +179,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: rgba(255,255,255,0.8);
   white-space: nowrap;
@@ -215,7 +215,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: rgba(255,255,255,0.55);
   text-decoration: none;
@@ -228,7 +228,7 @@ onUnmounted(() => {
 
 .announcement-divider {
   color: rgba(255,255,255,0.15);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .announcement-close {

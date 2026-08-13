@@ -90,7 +90,7 @@ function timeLeft(dateStr: string): string {
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 900;
   color: var(--text);
   margin: 8px 0 0;
@@ -155,7 +155,7 @@ function timeLeft(dateStr: string): string {
 }
 
 .promo-placeholder-icon {
-  font-size: 64px;
+  font-size: 4rem;
   color: rgba(184,138,68,0.18);
 }
 
@@ -164,7 +164,7 @@ function timeLeft(dateStr: string): string {
   top: 12px;
   right: 12px;
   border-radius: 100px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   padding: 6px 14px;
   color: var(--surface);
@@ -179,7 +179,7 @@ function timeLeft(dateStr: string): string {
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   padding: 5px 12px;
   border-radius: 100px;
@@ -192,7 +192,7 @@ function timeLeft(dateStr: string): string {
 
 .promo-title {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text);
   margin: 0 0 4px;
@@ -202,7 +202,7 @@ function timeLeft(dateStr: string): string {
 }
 
 .promo-desc {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--text-muted);
   margin: 0 0 12px;
@@ -222,12 +222,12 @@ function timeLeft(dateStr: string): string {
 }
 
 .promo-product-name {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
 .promo-product-price {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--primary);
 }
@@ -242,18 +242,18 @@ function timeLeft(dateStr: string): string {
 }
 
 .promo-timer-icon {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--primary);
 }
 
 .promo-timer-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   font-weight: 500;
 }
 
 .promo-timer-value {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--primary);
 }

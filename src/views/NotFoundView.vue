@@ -30,7 +30,7 @@
 .error-code {
   font-size: 7.5rem;
   font-weight: 900;
-  line-height: 1;
+  line-height: 1.15;
   margin-bottom: 16px;
   font-family: var(--font-heading);
   background: linear-gradient(135deg, #B88A44, #C9A96E);

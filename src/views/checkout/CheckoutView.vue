@@ -17,7 +17,7 @@
       <div v-if="!cartStore.items.length && !orderSuccess" class="empty-state">
         <i class="ti ti-shopping-bag empty-icon" aria-hidden="true" />
         <h2 class="empty-title">{{ $t('checkout.emptyTitle') }}</h2>
-        <p class="empty-desc" style="margin-bottom:16px;font-size:14px;color:var(--text-muted);">{{ $t('checkout.emptyDesc') }}</p>
+        <p class="empty-desc" style="margin-bottom:16px;font-size: 0.875rem;color:var(--text-muted);">{{ $t('checkout.emptyDesc') }}</p>
         <RouterLink to="/products" class="btn-primary">{{ $t('checkout.browseFragrances') }}</RouterLink>
       </div>
 
@@ -321,7 +321,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -350,14 +350,14 @@ onMounted(async () => {
 }
 
 .empty-state i {
-  font-size: 48px;
+  font-size: 3rem;
   display: block;
   margin-bottom: 16px;
   color: rgba(184,138,68,0.2);
 }
 
 .empty-title {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 900;
   color: var(--text);
   margin-bottom: 16px;
@@ -380,26 +380,26 @@ onMounted(async () => {
 }
 
 .success-icon i {
-  font-size: 48px;
+  font-size: 3rem;
   color: var(--primary);
 }
 
 .success-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 900;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .success-desc {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
   margin-bottom: 8px;
 }
 
 .success-order-id {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--primary);
   margin-bottom: 32px;
 }
@@ -426,7 +426,7 @@ onMounted(async () => {
 }
 
 .form-section-title {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 20px;
@@ -455,7 +455,7 @@ onMounted(async () => {
 }
 
 .form-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   color: var(--text-muted);
   margin-bottom: 6px;
@@ -474,7 +474,7 @@ onMounted(async () => {
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--primary);
   pointer-events: none;
 }
@@ -506,7 +506,7 @@ onMounted(async () => {
 }
 
 .payment-label {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-muted);
 }
@@ -515,7 +515,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 12px 16px;
   border-radius: 10px;
   background: rgba(184,138,68,0.08);
@@ -533,7 +533,7 @@ onMounted(async () => {
 }
 
 .summary-title {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 16px;
@@ -587,7 +587,7 @@ onMounted(async () => {
 }
 
 .summary-item-name {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text);
   overflow: hidden;
@@ -596,12 +596,12 @@ onMounted(async () => {
 }
 
 .summary-item-qty {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
 .summary-item-price {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text);
   flex-shrink: 0;
@@ -613,7 +613,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .totals-row {
@@ -635,7 +635,7 @@ onMounted(async () => {
 
 .total-row-final {
   font-weight: 900;
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--text);
 }
 
@@ -655,7 +655,7 @@ onMounted(async () => {
   background: linear-gradient(135deg, var(--primary), #C9A96E);
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   border: none;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
@@ -678,7 +678,7 @@ onMounted(async () => {
   justify-content: center;
   gap: 6px;
   margin-top: 16px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -710,7 +710,7 @@ onMounted(async () => {
   }
 
   .hero-title {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 }
 </style>

@@ -28,12 +28,14 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { useBannerStore } from '@/stores/banner'
 import ToastNotification from '@/components/common/ToastNotification.vue'
 import NetworkStatusBar from '@/components/common/NetworkStatusBar.vue'
 
 const { locale } = useI18n()
 const auth = useAuthStore()
 const cartStore = useCartStore()
+const bannerStore = useBannerStore()
 const route = useRoute()
 const router = useRouter()
 const ready = ref(false)
@@ -68,6 +70,7 @@ onMounted(async () => {
 
   await auth.boot()
   cartStore.fetchCart()
+  bannerStore.fetchBanners()
   ready.value = true
 })
 </script>

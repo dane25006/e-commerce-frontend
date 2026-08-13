@@ -10,7 +10,7 @@
             </div>
             <div>
               <div class="text-base font-bold tracking-wide" style="color: var(--surface, #FFFFFF); font-family: var(--font-heading);">{{ $t('app.name') }}</div>
-              <div class="text-[9px] tracking-[0.2em] font-semibold uppercase" style="color: var(--primary, #B88A44);">{{ $t('app.brand.subtitle') }}</div>
+              <div class="text-[0.5625rem] tracking-[0.2em] font-semibold uppercase" style="color: var(--primary, #B88A44);">{{ $t('app.brand.subtitle') }}</div>
             </div>
           </div>
           <p class="text-sm leading-relaxed mb-7 max-w-xs" style="color: var(--text-muted, #6F6F6F);">

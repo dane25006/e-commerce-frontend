@@ -43,14 +43,6 @@
               <div class="pulse-dot" />
               <span>{{ $t('payment.waitingForPayment') }}</span>
             </div>
-            <button
-              :disabled="confirming"
-              class="confirm-pay-btn"
-              @click="confirmPayment"
-            >
-              <i v-if="confirming" class="ti ti-loader-2 animate-spin" />
-              <template v-else>I've Paid / Check Status</template>
-            </button>
           </div>
         </div>
 
@@ -112,7 +104,7 @@ onMounted(async () => {
   justify-content: center;
   background: #F8FAFC;
   padding: 20px;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .khqr-card {
@@ -180,7 +172,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   color: #64748B;
 }
@@ -191,7 +183,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: #EE1C25;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -236,7 +228,7 @@ onMounted(async () => {
 }
 
 .error-placeholder h3 {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 600;
   color: #1E293B;
   margin: 0;
@@ -249,7 +241,7 @@ onMounted(async () => {
   background: #1E293B;
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;

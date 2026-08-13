@@ -29,7 +29,7 @@
           >
             <i class="ti ti-alert-triangle text-2xl" style="color: var(--primary);" aria-hidden="true" />
           </div>
-          <h3 class="text-lg font-bold mb-2" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">{{ title }}</h3>
+          <h3 class="text-lg font-bold mb-2" :style="{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }">{{ title }}</h3>
           <p class="text-sm mb-7 leading-relaxed" :style="{ color: 'var(--text-muted)' }">{{ message }}</p>
           <div class="flex items-center gap-3">
             <button

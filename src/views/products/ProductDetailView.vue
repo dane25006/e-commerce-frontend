@@ -74,7 +74,7 @@
                 </button>
                 <div
                   v-if="store.detail.is_new"
-                  class="absolute top-4 left-4 text-[10px] font-bold text-white px-3 py-1 rounded-full"
+                  class="absolute top-4 left-4 text-[0.625rem] font-bold text-white px-3 py-1 rounded-full"
                   style="background: var(--primary); letter-spacing: 0.08em;"
                 >{{ $t('productDetail.new') }}</div>
               </div>
@@ -144,7 +144,7 @@
                   <div class="flex justify-center gap-1.5 mb-3">
                     <span v-for="d in note.dots" :key="d" class="w-2 h-2 rounded-full" style="background: var(--primary);" />
                   </div>
-                  <p class="text-[10px] font-bold uppercase tracking-[0.15em] mb-1" style="color: var(--text-muted);">{{ note.label }}</p>
+                  <p class="text-[0.625rem] font-bold uppercase tracking-[0.15em] mb-1" style="color: var(--text-muted);">{{ note.label }}</p>
                   <p class="text-sm font-semibold" style="color: var(--secondary);">{{ note.value }}</p>
                 </div>
               </div>
@@ -155,7 +155,7 @@
                     <i class="ti ti-spray text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.type') }}</p>
+                    <p class="text-[0.625rem] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.type') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.type }}</p>
                   </div>
                 </div>
@@ -164,7 +164,7 @@
                     <i class="ti ti-user text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.gender') }}</p>
+                    <p class="text-[0.625rem] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.gender') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.gender }}</p>
                   </div>
                 </div>
@@ -173,7 +173,7 @@
                     <i class="ti ti-category text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.category') }}</p>
+                    <p class="text-[0.625rem] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.category') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.department }}</p>
                   </div>
                 </div>
@@ -182,7 +182,7 @@
                     <i class="ti ti-tag text-sm" style="color: var(--primary);" aria-hidden="true" />
                   </div>
                   <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.collection') }}</p>
+                    <p class="text-[0.625rem] font-bold uppercase tracking-[0.1em]" style="color: var(--text-muted);">{{ $t('productDetail.collection') }}</p>
                     <p class="text-sm font-semibold" style="color: var(--secondary);">{{ store.detail.category.name }}</p>
                   </div>
                 </div>

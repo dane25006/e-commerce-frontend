@@ -390,7 +390,7 @@ onUnmounted(() => {
   gap: 6px;
   padding: 6px 14px;
   border-radius: 100px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -404,7 +404,7 @@ onUnmounted(() => {
 
 .slide-title {
   font-family: var(--font-heading);
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 900;
   line-height: 1.2;
   color: var(--text);
@@ -413,13 +413,13 @@ onUnmounted(() => {
 
 @media (min-width: 768px) {
   .slide-title {
-    font-size: 42px;
+    font-size: 2.625rem;
   }
 }
 
 @media (min-width: 1024px) {
   .slide-title {
-    font-size: 48px;
+    font-size: 3rem;
   }
 }
 
@@ -428,7 +428,7 @@ onUnmounted(() => {
 }
 
 .slide-desc {
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.6;
   color: var(--text-muted);
   margin: 0 0 24px;
@@ -516,7 +516,7 @@ onUnmounted(() => {
 
 .visual-brand {
   color: rgba(255,255,255,0.5);
-  font-size: 7px;
+  font-size: 0.4375rem;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -554,14 +554,14 @@ onUnmounted(() => {
 }
 
 .badge-title {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 900;
   color: var(--text);
   margin: 0;
 }
 
 .badge-sub {
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--text-muted);
   margin: 0;
 }

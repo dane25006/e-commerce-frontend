@@ -22,9 +22,10 @@ Modern, responsive **Vue 3 SPA** for the Scentique luxury perfume e-commerce pla
 - [🔐 Authentication Flow](#-authentication-flow)
 - [🗄 State Management](#-state-management)
 - [🌐 API Integration](#-api-integration)
+- [🎨 Typography & Font System](./TYPOGRAPHY.md)
 - [📦 Build & Deployment](#-build--deployment)
 - [🧪 Linting & Formatting](#-linting--formatting)
-- [🔍 Troubleshooting](#-troubleshooting)
+- [🔍 Troubleshooting & Font Issues](#-troubleshooting--font-issues)
 - [📈 Future Improvements](#-future-improvements)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
@@ -369,6 +370,20 @@ export const productService = {
 
 ---
 
+## 🎨 Typography & Font System
+
+Scentique uses a luxury, dual-locale typography system designed for high legibility, brand elegance, and seamless bilingual support between English (`Playfair Display` + `Poppins`) and Khmer (`Battambang`).
+
+| Token | English (`lang="en"`) | Khmer (`lang="km"`) | Purpose |
+| :--- | :--- | :--- | :--- |
+| `--font-heading` | `'Playfair Display', serif` | `'Battambang', serif` | Hero banners, section headers, product titles |
+| `--font-body` | `'Poppins', sans-serif` | `'Battambang', sans-serif` | Body text, inputs, buttons, metadata |
+| **Icons** | `@tabler/icons-webfont` | `@tabler/icons-webfont` | Vector iconography (`.ti`) |
+
+👉 **For complete type scales, weights, fluid clamp formulas, multi-language rules, and font issues guide, see [🎨 TYPOGRAPHY.md](./TYPOGRAPHY.md).**
+
+---
+
 ## 📦 Build & Deployment
 
 ### Development
@@ -513,6 +528,17 @@ server {
 - Ensure you're on a modern browser (Chrome, Firefox, Edge)
 - Check for Vite errors in terminal
 - Restart the dev server: `Ctrl+C` then `npm run dev`
+
+---
+
+### Font Style & Size Issues (Clipping, Locale Mismatch, Responsive Scaling)
+
+**Issue:** Text cut-off in Khmer, hardcoded fonts breaking translations, or font size scaling issues across mobile and desktop.
+
+**Solutions:**
+- Always use CSS variables `var(--font-heading)` and `var(--font-body)` instead of hardcoded font names
+- Use `clamp()` for responsive hero titles and `rem` for UI components
+- For detailed diagnostic steps and solutions, refer to **[🎨 TYPOGRAPHY.md — Common Font Style & Size Issues & Solutions](./TYPOGRAPHY.md#-common-font-style--font-size-issues--solutions)**
 
 ---
 

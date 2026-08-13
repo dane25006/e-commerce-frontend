@@ -78,7 +78,7 @@ const emit = defineEmits<{
 .field-input {
   width: 100%;
   padding: 22px 14px 6px;
-  font-size: 14px;
+  font-size: 0.875rem;
   background: transparent;
   border: none;
   outline: none;
@@ -95,7 +95,7 @@ const emit = defineEmits<{
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 14px;
+  font-size: 0.875rem;
   pointer-events: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: left center;
@@ -106,7 +106,7 @@ const emit = defineEmits<{
 .field-input:not(:placeholder-shown) ~ .field-label {
   top: 10px;
   transform: translateY(0);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;

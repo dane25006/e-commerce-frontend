@@ -43,7 +43,7 @@
           {{ tab.label }}
           <span
             v-if="tab.key === 'unread' && store.unreadCount > 0"
-            class="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full bg-white/20"
+            class="ml-1.5 text-[0.625rem] px-1.5 py-0.5 rounded-full bg-white/20"
           >
             {{ store.unreadCount }}
           </span>
@@ -141,7 +141,7 @@
                     {{ item.title }}
                   </h3>
                   <span
-                    class="text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 inline-block"
+                    class="text-[0.625rem] font-medium px-2 py-0.5 rounded-full mt-1 inline-block"
                     :style="{
                       background: getTypeColor(item.type) + '15',
                       color: getTypeColor(item.type),
@@ -153,12 +153,12 @@
                 <div class="flex items-center gap-2 flex-shrink-0">
                   <span
                     v-if="item.priority === 'high'"
-                    class="px-1.5 py-0.5 text-[9px] font-bold rounded uppercase"
+                    class="px-1.5 py-0.5 text-[0.5625rem] font-bold rounded uppercase"
                     style="background: #fef2f2; color: #dc2626"
                   >
                     High
                   </span>
-                  <span class="text-[11px] whitespace-nowrap" style="color: #9ca3af">
+                  <span class="text-[0.6875rem] whitespace-nowrap" style="color: #9ca3af">
                     {{ timeAgo(item.sent_at) }}
                   </span>
                 </div>
@@ -190,21 +190,21 @@
                 <button
                   v-if="!item.is_read"
                   @click="handleRead(item)"
-                  class="text-[10px] font-semibold tracking-wide uppercase transition-colors"
+                  class="text-[0.625rem] font-semibold tracking-wide uppercase transition-colors"
                   style="color: var(--primary)"
                 >
                   {{ $t('notifications.markRead') }}
                 </button>
                 <button
                   @click="handleArchive(item)"
-                  class="text-[10px] font-medium transition-colors"
+                  class="text-[0.625rem] font-medium transition-colors"
                   style="color: #9ca3af"
                 >
                   {{ $t('notifications.archive') }}
                 </button>
                 <button
                   @click="handleDelete(item)"
-                  class="text-[10px] font-medium transition-colors"
+                  class="text-[0.625rem] font-medium transition-colors"
                   style="color: #ef4444"
                 >
                   {{ $t('notifications.delete') }}

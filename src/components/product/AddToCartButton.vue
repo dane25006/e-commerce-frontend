@@ -86,7 +86,7 @@ async function handleAdd() {
 }
 
 .out-of-stock {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -140,12 +140,12 @@ async function handleAdd() {
 }
 
 .btn-sm {
-  font-size: 12px;
+  font-size: 0.75rem;
   padding: 8px 16px;
 }
 
 .btn-lg {
-  font-size: 14px;
+  font-size: 0.875rem;
   padding: 14px 28px;
   width: 100%;
   letter-spacing: 0.03em;
@@ -156,7 +156,7 @@ async function handleAdd() {
 }
 
 .btn-spinner {
-  font-size: 14px;
+  font-size: 0.875rem;
   animation: spin 0.8s linear infinite;
 }
 
@@ -165,7 +165,7 @@ async function handleAdd() {
 }
 
 .btn-check {
-  font-size: 16px;
+  font-size: 1rem;
   animation: checkPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 

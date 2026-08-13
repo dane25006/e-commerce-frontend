@@ -142,15 +142,15 @@ async function handleToggle() {
 }
 
 .icon-sm {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .icon-md {
-  font-size: 17px;
+  font-size: 1.0625rem;
 }
 
 .icon-lg {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .heart-beat {

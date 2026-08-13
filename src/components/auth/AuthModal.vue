@@ -88,7 +88,7 @@
                 <i class="ti ti-sparkles text-sm text-white" aria-hidden="true" />
               </div>
               <p class="text-xs font-semibold uppercase tracking-[0.2em]" :style="{ color: 'var(--primary)' }">{{ eyebrow }}</p>
-              <h1 :id="titleId" class="mt-2 text-2xl font-bold" :style="{ fontFamily: '\'Playfair Display\', serif', color: 'var(--text)' }">{{ title }}</h1>
+              <h1 :id="titleId" class="mt-2 text-2xl font-bold" :style="{ fontFamily: 'var(--font-heading)', color: 'var(--text)' }">{{ title }}</h1>
               <!-- Gold accent line -->
               <div class="mt-3 h-0.5 w-10" :style="{ background: 'var(--primary)' }" />
               <p class="mt-3 text-sm" :style="{ color: 'var(--text-muted)' }">{{ subtitle }}</p>

@@ -71,8 +71,8 @@ defineEmits<{
 }
 
 .loading p {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
   font-weight: 500;
   color: #64748B;
   margin: 0;
@@ -110,16 +110,16 @@ defineEmits<{
 }
 
 .success-title {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 18px;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
   font-weight: 600;
   color: #1E293B;
   margin: 0;
 }
 
 .success-desc {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
   color: #64748B;
   margin: 0;
 }
@@ -130,9 +130,9 @@ defineEmits<{
   border-radius: 100px;
   background: #1E293B;
   color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
@@ -152,8 +152,8 @@ defineEmits<{
 }
 
 .error p {
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
   color: #DC2626;
   margin: 0;
 }
@@ -164,9 +164,9 @@ defineEmits<{
   border-radius: 100px;
   background: #EE1C25;
   color: #fff;
-  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s;

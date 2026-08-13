@@ -661,7 +661,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -679,7 +679,7 @@ onMounted(async () => {
 }
 
 .hero-count {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: rgba(255,255,255,0.4);
   margin: 0;
   font-weight: 400;
@@ -715,7 +715,7 @@ onMounted(async () => {
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--primary);
   pointer-events: none;
 }
@@ -727,7 +727,7 @@ onMounted(async () => {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 14px;
+  font-size: 0.875rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -748,7 +748,7 @@ onMounted(async () => {
 }
 
 .product-count {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -759,7 +759,7 @@ onMounted(async () => {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 13px;
+  font-size: 0.8125rem;
   outline: none;
   cursor: pointer;
   transition: border-color 0.2s;
@@ -809,7 +809,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: rgba(184,138,68,0.12);
   color: var(--primary);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
@@ -820,12 +820,12 @@ onMounted(async () => {
 }
 
 .chip-x {
-  font-size: 14px;
-  line-height: 1;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 .chip-clear {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   background: none;
   border: none;
@@ -874,7 +874,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -885,7 +885,7 @@ onMounted(async () => {
 }
 
 .chevron {
-  font-size: 10px;
+  font-size: 0.625rem;
   transition: transform 0.25s ease;
   color: var(--primary);
 }
@@ -919,14 +919,14 @@ onMounted(async () => {
 }
 
 .checkbox-label {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
   cursor: pointer;
   flex: 1;
 }
 
 .filter-count {
-  font-size: 11px;
+  font-size: 0.6875rem;
   padding: 2px 8px;
   border-radius: 100px;
   background: var(--background);
@@ -943,7 +943,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-muted);
   margin-top: 4px;
 }
@@ -952,7 +952,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
@@ -1079,14 +1079,14 @@ onMounted(async () => {
 }
 
 .state-icon {
-  font-size: 40px;
+  font-size: 2.5rem;
   display: block;
   margin-bottom: 12px;
   color: rgba(184,138,68,0.25);
 }
 
 .state-text {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
   margin: 0 0 16px;
 }
@@ -1099,7 +1099,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: var(--primary);
   color: var(--surface);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -1118,7 +1118,7 @@ onMounted(async () => {
   border-radius: 100px;
   background: transparent;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   border: 1px solid var(--border);
   cursor: pointer;
@@ -1148,7 +1148,7 @@ onMounted(async () => {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -1178,7 +1178,7 @@ onMounted(async () => {
 
 .page-dots {
   padding: 0 4px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
@@ -1205,14 +1205,14 @@ onMounted(async () => {
 }
 
 .mobile-filters-title {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 
 .mobile-filters-close {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 1.25rem;
   color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
@@ -1234,7 +1234,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;

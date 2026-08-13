@@ -23,14 +23,14 @@ defineProps<{
 }
 
 .product-name {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   color: #6B7280;
   margin: 0 0 6px;
 }
 
 .amount {
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 800;
   color: #111827;
   margin: 0;
@@ -38,7 +38,7 @@ defineProps<{
 }
 
 .currency {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   color: #9CA3AF;
   margin-left: 6px;

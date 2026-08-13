@@ -81,7 +81,7 @@
               <span
                 v-if="cartCount > 0"
                 class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-indigo-600
-                       text-white text-[10px] font-medium rounded-full flex items-center
+                       text-white text-[0.625rem] font-medium rounded-full flex items-center
                        justify-center px-1"
               >
                 {{ cartCount > 99 ? '99+' : cartCount }}
@@ -96,7 +96,7 @@
                        transition text-sm text-gray-700"
               >
                 <div class="w-7 h-7 rounded-full overflow-hidden bg-indigo-100 flex items-center justify-center text-indigo-700 text-xs font-medium flex-shrink-0">
-                  <img v-if="auth.user?.avatar" :src="auth.user.avatar" class="w-full h-full object-cover" alt="Avatar" />
+                  <img v-if="auth.user?.avatar" :src="imageUrl(auth.user.avatar)" referrerpolicy="no-referrer" class="w-full h-full object-cover" alt="Avatar" />
                   <span v-else>{{ initials }}</span>
                 </div>
                 <span class="hidden sm:block">{{ auth.userName }}</span>
@@ -151,6 +151,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { imageUrl } from '@/utils/image'
 
 const { t } = useI18n()
 
